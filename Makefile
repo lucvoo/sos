@@ -25,13 +25,6 @@ export	HOSTCC HOSTCFLAGS
 # Look for make include files relative to root of kernel src
 MAKEFLAGS += --include-dir=$(srctree)
 
-# Basic helpers built in scripts/
-PHONY += scripts_basic
-scripts_basic:
-	$(Q)$(MAKE) -f scripts/Makefile.host obj=scripts/basic
-# To avoid any implicit rule to kick in, define an empty command.
-scripts/basic/%: scripts_basic ;
-
 no-dot-config-targets := clean distclean help
 
 ifdef	mixed-targets
@@ -48,19 +41,13 @@ ifdef	config-targets
 # *config targets only - make sure prerequisites are updated, and descend
 # in scripts/kconfig to make the *config target
 
-%config: scripts_basic FORCE
+%config: FORCE
 	$(Q)mkdir -p include/config
 	$(Q)$(MAKE) -f scripts/Makefile.host obj=scripts/kconfig $@
 
 else
 # ===========================================================================
 # build targets only
-
-# Additional helpers built in scripts/
-PHONY += scripts
-scripts: scripts_basic include/config/auto.conf
-
-scripts_basic: include/autoconf.h
 
 ifndef	no-dot-config
 # Read in config
@@ -86,6 +73,19 @@ endif	# mixed-targets
 
 
 ####
+
+CPPFLAGS:= -Iinclude -Iarch/$(CONFIG_ARCH)/include -include include/autoconf.h
+CFLAGS	:= -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs
+CFLAGS	+= -Os 
+
+include arch/$(CONFIG_ARCH)/Makefile.arch
+arch/$(CONFIG_ARCH)/Makefile.arch: ;
+
+CC	:= $(CROSS_COMPILE)gcc
+AR	:= $(CROSS_COMPILE)ar
+CPP	:= $(CC) -E
+
+#######################################################################
 subdirs-y			:= arch/$(CONFIG_ARCH)
 subdirs-y			+= misc
 
@@ -94,18 +94,12 @@ objs :=
 -include $(subdirs:%=%/.make)
 
 libtarget.a: $(objs)
-	@echo '  AR      $@'
+	@echo 'AR	$@'
 	$(Q)$(AR) crs $@ $^
 
 
-_all: scripts libtarget.a FORCE
-	@echo "objs = $(objs)"
+_all: libtarget.a FORCE
 
-CC	:= arm-linux-gcc
-CPP	:= $(CC) -E
-CPPFLAGS:= -Iinclude -Iarch/$(CONFIG_ARCH)/include -include include/autoconf.h
-CFLAGS	:= -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs
-CFLAGS	+= -Os 
 include scripts/Makefile.build
 
 

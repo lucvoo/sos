@@ -43,3 +43,9 @@ endif
 %/.make: %/Makefile scripts/gen-makefile
 	@scripts/gen-makefile .make $*
 
+# avoid implicit rules
+_all:
+scripts/gen-makefile: ;
+scripts/Kbuild.include: ;
+scripts/Makefile.%: ;
+%.cmd: ;
