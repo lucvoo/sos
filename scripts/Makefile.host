@@ -1,0 +1,87 @@
+src := $(obj)
+
+PHONY := __build
+__build: FORCE
+
+-include include/config/auto.conf
+include scripts/Kbuild.include
+ifndef obj
+$(warning kbuild: Makefile.host is included improperly)
+endif
+include $(src)/Makefile
+
+host-csingle    := $(foreach m,$(hostprogs-y),$(if $($(m)-objs),,$(m)))
+host-cmulti     := $(foreach m,$(hostprogs-y),$(if $($(m)-objs),$(m)))
+
+# Object (.o) files compiled from .c files
+host-cobjs	:= $(sort $(foreach m,$(hostprogs-y),$($(m)-objs)))
+host-cobjs	+= $(host-csingle:%=%.o)
+
+
+host-csingle    := $(addprefix $(obj)/,$(host-csingle))
+host-cmulti     := $(addprefix $(obj)/,$(host-cmulti))
+host-cobjs	:= $(addprefix $(obj)/,$(host-cobjs))
+
+#####
+#####
+# Compile programs on the host
+
+# Link an executable based on list of .o files, all plain c
+# host-csingle -> executable
+      cmd_host-csingle	= $(HOSTCC) $(HOSTLDFLAGS) -o $@ \
+			  $(addprefix $(obj)/,$(@F).o) \
+			  $(HOST_LOADLIBES) $(HOSTLOADLIBES_$(@F))
+$(host-csingle): %: %.o
+	@echo "HOSTLD	$@"
+	$(Q)$(cmd_host-csingle)
+	@echo 'cmd_$@ := $(cmd_host-csingle)' > $(dir $@).$(notdir $@).cmd
+
+# host-cmulti -> executable
+      cmd_host-cmulti	= $(HOSTCC) $(HOSTLDFLAGS) -o $@ \
+			  $(addprefix $(obj)/,$($(@F)-objs)) \
+			  $(HOST_LOADLIBES) $(HOSTLOADLIBES_$(@F))
+$(host-cmulti): %: $(host-cobjs)
+	@echo "HOSTLD	$@"
+	$(Q)$(cmd_host-cmulti)
+	@echo 'cmd_$@ := $(cmd_host-cmulti)' > $(dir $@).$(notdir $@).cmd
+
+# Create .o file from a single .c file
+# Handle options to gcc.
+hostc_flags   = -Wp,-MD,$(dir $@).$(notdir $@).d	\
+		$(HOSTCFLAGS)   $(HOST_EXTRACFLAGS)   \
+                $(HOSTCFLAGS_$(basename $(notdir $@)).o)
+# host-cobjs -> .o
+      cmd_host-cobjs	= $(HOSTCC) $(hostc_flags) -c -o $@ $<
+$(host-cobjs): %.o: %.c
+	@echo "HOSTCC	$@"
+	$(Q)$(cmd_host-cobjs)
+	@mv -f $(dir $@).$(notdir $@).d $(dir $@).$(notdir $@).cmd
+
+
+targets := $(host-csingle) $(host-cmulti) $(host-cobjs)
+
+# Add FORCE to the prequisites of a target to force it to be always rebuilt.
+# ---------------------------------------------------------------------------
+
+PHONY += FORCE
+
+FORCE:
+
+# Read all saved command lines and dependencies for the $(targets) we
+# may be building above, using $(if_changed{,_dep}). As an
+# optimization, we don't need to read them if the target does not
+# exist, we will rebuild anyway in that case.
+
+targets := $(sort $(targets))
+cmd_files := $(wildcard $(targets:$(obj)/%=$(obj)/.%.cmd))
+
+ifneq ($(cmd_files),)
+  include $(cmd_files)
+endif
+
+# Declare the contents of the .PHONY variable as phony.  We keep that
+# information in a variable se we can use it in if_changed and friends.
+
+.PHONY: $(PHONY)
+
+__build: $(targets)

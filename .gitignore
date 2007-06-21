@@ -1,0 +1,10 @@
+.*.cmd
+*.o
+*.a
+*.s
+*.i
+*.bin
+*.map
+.make
+.config
+.config.old

@@ -1,0 +1,45 @@
+# Do not:
+# o  use make's built-in rules and variables
+#    (this increases performance and avoid hard-to-debug behavour);
+# o  print "Entering directory ...";
+MAKEFLAGS += --no-builtin-rules
+MAKEFLAGS += --no-builtin-variables
+MAKEFLAGS += --no-print-directory
+
+# To put more focus on warnings, be less verbose as default
+# Use 'make V=1' to see the full commands
+
+ifeq ("$(origin V)", "command line")
+  KBUILD_VERBOSE := $(V)
+endif
+ifndef KBUILD_VERBOSE
+  KBUILD_VERBOSE := 0
+endif
+export KBUILD_VERBOSE
+
+# Beautify output
+ifeq ($(KBUILD_VERBOSE),1)
+  Q 	:=
+else
+  Q	:= @
+endif
+export Q
+
+################################################################################
+ifneq ($(filter $(no-dot-config-targets), $(MAKECMDGOALS)),)
+	ifeq ($(filter-out $(no-dot-config-targets), $(MAKECMDGOALS)),)
+		no-dot-config := 1
+	endif
+endif
+
+ifneq ($(filter config %config,$(MAKECMDGOALS)),)
+	config-targets := 1
+	ifneq ($(filter-out config %config,$(MAKECMDGOALS)),)
+		mixed-targets := 1
+	endif
+endif
+
+##
+%/.make: %/Makefile scripts/gen-makefile
+	@scripts/gen-makefile .make $*
+

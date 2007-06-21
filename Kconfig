@@ -1,0 +1,31 @@
+mainmenu "OS configuration"
+
+choice
+	prompt "Architecture"
+	default	ARCH_ARM
+
+config ARCH_ARM
+	bool "ARM"
+
+endchoice
+
+
+config ARCH
+	symbol
+	default arm if ARCH_ARM
+
+config	INTERRUPT_STACK_SIZE
+	int "Interrupt stack size"
+	default 4096
+
+config	EXCEPTION_STACK_SIZE
+	int "Exception stack size"
+	default 4096
+
+config	STARTUP_STACK_SIZE
+	int "startup stack size"
+	default 4096
+
+config	STACK_ALIGNMENT
+	int "Stacks alignment"
+	default 16
