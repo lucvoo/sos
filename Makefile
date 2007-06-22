@@ -103,6 +103,10 @@ _all: libtarget.a FORCE
 
 include scripts/Makefile.build
 
+LDFLAGS+=-static -nostdlib
+LDFLAGS+=-Wl,--verbose
+%: %.c libtarget.a FORCE
+	$(Q)$(CC) -Wl,-Map,$@.map,--cref -T$@.ld $(LDFLAGS) arch/$(CONFIG_ARCH)/startup.o $@.c -o $@
 
 endif	# skip-makefile
 
