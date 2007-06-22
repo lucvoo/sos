@@ -29,3 +29,9 @@ config	STARTUP_STACK_SIZE
 config	STACK_ALIGNMENT
 	int "Stacks alignment"
 	default 16
+
+config	NR_THREAD_PRIORITY
+	int "Number of threads priority levels"
+	range 2 32
+	default 32
+
