@@ -1,0 +1,12 @@
+config MACH_PARAMS
+	bool
+	default y
+	select ARM7TDMI
+
+config VIRT_ADDR
+	hex "Kernel virtual start address"
+	default 0xC0000000
+
+config TEXT_OFFSET
+	hex "Kernel text offset"
+	default 0x00008000

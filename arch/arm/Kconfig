@@ -1,3 +1,20 @@
 config ARCH
 	symbol
 	default arm
+
+choice
+	prompt "Machine"
+	default	MACH_XXX
+
+config MACH_XXX
+	bool "xxx"
+
+endchoice
+
+config MACH
+	symbol
+	default xxx if MACH_XXX
+
+if MACH_XXX
+source arch/arm/mach-xxx/Kconfig
+endif
