@@ -20,7 +20,7 @@ cmd_cc_s_c = $(CC) $(c_flags) -fverbose-asm -S -o $@ $<
 	@echo "CC	$@"
 	$(Q)$(cmd_cc_s_c)
 
-cmd_cc_i_c = $(CPP) $(c_flags) -o $@ $<
+cmd_cc_i_c = $(CPP) $(c_flags) -dD -o $@ $<
 %.i: %.c FORCE
 	@echo "CPP	$@"
 	$(Q)$(cmd_cc_i_c)
@@ -34,7 +34,7 @@ cmd_cc_o_c = $(CC) $(c_flags) -c -o $@ $<
 # Compile assembler sources (.S)
 # ---------------------------------------------------------------------------
 
-cmd_cc_s_S = $(CPP) $(a_flags)   -o $@ $<
+cmd_cc_s_S = $(CPP) $(a_flags) -dD -o $@ $<
 %.s: %.S FORCE
 	@echo "CPP	$@"
 	$(Q)$(cmd_cc_s_S)
