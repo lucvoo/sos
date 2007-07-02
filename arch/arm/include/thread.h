@@ -35,4 +35,12 @@ struct eframe {
 	unsigned long	old_r0;
 };
 
+struct thread;
+
+static inline struct thread* get_current_thread(void)
+{
+	// FIXME
+	return 0;
+}
+
 #endif
