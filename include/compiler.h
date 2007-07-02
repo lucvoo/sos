@@ -6,4 +6,6 @@
 
 #define barrier() __asm__ __volatile__("": : :"memory")
 
+#define	offsetof(type, member)	__builtin_offsetof(type, member)
+
 #endif
