@@ -103,7 +103,26 @@ libtarget.a: $(objs)
 _all: libtarget.a FORCE
 
 include scripts/Makefile.build
-scripts/Makefile.build: $(asm-offsets)	# FIXME
+scripts/Makefile.build: prepare
+
+symlinks:= include/arch include/mach include/arch/mach
+.PHONY: prepare
+prepare: $(symlinks) $(asm-offsets)
+
+include/arch: .config
+	@echo "SYMLINK	$@"
+	$(Q)ln -sfn ../arch/$(CONFIG_ARCH)/include $@
+	@touch $@/$$; rm $@/$$	# force $@ dir to be older than .config
+include/mach: .config
+	@echo "SYMLINK	$@"
+	$(Q)ln -sfn ../arch/$(CONFIG_ARCH)/mach-$(CONFIG_MACH)/include $@
+	@touch $@/$$; rm $@/$$	# force $@ dir to be older than .config
+include/arch/mach: include/arch
+	@echo "SYMLINK	$@"
+	$(Q)ln -sfn ../mach-$(CONFIG_MACH)/include $@
+	@touch $@/$$; rm $@/$$	# force $@ dir to be older than .config
+
+$(asm-offsets): $(symlinks)
 
 else	# CONFIG_ARCH
 
