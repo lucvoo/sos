@@ -74,6 +74,7 @@ endif	# mixed-targets
 
 ####
 
+ifdef CONFIG_ARCH
 CPPFLAGS:= -Iinclude -Iarch/$(CONFIG_ARCH)/include -include include/autoconf.h
 CFLAGS	:= -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs
 CFLAGS	+= -Os 
@@ -102,6 +103,13 @@ libtarget.a: $(objs)
 _all: libtarget.a FORCE
 
 include scripts/Makefile.build
+scripts/Makefile.build: $(asm-offsets)	# FIXME
+
+else	# CONFIG_ARCH
+
+include scripts/Makefile.build
+
+endif	# CONFIG_ARCH
 
 LDFLAGS+=-static -nostdlib
 LDFLAGS+=-Wl,--verbose
