@@ -38,10 +38,10 @@ __irq_svc:
 1:
 		get_irqnr r0, r6, r5, lr
 
-		@ while there is an interrupt call asm_do_IRQ(irq, frame):
+		@ while there is an interrupt call __do_IRQ(irq, frame):
 		movne   r1, sp
 		adrne	lr, 1b		// load lr with a label
-		bne	asm_do_IRQ
+		bne	__do_IRQ
 
 		@ if none or no more:
 		@ restore spsr:
