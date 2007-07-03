@@ -55,10 +55,10 @@ __irq_svc:
 
 	.text
 	.align	2
-	.global	irq_handler
-	.type	irq_handler, %function
+	.global	vector_irq
+	.type	vector_irq, %function
 
-irq_handler:
+vector_irq:
 		@ adjust lr_IRQ
 		sub     lr, lr, #4
 

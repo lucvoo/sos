@@ -4,16 +4,16 @@
 	.global __exception_handlers
 
 __exception_handlers:
-	b	reset_vector
-	b	undefined_instruction
-	b	software_interrupt
-	b	abort_prefetch
-	b	abort_data
+	b	vector_reset
+	b	vector_undef
+	b	vector_swint
+	b	vector_p_abt
+	b	vector_d_abt
 	.word	0		// unused
-	b	irq_handler
-	b	fiq_handler
+	b	vector_irq
+	b	vector_fiq
 
-reset_vector:
+vector_reset:
 	// call MMU, ...
 #include "platform_setup.S"
 
