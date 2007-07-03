@@ -1,7 +1,7 @@
 #ifndef	_ARCH_IRQFLAGS_H_
 #define	_ARCH_IRQFLAGS_H_
 
-#include "arch.h"
+#include "arch/arch.h"
 
 static inline void __raw_irq_dis(void)
 {

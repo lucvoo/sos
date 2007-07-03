@@ -75,7 +75,7 @@ endif	# mixed-targets
 ####
 
 ifdef CONFIG_ARCH
-CPPFLAGS:= -Iinclude -Iarch/$(CONFIG_ARCH)/include -include include/autoconf.h
+CPPFLAGS:= -Iinclude -include include/autoconf.h
 CFLAGS	:= -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs
 CFLAGS	+= -Os 
 
