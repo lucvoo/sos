@@ -30,6 +30,12 @@ SECTIONS
 
     .data ALIGN (0x4) : {
 	*(.data*)
+
+	. = ALIGN (4);
+	PROVIDE(__INITCALL_LIST__ = ABSOLUTE(.));
+	KEEP(*(SORT(.initcall*)))
+	LONG(0)
+	PROVIDE(__INITCALL_END__ = ABSOLUTE(.));
     } > sdram
     PROVIDE(_edata = .);
 
