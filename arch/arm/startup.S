@@ -48,3 +48,20 @@ start:
 
 __start_hang:
 	b	__start_hang
+
+
+
+vector_undef:
+	b	vector_undef
+
+vector_swint:
+	b	vector_swint
+
+vector_p_abt:
+	b	vector_p_abt
+
+vector_d_abt:
+	b	vector_d_abt
+
+vector_fiq:
+	b	vector_fiq
