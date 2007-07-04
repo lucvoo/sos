@@ -20,7 +20,7 @@ __exception_handlers:
 
 vector_reset:
 	// call MMU, ...
-#include "platform_setup.S"
+#include "arch/mach/platform_setup.S"
 
 	// move to vectors to their definitive address
 	// FIXME
