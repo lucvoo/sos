@@ -15,6 +15,9 @@ endif
 ifndef KBUILD_VERBOSE
   KBUILD_VERBOSE := 0
 endif
+ifneq ($(KBUILD_VERBOSE),0)
+  VERBOSE:=y
+endif
 export KBUILD_VERBOSE
 
 # Beautify output
