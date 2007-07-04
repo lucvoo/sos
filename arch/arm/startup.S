@@ -20,7 +20,6 @@ vector_reset:
 	// call MMU, ...
 #include "platform_setup.S"
 
-start:
 	// move to vectors to their definitive address
 	// FIXME
 
