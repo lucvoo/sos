@@ -141,9 +141,9 @@ endif
 
 LDFLAGS+=$(LDFLAGS-y)
 
-%: %.c libtarget.a FORCE
+%: %.o libtarget.a FORCE
 	@echo "LINK	$@"
-	$(Q)$(CC) -Wl,-Map,$@.map,--cref -T$@.ld $(LDFLAGS) arch/$(CONFIG_ARCH)/startup.o $@.c -o $@
+	$(Q)$(CC) -Wl,-Map,$@.map,--cref -T$@.ld $(LDFLAGS) arch/$(CONFIG_ARCH)/startup.o $< -o $@
 
 endif	# skip-makefile
 
