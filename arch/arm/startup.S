@@ -13,6 +13,9 @@ __exception_handlers:
 	b	vector_irq
 	b	vector_fiq
 
+
+	.text
+
 vector_reset:
 	// call MMU, ...
 #include "platform_setup.S"
