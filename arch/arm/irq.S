@@ -87,3 +87,4 @@ vector_irq:
 		@ jump to this address and switch to SVC mode
 		movs    pc, lr
 
+		.size   vector_irq, .-vector_irq

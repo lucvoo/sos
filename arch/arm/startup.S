@@ -13,6 +13,8 @@ __exception_handlers:
 	b	vector_irq
 	b	vector_fiq
 
+	.size __exception_handlers, . - __exception_handlers
+
 
 	.text
 
@@ -55,15 +57,22 @@ vector_reset:
 
 vector_undef:
 	b	vector_undef
+	.size   vector_undef, .-vector_undef
 
 vector_swint:
 	b	vector_swint
+	.size   vector_swint, .-vector_swint
 
 vector_p_abt:
 	b	vector_p_abt
+	.size   vector_p_abt, .-vector_p_abt
 
 vector_d_abt:
 	b	vector_d_abt
+	.size   vector_d_abt, .-vector_d_abt
 
 vector_fiq:
 	b	vector_fiq
+	.size   vector_fiq, .-vector_fiq
+
+	.ltorg
