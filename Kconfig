@@ -15,6 +15,18 @@ source arch/arm/Kconfig
 endif
 
 
+menu "Build options"
+
+config GC_SECTIONS
+	bool "Sections GC"
+
+config GC_SECTIONS_SHOW
+	bool "Show sections GCed"
+	depends on GC_SECTIONS
+
+endmenu
+
+
 config	INTERRUPT_STACK_SIZE
 	int "Interrupt stack size"
 	default 4096

@@ -78,6 +78,7 @@ ifdef CONFIG_ARCH
 CPPFLAGS:= -Iinclude -include include/autoconf.h
 CFLAGS	:= -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs
 CFLAGS	+= -Os 
+CFLAGS-$(CONFIG_GC_SECTIONS) := -ffunction-sections -fdata-sections
 
 include arch/$(CONFIG_ARCH)/Makefile.arch
 arch/$(CONFIG_ARCH)/Makefile.arch: ;
@@ -126,14 +127,20 @@ $(asm-offsets): $(symlinks)
 
 else	# CONFIG_ARCH
 
+CFLAGS	+= $(CFLAGS-y)
 include scripts/Makefile.build
 
 endif	# CONFIG_ARCH
 
 LDFLAGS+=-static -nostdlib
+LDFLAGS-$(CONFIG_GC_SECTIONS) += -Wl,--gc-sections
+LDFLAGS-$(CONFIG_GC_SECTIONS_SHOW) += -Wl,--print-gc-sections
 ifneq ($(KBUILD_VERBOSE),0)
 LDFLAGS+=-Wl,--verbose
 endif
+
+LDFLAGS+=$(LDFLAGS-y)
+
 %: %.c libtarget.a FORCE
 	@echo "LINK	$@"
 	$(Q)$(CC) -Wl,-Map,$@.map,--cref -T$@.ld $(LDFLAGS) arch/$(CONFIG_ARCH)/startup.o $@.c -o $@
