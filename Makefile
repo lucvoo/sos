@@ -141,7 +141,8 @@ endif
 
 LDFLAGS+=$(LDFLAGS-y)
 
-%: %.o libtarget.a FORCE
+tests=$(basename $(wildcard tests/*.c))
+$(tests): %: %.o libtarget.a FORCE
 	@echo "LINK	$@"
 	$(Q)$(CC) -Wl,-Map,$@.map,--cref -T$@.ld $(LDFLAGS) arch/$(CONFIG_ARCH)/startup.o $< -o $@
 
