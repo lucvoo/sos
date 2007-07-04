@@ -48,8 +48,8 @@ vector_reset:
 	bl	kapi_start
 	bl	kapi_scheduler_start
 
-__start_hang:
-	b	__start_hang
+.Lstart_hang:
+	b	.Lstart_hang
 
 
 
