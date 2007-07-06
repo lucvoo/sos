@@ -148,6 +148,7 @@ $(asm-offsets): $(symlinks)
 
 endif	# CONFIG_ARCH
 
+ifneq ($(filter tests/%,$(MAKECMDGOALS)),)
 LDFLAGS+=-static -nostdlib
 LDFLAGS-$(CONFIG_GC_SECTIONS) += -Wl,--gc-sections
 LDFLAGS-$(CONFIG_GC_SECTIONS_SHOW) += -Wl,--print-gc-sections
@@ -157,10 +158,13 @@ endif
 
 LDFLAGS+=$(LDFLAGS-y)
 
-tests=$(basename $(wildcard tests/*.c))
-$(tests): %: %.o libtarget.a FORCE
+include tests/Makefile
+tests=$(progs-y:%=tests/%)
+tests/: $(tests)
+$(tests): %: %.o libtarget.a
 	@echo "LINK	$@"
 	$(Q)$(CC) -Wl,-Map,$@.map,--cref -T$@.ld $(LDFLAGS) arch/$(CONFIG_ARCH)/startup.o $< -o $@
+endif	# tests/%
 
 endif	# skip-makefile
 
