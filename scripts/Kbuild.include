@@ -9,6 +9,7 @@ dot-target = $(dir $@).$(notdir $@)
 # The temporary file to save gcc -MD generated dependencies must not
 # contain a comma
 depfile = $(dir $@).$(notdir $@).d
+cmdfile = $(dir $@).$(notdir $@).cmd
 
 # Convinient variables
 comma   := ,
