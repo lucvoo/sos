@@ -74,6 +74,7 @@ hostprogs-y += mconf
 
 
 clean-files	:= lkc_defs.h 
+clean-files	+= zconf.tab.c lex.zconf.c zconf.hash.c
 
 # generated files seem to need this to find local include files
 HOSTCFLAGS_lex.zconf.o	:= -I$(src)
