@@ -92,6 +92,10 @@ subdirs-y			:= arch/$(CONFIG_ARCH)
 subdirs-y			+= misc
 subdirs-y			+= kernel
 
+include scripts/Makefile.build
+scripts/Makefile.build: prepare
+
+
 subdirs:=$(subdirs-y)
 objs :=
 -include $(subdirs:%=%/.make)
@@ -102,9 +106,6 @@ libtarget.a: $(objs)
 
 
 _all: libtarget.a FORCE
-
-include scripts/Makefile.build
-scripts/Makefile.build: prepare
 
 symlinks:= include/arch include/mach include/arch/mach
 .PHONY: prepare
