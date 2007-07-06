@@ -6,6 +6,8 @@ clean-files :=
 include $(src)/Makefile
 
 clean-files += $(hostprogs-y) $(hostprogs-n) $(hostprogs-)
+progs-files := $(progs-y) $(progs-n) $(progs-)
+clean-files += $(progs-files) $(progs-files:%=%.map)
 
 clean-files := $(addprefix $(obj)/,$(clean-files))
 

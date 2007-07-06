@@ -1,0 +1,1 @@
+progs-y	:= link.test

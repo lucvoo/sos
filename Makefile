@@ -69,6 +69,7 @@ include/config/auto.conf: ;
 
 .PHONY: clean distclean
 clean: FORCE
+	$(Q)$(MAKE) -f scripts/Makefile.clean obj=tests
 	$(Q)find * -name '*.[oas]' -o -name '.*.cmd' -o -name '.*.d' -type f | xargs rm -f
 
 distclean-files := .config .config.old include/autoconf.h
