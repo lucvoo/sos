@@ -56,7 +56,8 @@ hostc_flags   = -Wp,-MD,$(depfile)	\
 $(host-cobjs): %.o: %.c
 	@echo "HOSTCC	$@"
 	$(Q)$(cmd_host-cobjs)
-	@mv -f $(depfile) $(cmdfile)
+	@sed '1s|^$(@F):|$@:|' < $(depfile) > $(cmdfile)
+	@rm -f $(depfile)
 
 
 targets := $(host-csingle) $(host-cmulti) $(host-cobjs)
