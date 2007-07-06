@@ -1,3 +1,4 @@
+no-dot-config-targets := clean distclean help
 include scripts/Makefile.main
 
 .PHONY: _all
@@ -25,7 +26,6 @@ export	HOSTCC HOSTCFLAGS
 # Look for make include files relative to root of kernel src
 MAKEFLAGS += --include-dir=$(srctree)
 
-no-dot-config-targets := clean distclean help
 
 ifdef	mixed-targets
 # ===========================================================================
@@ -66,6 +66,24 @@ include/config/auto.conf: .config include/config/auto.conf.cmd
 else
 # Dummy target needed, because used as prerequisite
 include/config/auto.conf: ;
+
+.PHONY: clean distclean
+clean: FORCE
+	$(Q)find * -name '*.[oas]' -o -name '.*.cmd' -o -name '.*.d' -type f | xargs rm -f
+
+distclean-files := .config .config.old include/autoconf.h
+distclean-files	+= include/arch/asm-offsets.h
+distclean-files	+= include/arch/mach
+distclean-files += include/arch include/mach
+distclean-dirs	:= include/config/
+distclean: clean FORCE
+	$(Q)$(MAKE) -f scripts/Makefile.clean obj=scripts/kconfig
+	$(Q)$(MAKE) -f scripts/Makefile.clean obj=scripts/basic
+	$(Q)find */ -name '.make' -type f | xargs rm -f
+	@echo "CLEAN	$(distclean-files)"
+	@rm -rf $(distclean-files)
+	@echo "CLEAN	$(distclean-dirs)"
+	@rm -rf $(distclean-dirs)
 endif	# no-dot-config
 
 endif	# config-targets
@@ -126,11 +144,6 @@ include/arch/mach: include/arch
 	@touch $@/$$; rm $@/$$	# force $@ dir to be older than .config
 
 $(asm-offsets): $(symlinks)
-
-else	# CONFIG_ARCH
-
-CFLAGS	+= $(CFLAGS-y)
-include scripts/Makefile.build
 
 endif	# CONFIG_ARCH
 

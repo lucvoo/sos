@@ -1,0 +1,14 @@
+.PHONY: __clean
+__clean:
+
+src := $(obj)
+clean-files :=
+include $(src)/Makefile
+
+clean-files += $(hostprogs-y) $(hostprogs-n) $(hostprogs-)
+
+clean-files := $(addprefix $(obj)/,$(clean-files))
+
+__clean:
+	@echo "CLEAN $(clean-files)"
+	@rm -f $(clean-files)
