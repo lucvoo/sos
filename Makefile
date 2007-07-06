@@ -79,6 +79,7 @@ CPPFLAGS:= -Iinclude -include include/autoconf.h
 CFLAGS	:= -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs
 CFLAGS	+= -Os 
 CFLAGS-$(CONFIG_GC_SECTIONS) := -ffunction-sections -fdata-sections
+AFLAGS	:=-D__ASSEMBLY__ -fverbose-asm
 
 include arch/$(CONFIG_ARCH)/Makefile.arch
 arch/$(CONFIG_ARCH)/Makefile.arch: ;
