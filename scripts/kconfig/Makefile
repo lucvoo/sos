@@ -70,10 +70,8 @@ conf-objs	:= conf.o  zconf.tab.o
 mconf-objs	:= mconf.o zconf.tab.o $(lxdialog)
 
 hostprogs-y := conf
+hostprogs-y += mconf
 
-ifeq ($(MAKECMDGOALS),menuconfig)
-	hostprogs-y += mconf
-endif
 
 clean-files	:= lkc_defs.h 
 
