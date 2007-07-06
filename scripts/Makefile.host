@@ -35,7 +35,7 @@ host-cobjs	:= $(addprefix $(obj)/,$(host-cobjs))
 $(host-csingle): %: %.o
 	@echo "HOSTLD	$@"
 	$(Q)$(cmd_host-csingle)
-	@echo 'cmd_$@ := $(cmd_host-csingle)' > $(dir $@).$(notdir $@).cmd
+	@echo 'cmd_$@ := $(cmd_host-csingle)' > $(cmdfile)
 
 # host-cmulti -> executable
       cmd_host-cmulti	= $(HOSTCC) $(HOSTLDFLAGS) -o $@ \
@@ -44,11 +44,11 @@ $(host-csingle): %: %.o
 $(host-cmulti): %:
 	@echo "HOSTLD	$@"
 	$(Q)$(cmd_host-cmulti)
-	@echo 'cmd_$@ := $(cmd_host-cmulti)' > $(dir $@).$(notdir $@).cmd
+	@echo 'cmd_$@ := $(cmd_host-cmulti)' > $(cmdfile)
 
 # Create .o file from a single .c file
 # Handle options to gcc.
-hostc_flags   = -Wp,-MD,$(dir $@).$(notdir $@).d	\
+hostc_flags   = -Wp,-MD,$(depfile)	\
 		$(HOSTCFLAGS)   $(HOST_EXTRACFLAGS)   \
                 $(HOSTCFLAGS_$(basename $(notdir $@)).o)
 # host-cobjs -> .o
@@ -56,7 +56,7 @@ hostc_flags   = -Wp,-MD,$(dir $@).$(notdir $@).d	\
 $(host-cobjs): %.o: %.c
 	@echo "HOSTCC	$@"
 	$(Q)$(cmd_host-cobjs)
-	@mv -f $(dir $@).$(notdir $@).d $(dir $@).$(notdir $@).cmd
+	@mv -f $(depfile) $(cmdfile)
 
 
 targets := $(host-csingle) $(host-cmulti) $(host-cobjs)
