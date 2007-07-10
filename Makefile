@@ -105,6 +105,7 @@ arch/$(CONFIG_ARCH)/Makefile.arch: ;
 
 CC	:= $(CROSS_COMPILE)gcc
 AR	:= $(CROSS_COMPILE)ar
+OBJCOPY	:= $(CROSS_COMPILE)objcopy
 CPP	:= $(CC) -E
 
 #######################################################################
@@ -163,7 +164,7 @@ misc/version.o: FORCE
 
 include tests/Makefile
 tests=$(progs-y:%=tests/%)
-tests/: $(tests)
+tests/: $(tests:%=%.bin)
 $(tests): %: %.o libtarget.a misc/version.o
 	@echo "LINK	$@"
 	$(Q)$(CC) -Wl,-Map,$@.map,--cref -T$@.ld $(LDFLAGS) arch/$(CONFIG_ARCH)/startup.o misc/version.o $< -o $@

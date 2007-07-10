@@ -45,6 +45,11 @@ cmd_cc_o_S = $(CC) $(a_flags) -c -o $@ $<
 	$(Q)$(cmd_cc_o_S)
 	@scripts/basic/fixdep.sh $(depfile) $@ '$(cmd_cc_o_S)' $(dot-target).cmd
 
+# ---------------------------------------------------------------------------
+%.bin: %
+	@echo "BIN	$<"
+	$(Q)$(OBJCOPY) -O binary $< $@
+# ---------------------------------------------------------------------------
 
 # Read all saved command lines and dependencies for the $(targets) we
 # may be building above.
