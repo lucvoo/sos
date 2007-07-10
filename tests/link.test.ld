@@ -25,17 +25,17 @@ SECTIONS
     .rodata ALIGN (0x4) : {
 	PROVIDE(__srodata = ABSOLUTE(.));
 	*(.rodata*)
-    } > sdram
-    PROVIDE(__erodata = .);
-
-    .data ALIGN (0x4) : {
-	*(.data*)
 
 	. = ALIGN (4);
 	PROVIDE(__INITCALL_LIST__ = ABSOLUTE(.));
 	KEEP(*(SORT(.initcall*)))
 	LONG(0)
 	PROVIDE(__INITCALL_END__ = ABSOLUTE(.));
+    } > sdram
+    PROVIDE(__erodata = .);
+
+    .data ALIGN (0x4) : {
+	*(.data*)
     } > sdram
     PROVIDE(_edata = .);
 
