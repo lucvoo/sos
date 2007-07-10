@@ -159,12 +159,14 @@ endif
 
 LDFLAGS+=$(LDFLAGS-y)
 
+misc/version.o: FORCE
+
 include tests/Makefile
 tests=$(progs-y:%=tests/%)
 tests/: $(tests)
-$(tests): %: %.o libtarget.a
+$(tests): %: %.o libtarget.a misc/version.o
 	@echo "LINK	$@"
-	$(Q)$(CC) -Wl,-Map,$@.map,--cref -T$@.ld $(LDFLAGS) arch/$(CONFIG_ARCH)/startup.o $< -o $@
+	$(Q)$(CC) -Wl,-Map,$@.map,--cref -T$@.ld $(LDFLAGS) arch/$(CONFIG_ARCH)/startup.o misc/version.o $< -o $@
 endif	# tests/%
 
 endif	# skip-makefile
