@@ -54,6 +54,7 @@ cmd_cc_lds = $(CPP) -x assembler-with-cpp -P $(a_flags)   -o $@ $<
 %.lds: %.lds.in
 	@echo "LDS	$@"
 	$(Q)$(cmd_cc_lds) 
+	@scripts/basic/fixdep.sh $(depfile) $@ '$(cmd_cc_o_c)' $(dot-target).cmd
 
 %.bin: %
 	@echo "BIN	$<"

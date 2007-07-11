@@ -8,6 +8,7 @@ do_makefile()
 
 	echo "objs-y	:="
 	echo "subdirs-y :="
+	echo "deps-y :="
 	echo
 	cat "$dir/Makefile" | \
 		sed "s:^EXTRA_CFLAGS[^A_Z_-]:$dir/&:"	| \
@@ -22,6 +23,9 @@ do_makefile()
 	echo "ifneq (\$(objs-y),)"
 	echo "objs += \$(objs-y:%=$dir/%)"
 	echo "-include \$(objs-y:%=$dir/.%.cmd)"
+	echo "endif"
+	echo "ifneq (\$(deps-y),)"
+	echo "-include \$(deps-y:%=$dir/.%.cmd)"
 	echo "endif"
 	echo "ifneq (\$(subdirs-y),)"
 	echo "-include \$(subdirs-y:%=$dir/%$out)"
