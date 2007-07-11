@@ -70,7 +70,7 @@ include/config/auto.conf: ;
 .PHONY: clean distclean
 clean: FORCE
 	$(Q)$(MAKE) -f scripts/Makefile.clean obj=tests
-	$(Q)find * -name '*.[oas]' -o -name '.*.cmd' -o -name '.*.d' -type f | xargs rm -f
+	$(Q)find * -name '*.[oas]' -o -name '.*.cmd' -o -name '.*.d' -o -name '*.lds' -type f | xargs rm -f
 
 distclean-files := .config .config.old include/autoconf.h
 distclean-files	+= include/arch/asm-offsets.h
@@ -165,11 +165,11 @@ misc/version.o: FORCE
 include tests/Makefile
 tests=$(progs-y:%=tests/%)
 tests/: $(tests:%=%.bin)
-$(tests): %: %.o libtarget.a misc/version.o
+$(tests): %: %.o libtarget.a misc/version.o arch/$(CONFIG_ARCH)/target.lds
 	@echo "LINK	$@"
 	$(Q)$(CC) -Wl,--gc-sections					\
 		-Wl,-Map,$@.map,--cref					\
-		-T$@.ld $(LDFLAGS) 		\
+		-Tarch/$(CONFIG_ARCH)/target.lds $(LDFLAGS) 		\
 		misc/version.o						\
 		-Wl,--start-group -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive -Wl,--end-group	\
 		-lgcc							\

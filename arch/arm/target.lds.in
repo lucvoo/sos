@@ -1,0 +1,47 @@
+ENTRY(_os_startup)
+GROUP(libtarget.a libgcc.a)
+
+
+SECTIONS
+{
+	. = CONFIG_VIRT_ADDR + CONFIG_TEXT_OFFSET;
+
+	.init : {
+			*(.init.text)
+
+		PROVIDE(__INITCALL_LIST__ = .);
+			KEEP(*(SORT(.initcall*)))
+			LONG(0)
+	}
+
+#ifdef	CONFIG_HIGH_VECTORS
+	.vectors 0xFFFF0000 : {
+		PROVIDE(__rom_vectors_vma = .);
+		KEEP(*(.vectors))
+    	}
+#endif
+
+	.text : {
+			*(.text*)
+	}
+
+	.rodata : {
+			*(.rodata*)
+	}
+
+#ifdef	CONFIG_FIXED_STACKS
+	. = ALIGN(THREAD_SIZE);
+#endif
+	__data_loc = .;
+	.data : AT(__data_loc)  {
+			*(.init.task)
+			*(.data*)
+	}
+
+	.bss ALIGN (0x4) : {
+		PROVIDE(__bss_start = .);
+			*(.bss*)
+			*(COMMON)
+		PROVIDE(__bss_end = .);
+	}
+}

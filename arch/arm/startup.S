@@ -17,9 +17,9 @@ __exception_handlers:
 	.size __exception_handlers, . - __exception_handlers
 
 
-	.text
+	.section	".init.text","ax"
 
-vector_reset:
+_os_startup:
 	// platform setup, initialize MMU, ...
 	// return:
 	//	r0: physical address of the L1 MMU table
@@ -92,6 +92,10 @@ sctlr_mask:
 	b	.Lstart_hang
 
 
+
+vector_reset:
+	b	vector_reset
+	.size   vector_reset, .-vector_reset
 
 vector_undef:
 	b	vector_undef

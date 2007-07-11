@@ -50,6 +50,11 @@ cmd_cc_o_S = $(CC) $(a_flags) -c -o $@ $<
 	@scripts/basic/fixdep.sh $(depfile) $@ '$(cmd_cc_o_S)' $(dot-target).cmd
 
 # ---------------------------------------------------------------------------
+cmd_cc_lds = $(CPP) -x assembler-with-cpp -P $(a_flags)   -o $@ $<
+%.lds: %.lds.in
+	@echo "LDS	$@"
+	$(Q)$(cmd_cc_lds) 
+
 %.bin: %
 	@echo "BIN	$<"
 	$(Q)$(OBJCOPY) -O binary $< $@
