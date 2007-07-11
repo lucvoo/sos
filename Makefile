@@ -154,7 +154,7 @@ ifneq ($(filter tests/%,$(MAKECMDGOALS)),)
 LDFLAGS+=-static -nostdlib
 LDFLAGS-$(CONFIG_GC_SECTIONS) += -Wl,--gc-sections
 LDFLAGS-$(CONFIG_GC_SECTIONS_SHOW) += -Wl,--print-gc-sections
-ifneq ($(KBUILD_VERBOSE),0)
+ifeq ($(KBUILD_VERBOSE),2)
 LDFLAGS+=-Wl,--verbose
 endif
 
