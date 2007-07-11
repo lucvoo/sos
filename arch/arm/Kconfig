@@ -20,6 +20,11 @@ if MACH_XXX
 source arch/arm/mach-xxx/Kconfig
 endif
 
+config HIGH_VECTORS
+	bool "High vectors"
+	default y
+
+
 config	ARM720T
 	bool
 	select ARMV4T
