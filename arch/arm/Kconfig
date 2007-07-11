@@ -8,6 +8,7 @@ choice
 
 config MACH_XXX
 	bool "xxx"
+	select ARM7TDMI
 
 endchoice
 
@@ -18,3 +19,15 @@ config MACH
 if MACH_XXX
 source arch/arm/mach-xxx/Kconfig
 endif
+
+config	ARM720T
+	bool
+	select ARMV4T
+
+config	ARM7TDMI
+	bool
+	select ARMV4T
+
+
+config	ARMV4T
+	bool
