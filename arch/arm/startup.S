@@ -80,6 +80,8 @@ sctlr_mask:
 	bl	__clear_bss
 
 	bl      __invoke_constructors
+	bl	_os_initcalls
+
 	// 0	platform hw init
 	// ...
 
