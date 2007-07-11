@@ -18,6 +18,7 @@ __exception_handlers:
 
 
 	.section	".init.text","ax"
+	.global _os_startup
 
 _os_startup:
 	// platform setup, initialize MMU, ...
