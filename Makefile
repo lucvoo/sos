@@ -94,11 +94,11 @@ endif	# mixed-targets
 ####
 
 ifdef CONFIG_ARCH
-CPPFLAGS:= -Iinclude -include include/autoconf.h
-CFLAGS	:= -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs
-CFLAGS	+= -Os 
-CFLAGS-$(CONFIG_GC_SECTIONS) := -ffunction-sections -fdata-sections
-AFLAGS	:=-D__ASSEMBLY__ -fverbose-asm
+CPPFLAGS-y	:= -Iinclude -include include/autoconf.h
+CFLAGS-y	:= -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs
+CFLAGS-y	+= -Os 
+CFLAGS-$(CONFIG_GC_SECTIONS) += -ffunction-sections -fdata-sections
+AFLAGS-y	:=-D__ASSEMBLY__ -fverbose-asm
 
 include arch/$(CONFIG_ARCH)/Makefile.arch
 arch/$(CONFIG_ARCH)/Makefile.arch: ;

@@ -3,6 +3,10 @@
 
 include scripts/Kbuild.include
 
+CPPFLAGS	:= $(CPPFLAGS) $(CPPFLAGS-y)
+CFLAGS		:= $(CFLAGS)   $(CFLAGS-y)
+AFLAGS		:= $(AFLAGS)   $(AFLAGS-y)
+
 c_flags        = -Wp,-MD,$(dir $@).$(notdir $@).d $(NOSTDINC_FLAGS) $(CPPFLAGS) \
 		 $(CFLAGS) $($(@D)/EXTRA_CFLAGS) $($(basename $@)-cflags)
 
