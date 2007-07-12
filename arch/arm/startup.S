@@ -51,16 +51,6 @@ _os_startup:
 	nop
 	mov pc, lr
 
-#if 1	// ARM 720
-// FIXME: move this in a separate header file
-	//  R
-	// .RVI ZFRS BLDP WCAM
-	// ..1. 1001 ..11 1101
-sctlr_mask:
-	.word	SCTLR_F|SCTLR_R|SCTLR_A
-	.word	SCTLR_V|SCTLR_Z|SCTLR_S|SCTLR_D|SCTLR_P|SCTLR_W|SCTLR_C|SCTLR_M
-#endif
-
 1:
 	// initialize interrupt/exception environments
 	ldr     sp,=__startup_stack
@@ -92,6 +82,17 @@ sctlr_mask:
 .Lstart_hang:
 	b	.Lstart_hang
 
+
+#if defined(CONFIG_ARM720) || defined(CONFIG_ARM7TDMI)
+// FIXME: move this in a separate header file
+	//  R
+	// .RVI ZFRS BLDP WCAM
+	// ..1. 1001 ..11 1101
+sctlr_mask:
+	.word	SCTLR_F|SCTLR_R|SCTLR_A
+	.word	SCTLR_V|SCTLR_Z|SCTLR_S|SCTLR_D|SCTLR_P|SCTLR_W|SCTLR_C|SCTLR_M
+#endif
+	.ltorg
 
 
 	.text
