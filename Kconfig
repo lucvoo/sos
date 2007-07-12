@@ -24,14 +24,6 @@ config GC_SECTIONS_SHOW
 	bool "Show sections GCed"
 	depends on GC_SECTIONS
 
-config VIRT_ADDR
-	hex "Kernel virtual start address"
-	default 0xC0000000
-
-config TEXT_OFFSET
-	hex "Kernel text offset"
-	default 0x00008000
-
 endmenu
 
 
