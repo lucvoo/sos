@@ -94,6 +94,8 @@ sctlr_mask:
 
 
 
+	.text
+
 vector_reset:
 	b	vector_reset
 	.size   vector_reset, .-vector_reset
