@@ -5,14 +5,14 @@
 	.global __exception_handlers
 
 __exception_handlers:
-	b	vector_reset
-	b	vector_undef
-	b	vector_swint
-	b	vector_p_abt
-	b	vector_d_abt
-	.word	0		// unused
-	b	vector_irq
-	b	vector_fiq
+	ldr	pc, =vector_reset	// should never be reached
+	ldr	pc, =vector_undef
+	ldr	pc, =vector_swint
+	ldr	pc, =vector_p_abt
+	ldr	pc, =vector_d_abt
+	.word	0			// unused
+	ldr	pc, =vector_irq
+	ldr	pc, =vector_fiq
 
 	.size __exception_handlers, . - __exception_handlers
 
