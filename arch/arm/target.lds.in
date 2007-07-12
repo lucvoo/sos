@@ -1,8 +1,11 @@
+#include "arch/memory.h"
+
+
 ENTRY(_os_startup)
 GROUP(libtarget.a libgcc.a)
 
 MEMORY {
-	ram		: ORIGIN = CONFIG_VIRT_ADDR + CONFIG_TEXT_OFFSET, LENGTH = 0xFFFFFFFF
+	ram		: ORIGIN = VIRT_ADDR + TEXT_OFFSET, LENGTH = 0xFFFFFFFF
 #define	rom ram
 	highvectors	: ORIGIN = 0xFFFF0000, LENGTH = 0x00010000
 }
