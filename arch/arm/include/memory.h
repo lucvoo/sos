@@ -7,8 +7,6 @@
 #define	UL(x)	(x)
 #endif
 
-
-#define	VIRT_ADDR	UL(CONFIG_VIRT_ADDR)
-#define	TEXT_OFFSET	UL(CONFIG_TEXT_OFFSET)
+#include "arch/mach/memory.h"
 
 #endif
