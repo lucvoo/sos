@@ -1,4 +1,6 @@
-void __clear_bss(void)
+#include <init.h>
+
+void __init __clear_bss(void)
 {
 	extern unsigned long __bss_start;
 	extern unsigned long __bss_end;
