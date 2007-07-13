@@ -112,6 +112,7 @@ CPP	:= $(CC) -E
 subdirs-y			:= arch/$(CONFIG_ARCH)
 subdirs-y			+= misc
 subdirs-y			+= kernel
+subdirs-y			+= init
 subdirs-y			+= kapi
 
 include scripts/Makefile.build
