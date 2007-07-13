@@ -65,8 +65,12 @@ _os_startup:
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_SVC)
 	msr     cpsr,r0
 
+#ifdef	CONFIG_FIXED_STACKS
 	// initialize stack
-	ldr     sp,=__startup_stack
+	ldr     sp,=init_thread + (1 << CONFIG_FIXED_STACKS) - 8
+#else
+#error	Init stack not initialized!
+#endif
 
 	bl	__clear_bss
 

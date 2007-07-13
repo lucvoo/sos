@@ -1,10 +1,8 @@
 #include <thread.h>
 
 
-struct thread init_thread = {
+struct thread init_thread __attribute__((__section__(".init.task"))) = {
 	.cpu_context	= { },
-	.stack_base	= 0 + 0,
-	.stack_size	= 0,
 	.entry_point	= 0 + 0,
 	.entry_data	= 0,
 	.priority	= 0,
