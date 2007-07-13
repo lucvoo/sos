@@ -8,7 +8,6 @@ choice
 
 config MACH_XXX
 	bool "xxx"
-	select ARM7TDMI
 
 endchoice
 
