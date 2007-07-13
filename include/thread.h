@@ -13,6 +13,8 @@
 #define	THREAD_SIZE	(1 << CONFIG_FIXED_STACKS_SHIFT)
 #endif
 
+#define	TIF_NEED_RESCHED	0x00000001
+
 typedef	void (*__entry_fun)(void*);
 
 struct thread {
@@ -21,6 +23,7 @@ struct thread {
 	void*			entry_data;
 	unsigned int		priority;
 	struct dlist		run_list;
+	unsigned long		flags;
 	int			state;
 #ifndef	CONFIG_FIXED_STACKS
 	void*			stack_base;
