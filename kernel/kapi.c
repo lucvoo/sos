@@ -1,8 +1,9 @@
 #include <kapi.h>
 
 #include <thread.h>
+#include <idle.h>
 
 void kapi_scheduler_start(void)
 {
-	thread_schedule();
+	__cpu_idle();
 }
