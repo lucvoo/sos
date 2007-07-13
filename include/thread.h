@@ -34,6 +34,12 @@ struct thread {
 #endif
 
 
+static inline int thread_flag_test(struct thread* t, unsigned long flag)
+{
+	return t->flags & flag;
+}
+
+
 void thread_yield(void);
 
 #endif
