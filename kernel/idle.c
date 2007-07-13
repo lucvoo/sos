@@ -1,6 +1,7 @@
 #include <idle.h>
 #include <arch/mach/idle.h>
 #include <irqflags.h>
+#include <sched.h>
 
 
 static void default_idle(void)
