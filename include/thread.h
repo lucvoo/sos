@@ -1,8 +1,6 @@
 #ifndef	_THREAD_H_
 #define	_THREAD_H_
 
-#include <arch/thread.h>
-#include <dlist.h>
 
 #define	THREAD_STATE_NEW	0
 #define	THREAD_STATE_READY	1
@@ -14,6 +12,10 @@
 #endif
 
 #define	TIF_NEED_RESCHED	0x00000001
+
+#include <arch/thread.h>
+#include <dlist.h>
+
 
 typedef	void (*__entry_fun)(void*);
 

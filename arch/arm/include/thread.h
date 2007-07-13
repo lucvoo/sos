@@ -37,10 +37,12 @@ struct eframe {
 
 struct thread;
 
+#ifdef	CONFIG_FIXED_STACKS
 static inline struct thread* get_current_thread(void)
 {
-	// FIXME
-	return 0;
+	register unsigned long sp asm ("sp");
+	return (struct thread *)(sp & ~(THREAD_SIZE - 1));
 }
+#endif
 
 #endif
