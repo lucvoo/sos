@@ -48,3 +48,12 @@ config	NR_THREAD_PRIORITY
 	range 2 32
 	default 32
 
+config	FIXED_STACKS
+	bool "Use the same size for all stacks"
+	default y
+
+config	FIXED_STACKS_SHIFT
+	int "Size of the stacks, in power of 2"
+	depends on FIXED_STACKS
+	range 12 14
+	default 14
