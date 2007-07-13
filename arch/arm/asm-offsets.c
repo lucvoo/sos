@@ -1,5 +1,5 @@
 #include <arch/arch.h>
-#include <arch/thread.h>
+#include <thread.h>
 #include <compiler.h>
 
 #define DEFINE(sym, val) \
@@ -9,6 +9,8 @@
 
 int main(void)
 {
+  DEFINE(TI_CPU_SAVE,		offsetof(struct thread, cpu_context));
+  BLANK();
   DEFINE(S_R0,			offsetof(struct eframe, r0));
   DEFINE(S_R1,			offsetof(struct eframe, r1));
   DEFINE(S_R2,			offsetof(struct eframe, r2));
