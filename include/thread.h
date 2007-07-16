@@ -36,9 +36,19 @@ struct thread {
 #endif
 
 
-static inline int thread_flag_test(struct thread* t, unsigned long flag)
+static inline int thread_flag_test(const struct thread* t, unsigned long flag)
 {
 	return t->flags & flag;
+}
+
+static inline void thread_flag_set(struct thread* t, unsigned long flag)
+{
+	t->flags |= flag;
+}
+
+static inline void thread_flag_clear(struct thread* t, unsigned long flag)
+{
+	t->flags &= ~flag;
 }
 
 
