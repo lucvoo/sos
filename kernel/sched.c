@@ -34,10 +34,10 @@ static void __init sched_init(void)
 pure_initcall(sched_init);
 
 
-extern void __switch_to(struct thread* prev, struct thread* next);
+struct thread* __switch_to(struct thread* prev, struct thread* next);
 static struct thread* context_switch(struct thread* prev, struct thread* next)
 {
-	__switch_to(prev, next);
+	prev = __switch_to(prev, next);
 
 	return prev;
 }
