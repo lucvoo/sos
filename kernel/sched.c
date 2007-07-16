@@ -48,6 +48,7 @@ void thread_schedule(void)
 	struct thread* next;
 	struct run_queue* rq = &runq;
 
+need_resched:
 	lock_acq_irq(&rq->lock);
 	if (rq->bitmap == 0)
 		next = rq->idle;
@@ -58,6 +59,7 @@ void thread_schedule(void)
 	}
 
 	prev = get_current_thread();
+	thread_need_resched_clear(prev);
 	if (prev != next) {
 		prev = context_switch(prev, next);
 		barrier();
@@ -66,4 +68,7 @@ void thread_schedule(void)
 #endif
 	}
 	lock_rel_irq(&rq->lock);
+
+	if (thread_need_resched_test(prev))
+		goto need_resched;
 }
