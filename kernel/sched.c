@@ -14,7 +14,9 @@ struct run_queue {
 	struct lock		lock;
 	struct dlist		queues[CONFIG_NR_THREAD_PRIORITY];
 	unsigned long		bitmap;
+#ifndef	CONFIG_FIXED_STACKS
 	struct thread*		curr;
+#endif
 	struct thread*		idle;
 };
 
@@ -55,11 +57,13 @@ void thread_schedule(void)
 		next = dlist_entry(q->next, struct thread, run_list);
 	}
 
-	prev = rq->curr;		// FIXME
+	prev = get_current_thread();
 	if (prev != next) {
 		prev = context_switch(prev, next);
 		barrier();
+#ifndef	CONFIG_FIXED_STACKS
 		rq->curr = next;
+#endif
 	}
 	lock_rel_irq(&rq->lock);
 }
