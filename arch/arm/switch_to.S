@@ -17,6 +17,8 @@ __switch_to:
 	// r0-r3 & ip are not saved as they are call clobered
 	add	ip, r0, #TI_CPU_SAVE
 	stmia	ip!, {r4 - sl, fp, sp, lr}	@ Store most regs
+
+	add	r1, r1, #TI_CPU_SAVE
 	ldmia	r1,  {r4 - sl, fp, sp, pc}	@ Load all regs saved previously
 
 	.size   __switch_to, .-__switch_to
