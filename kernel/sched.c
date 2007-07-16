@@ -3,6 +3,7 @@
 #include <dlist.h>
 #include <lock.h>
 #include <thread.h>
+#include <sched.h>
 
 
 #if CONFIG_NR_THREAD_PRIORITY > 32
