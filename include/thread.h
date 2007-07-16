@@ -42,6 +42,7 @@ static inline int thread_flag_test(struct thread* t, unsigned long flag)
 }
 
 
+int  thread_create(struct thread* t, int priority, void (*entry_func)(void*), void* entry_data);
 void thread_yield(void);
 
 #endif
