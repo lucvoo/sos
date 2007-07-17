@@ -108,6 +108,8 @@ AR	:= $(CROSS_COMPILE)ar
 OBJCOPY	:= $(CROSS_COMPILE)objcopy
 CPP	:= $(CC) -E
 
+SYS_INCDIR := $(shell $(CC) -print-file-name=include)
+CFLAGS-y   += -isystem $(SYS_INCDIR)
 #######################################################################
 subdirs-y			:= arch/$(CONFIG_ARCH)
 subdirs-y			+= misc
