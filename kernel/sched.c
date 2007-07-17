@@ -73,3 +73,28 @@ need_resched:
 	if (thread_need_resched_test(prev))
 		goto need_resched;
 }
+
+void thread_start(struct thread* t)
+{
+	struct run_queue* rq = &runq;
+
+	thread_need_resched_set(t);
+	t->state = THREAD_STATE_READY;
+	// FIXME: need to keep count of the level of suspendness
+
+	lock_acq_irq(&rq->lock);
+	dlist_add_tail(&rq->queues[t->priority], &t->run_list);
+	lock_rel_irq(&rq->lock);
+}
+
+void thread_yield(void)
+{
+	struct thread* t = get_current_thread();
+	struct run_queue* rq = &runq;
+
+	lock_acq_irq(&rq->lock);
+	dlist_move_tail(&rq->queues[t->priority], &t->run_list);
+	lock_rel_irq(&rq->lock);
+
+	thread_schedule();
+}

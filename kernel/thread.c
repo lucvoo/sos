@@ -21,6 +21,7 @@ int thread_create(struct thread* t, int priority, void (*entry_func)(void*), voi
 	t->priority	= priority;
 	t->flags	= TIF_NEED_RESCHED;
 	t->state	= THREAD_STATE_SLEEPING;
+	list_init(&t->run_list);
 
 	thread_load_context(t, entry_func, entry_data, thread_entry);
 
