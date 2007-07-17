@@ -116,6 +116,7 @@ subdirs-y			+= misc
 subdirs-y			+= kernel
 subdirs-y			+= init
 subdirs-y			+= kapi
+subdirs-y			+= lib
 
 include scripts/Makefile.build
 scripts/Makefile.build: prepare
