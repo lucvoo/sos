@@ -67,7 +67,7 @@ _os_startup:
 
 #ifdef	CONFIG_FIXED_STACKS
 	// initialize stack
-	ldr     sp,=init_thread + (1 << CONFIG_FIXED_STACKS) - 8
+	ldr     sp,=init_thread + (1 << CONFIG_FIXED_STACKS_SHIFT) - 8
 #else
 #error	Init stack not initialized!
 #endif
