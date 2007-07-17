@@ -24,4 +24,7 @@ static inline int need_resched(void)
 	return unlikely(thread_need_resched_test(get_current_thread()));
 }
 
+
+void	thread_schedule(void);
+
 #endif
