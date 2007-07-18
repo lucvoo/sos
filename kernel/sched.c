@@ -4,6 +4,7 @@
 #include <lock.h>
 #include <thread.h>
 #include <sched.h>
+#include <bitops/findbit.h>
 
 
 #if CONFIG_NR_THREAD_PRIORITY > 32
@@ -64,7 +65,7 @@ need_resched:
 	if (rq->bitmap == 0)
 		next = rq->idle;
 	else {
-		int prio = __builtin_ffsl(rq->bitmap) -1;
+		int prio = bitop_fmsb(rq->bitmap);
 		struct dlist* q = &rq->queues[prio];
 		next = dlist_entry(q->next, struct thread, run_list);
 	}
