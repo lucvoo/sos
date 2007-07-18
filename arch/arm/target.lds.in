@@ -37,12 +37,12 @@ SECTIONS
 	} > rom
 
 	.data : {
-			*(.init.task)
 			*(.data*)
 	} > ram AT> rom
 
-	.bss ALIGN (0x4) : {
+	.bss : {
 		PROVIDE(__bss_start = .);
+			*(.init.task)
 			*(.bss*)
 			*(COMMON)
 		PROVIDE(__bss_end = .);

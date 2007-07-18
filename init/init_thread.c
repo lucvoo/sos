@@ -1,11 +1,11 @@
 #include <thread.h>
+#include <init.h>
 
 
-struct thread init_thread __attribute__((__section__(".init.task"))) = {
-	.cpu_context	= { },
-	.entry_point	= 0 + 0,
-	.entry_data	= 0,
-	.priority	= 0,
-	.run_list	= DLIST_INIT(init_thread.run_list),
-	.state		= 0,
-};
+struct thread init_thread __attribute__((__section__(".init.task")));
+
+static void init_thread_init(void)
+{
+	dlist_init(&init_thread.run_list);
+}
+pure_initcall(init_thread_init);
