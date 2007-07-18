@@ -5,5 +5,6 @@
 
 void kapi_scheduler_start(void)
 {
+	_thread_scheduler_start();
 	__cpu_idle();
 }

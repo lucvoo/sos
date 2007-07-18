@@ -74,6 +74,14 @@ need_resched:
 		goto need_resched;
 }
 
+void _thread_scheduler_start(void)
+{
+	struct thread* t = get_current_thread();
+
+	runq.idle = t;
+	thread_need_resched_set(t);
+}
+
 void thread_start(struct thread* t)
 {
 	struct run_queue* rq = &runq;
