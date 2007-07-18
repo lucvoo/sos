@@ -4,11 +4,12 @@
 #include <lock.h>
 #include <thread.h>
 #include <sched.h>
+#include <types.h>
 #include <bitops/findbit.h>
 
 
-#if CONFIG_NR_THREAD_PRIORITY > 32
-#error	CONFIG_NR_THREAD_PRIORITY must not be greater than 32
+#if CONFIG_NR_THREAD_PRIORITY > BITS_PER_LONG
+#error	CONFIG_NR_THREAD_PRIORITY must not be greater than BITS_PER_LONG
 #endif
 
 
