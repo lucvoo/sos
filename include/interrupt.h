@@ -21,4 +21,6 @@ struct irqaction {
 	void*		data;
 };
 
+int irq_attach(struct irqaction* action, int irq);
+
 #endif
