@@ -53,6 +53,17 @@ __irq_svc:
 
 	.size   __irq_svc, .-__irq_svc
 
+
+	.text
+	.align	2
+	.global	__irq_invalid
+	.type	__irq_invalid, %function
+__irq_invalid:
+		b	__irq_invalid	// FIXME
+
+	.size   __irq_invalid, .-__irq_invalid
+
+
 	.text
 	.align	2
 	.global	vector_irq
@@ -86,5 +97,22 @@ vector_irq:
 
 		@ jump to this address and switch to SVC mode
 		movs    pc, lr
+
+		.long	__irq_invalid			@  0  (USR_26 / USR_32)
+		.long	__irq_invalid			@  1  (FIQ_26 / FIQ_32)
+		.long	__irq_invalid			@  2  (IRQ_26 / IRQ_32)
+		.long	__irq_svc			@  3  (SVC_26 / SVC_32)
+		.long	__irq_invalid			@  4
+		.long	__irq_invalid			@  5
+		.long	__irq_invalid			@  6
+		.long	__irq_invalid			@  7
+		.long	__irq_invalid			@  8
+		.long	__irq_invalid			@  9
+		.long	__irq_invalid			@  a
+		.long	__irq_invalid			@  b
+		.long	__irq_invalid			@  c
+		.long	__irq_invalid			@  d
+		.long	__irq_invalid			@  e
+		.long	__irq_invalid			@  f
 
 		.size   vector_irq, .-vector_irq
