@@ -56,3 +56,26 @@ void __do_IRQ(unsigned int irq, struct eframe *regs)
 
 	handle_level_irq(irq, desc);
 }
+
+
+void irq_create(struct irqaction* action, isr_handler_t isr_handler, dsr_handler_t dsr_handler, void* data, unsigned long flags)
+{
+	action->isr_handler = isr_handler;
+	action->dsr_handler = dsr_handler;
+	action->data        = data;
+	action->flags       = flags;
+}
+
+int irq_attach(struct irqaction* action, int irq)
+{
+	struct irqdesc* desc = &irq_descs[irq];
+
+	if (irq >= NR_IRQS)
+		return -1;	// FIXME: should be -EINVAL
+
+	lock_acq_irq(&desc->lock);
+	desc->action = action;
+	lock_rel_irq(&desc->lock);
+
+	return 0;
+}
