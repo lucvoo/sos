@@ -53,13 +53,13 @@ _os_startup:
 
 1:
 	// initialize interrupt/exception environments
-	ldr     sp,=__startup_stack
+	ldr     sp,=__startup_stack + CONFIG_STARTUP_STACK_SIZE - 8
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_IRQ)
 	msr     cpsr,r0
-	ldr     sp,=__exception_stack
+	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE - 8
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_UND)
 	msr     cpsr,r0
-	ldr     sp,=__exception_stack
+	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE - 8
 
 	// initialize CPSR (machine state register)
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_SVC)
