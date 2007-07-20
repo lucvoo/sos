@@ -57,3 +57,7 @@ config	FIXED_STACKS_SHIFT
 	depends on FIXED_STACKS
 	range 12 14
 	default 14
+
+config	HZ
+	int "tick frequency"
+	default 100
