@@ -3,6 +3,7 @@ objs-y	:= \
 	switch_to.o	\
 	irq.o		\
 	context.o	\
+	traps.o		\
 
 
 deps-y	:= \

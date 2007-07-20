@@ -75,6 +75,7 @@ _os_startup:
 	bl	__clear_bss
 
 	bl      __invoke_constructors
+	bl	__high_vectors
 	bl	_os_initcalls
 
 	// 0	platform hw init
