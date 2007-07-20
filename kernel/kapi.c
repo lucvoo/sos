@@ -1,6 +1,6 @@
 #include <kapi.h>
 
-#include <thread.h>
+#include <sched.h>
 #include <idle.h>
 
 void kapi_scheduler_start(void)
