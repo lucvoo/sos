@@ -23,9 +23,12 @@ SECTIONS
 
 #ifdef	CONFIG_HIGH_VECTORS
 	.vectors :  {
-		PROVIDE(__rom_vectors_vma = .);
+		PROVIDE(__vectors_start = LOADADDR(.vectors));
 		KEEP(*(.vectors))
+		PROVIDE(__vectors_end   = LOADADDR(.vectors) + SIZEOF(.vectors));
     	} > highvectors AT > rom
+
+	. = LOADADDR(.vectors) + SIZEOF(.vectors);
 #endif
 
 	.text LOADADDR(.vectors) + SIZEOF(.vectors): {
