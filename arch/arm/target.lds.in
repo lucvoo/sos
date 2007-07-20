@@ -21,7 +21,6 @@ SECTIONS
 			LONG(0);
 	} > rom
 
-#ifdef	CONFIG_HIGH_VECTORS
 	.vectors :  {
 		PROVIDE(__vectors_start = LOADADDR(.vectors));
 		KEEP(*(.vectors))
@@ -29,8 +28,6 @@ SECTIONS
     	} > highvectors AT > rom
 
 	. = LOADADDR(.vectors) + SIZEOF(.vectors);
-#endif
-
 	.text ALIGN(0x1000) : {
 			*(.text*)
 	} > rom
