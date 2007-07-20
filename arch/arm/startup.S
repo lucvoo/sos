@@ -72,20 +72,8 @@ _os_startup:
 #error	Init stack not initialized!
 #endif
 
-	bl	__clear_bss
-
-	bl      __invoke_constructors
 	bl	__high_vectors
-	bl	_os_initcalls
-
-	// 0	platform hw init
-	// ...
-
-	bl	kapi_start
-	bl	kapi_scheduler_start
-
-.Lstart_hang:
-	b	.Lstart_hang
+	b	_os_start
 
 
 #if defined(CONFIG_ARM720) || defined(CONFIG_ARM7TDMI)
