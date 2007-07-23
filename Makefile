@@ -153,6 +153,9 @@ include/arch/mach: include/arch
 
 $(asm-offsets): $(symlinks)
 
+namespacecheck:
+	@scripts/namespace.pl
+
 endif	# CONFIG_ARCH
 
 ifneq ($(filter tests/%,$(MAKECMDGOALS)),)
