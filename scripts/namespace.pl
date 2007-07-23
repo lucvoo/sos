@@ -287,6 +287,7 @@ sub list_extra_externals
 		if (! exists($ref{$name})
 			&& $name ne "__divsi3"
 			&& $name ne "__modsi3"
+			&& $name ne "_os_startup"
 		) {
 			@module = @{$def{$name}};
 			foreach $module (@module) {
