@@ -1,6 +1,7 @@
 #include <idle.h>
 #include <sched.h>
 #include <kapi.h>
+#include <os.h>
 
 void __clear_bss(void);
 void _os_initcalls(void);
