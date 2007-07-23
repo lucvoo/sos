@@ -37,6 +37,7 @@ config	EXCEPTION_STACK_SIZE
 
 config	STARTUP_STACK_SIZE
 	int "startup stack size"
+	depends on !FIXED_STACKS
 	default 4096
 
 config	STACK_ALIGNMENT

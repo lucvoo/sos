@@ -52,7 +52,12 @@ _os_startup:
 
 1:
 	// initialize interrupt/exception environments
+#ifdef	CONFIG_FIXED_STACKS
+	// initialize stack
+	ldr     sp,=init_thread + (1 << CONFIG_FIXED_STACKS_SHIFT) - 8
+#else
 	ldr     sp,=__startup_stack + CONFIG_STARTUP_STACK_SIZE - 8
+#endif
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_IRQ)
 	msr     cpsr,r0
 	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE - 8
@@ -63,13 +68,6 @@ _os_startup:
 	// initialize CPSR (machine state register)
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_SVC)
 	msr     cpsr,r0
-
-#ifdef	CONFIG_FIXED_STACKS
-	// initialize stack
-	ldr     sp,=init_thread + (1 << CONFIG_FIXED_STACKS_SHIFT) - 8
-#else
-#error	Init stack not initialized!
-#endif
 
 	bl	__high_vectors
 	b	_os_start
