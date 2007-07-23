@@ -55,6 +55,17 @@ static void enqueue_thread(struct thread* t, struct run_queue* rq)
 	lock_rel_irq(&rq->lock);
 }
 
+static void dequeue_thread(struct thread* t, struct run_queue* rq)
+{
+	unsigned prio = t->priority;
+
+	lock_acq_irq(&rq->lock);
+	dlist_del(&t->run_list);
+	if (dlist_is_empty(&rq->queues[prio]))
+		rq->bitmap &= ~(1 << prio);
+	lock_rel_irq(&rq->lock);
+}
+
 void thread_schedule(void)
 {
 	struct thread* prev;
@@ -86,6 +97,27 @@ need_resched:
 		goto need_resched;
 }
 
+static int wake_up(struct thread* t)
+{
+	struct run_queue *rq = &runq;
+	struct thread* curr = get_current_thread();
+	int rc = 1;
+
+	if (t->state == THREAD_STATE_READY)
+		goto out;		// FIXME: should never happen?
+
+	t->state = THREAD_STATE_READY;
+	enqueue_thread(t, rq);
+	if (t->priority >= curr->priority)
+		thread_need_resched_set(curr);
+
+	rc = 0;
+
+out:
+	return rc;
+}
+
+
 void _thread_scheduler_start(void)
 {
 	struct thread* t = get_current_thread();
@@ -115,4 +147,18 @@ void thread_yield(void)
 	lock_rel_irq(&rq->lock);
 
 	thread_schedule();
+}
+
+void thread_sleep(struct thread* t)
+{
+	if (t->state == THREAD_STATE_READY)
+		dequeue_thread(t, &runq);
+
+	t->state = THREAD_STATE_SLEEPING;
+	thread_schedule();
+}
+
+void thread_wakeup(struct thread* t)
+{
+	wake_up(t);
 }
