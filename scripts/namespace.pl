@@ -101,7 +101,9 @@ sub linux_objects
 	my $basename = $_;
 	$_ = $File::Find::name;
 	s:^\./::;
-	if (/.*\.o$/) {
+	if (/.*\.o$/
+		&& ! m:^scripts/:
+	) {
 		do_nm($basename, $_);
 	}
 	$_ = $basename;		# File::Find expects $_ untouched (undocumented)
