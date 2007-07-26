@@ -2,6 +2,7 @@
 #include <sched.h>
 #include <kapi.h>
 #include <os.h>
+#include <init.h>
 
 void __clear_bss(void);
 void _os_initcalls(void);
@@ -17,7 +18,7 @@ void _os_start(void)
 	kapi_start();
 	_thread_scheduler_start();
 
-	// remove .init sections
+	__free_initmem();
 
 	__cpu_idle();
 }

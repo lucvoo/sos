@@ -23,4 +23,11 @@ struct initcall {
 #define	device_initcall(fn)		__initcall("6",fn)
 #define	late_initcall(fn)		__initcall("7",fn)
 
+
+#ifdef	CONFIG_REMOVE_INIT_SECTIONS
+void __free_initmem(void);
+#else
+#define	__free_initmem()	do ; while (0)
+#endif
+
 #endif

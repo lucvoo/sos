@@ -1,5 +1,12 @@
 #include "arch/memory.h"
+#include "page.h"
 
+
+#ifdef CONFIG_REMOVE_INIT_SECTIONS
+#define	TEXT_ALIGN	ALIGN(PAGE_SIZE)
+#else
+#define	TEXT_ALIGN
+#endif
 
 ENTRY(_os_startup)
 GROUP(libtarget.a libgcc.a)
@@ -28,7 +35,7 @@ SECTIONS
     	} > highvectors AT > rom
 
 	. = LOADADDR(.vectors) + SIZEOF(.vectors);
-	.text ALIGN(0x1000) : {
+	.text TEXT_ALIGN : {
 			*(.text*)
 	} > rom
 
