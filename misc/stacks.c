@@ -2,7 +2,9 @@
 	extern unsigned longname[];	\
 	unsigned long name[size/sizeof(unsigned long)] __attribute__((aligned(CONFIG_STACK_ALIGNMENT)))
 
+#ifdef CONFIG_INTERRUPT_STACK_SIZE
 DECLARE_STACK(__interrupt_stack, CONFIG_INTERRUPT_STACK_SIZE);
+#endif
 
 DECLARE_STACK(__exception_stack, CONFIG_EXCEPTION_STACK_SIZE);
 

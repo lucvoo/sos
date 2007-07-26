@@ -27,8 +27,13 @@ config GC_SECTIONS_SHOW
 endmenu
 
 
+config	NEED_INTERRUPT_STACK
+	bool "is an interrupt stack needed?"
+	default n
+
 config	INTERRUPT_STACK_SIZE
 	int "Interrupt stack size"
+	depends on NEED_INTERRUPT_STACK
 	default 4096
 
 config	EXCEPTION_STACK_SIZE
