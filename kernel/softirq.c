@@ -9,6 +9,16 @@ struct irq_stat irq_stat;
 static struct softirq_action softirqs[SOFTIRQ_MAX];
 
 
+int softirq_register(unsigned int nr, void (*action)(struct softirq_action*), void* data)
+{
+	if (nr >= SOFTIRQ_MAX)
+		return -1;		// FIXME: -EINVAL
+
+	softirqs[nr].action = action;
+	softirqs[nr].data   = data;
+	return 0;
+}
+
 void __do_softirq(void)
 {
 	struct softirq_action *h;

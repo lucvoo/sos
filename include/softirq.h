@@ -13,6 +13,6 @@ struct softirq_action {
 	void *data;
 };
 
-int softirq_register(unsigned int nr, void (*action)(struct softirq_action *));
+int softirq_register(unsigned int nr, void (*action)(struct softirq_action*), void* data);
 
 #endif
