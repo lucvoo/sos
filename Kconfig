@@ -64,6 +64,10 @@ config	FIXED_STACKS_SHIFT
 	range 12 14
 	default 14
 
+config	KSOFTIRQ
+	bool "Use a specific thread for delaying softirq"
+	default n
+
 config	HZ
 	int "tick frequency"
 	default 100
