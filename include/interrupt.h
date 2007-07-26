@@ -5,6 +5,7 @@
 struct eframe;
 
 void __do_IRQ(unsigned int irq, struct eframe *regs);
+void __do_softirq(void);
 
 
 typedef int (*isr_handler_t)(int, void *);

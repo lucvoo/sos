@@ -3,4 +3,5 @@ objs-y	:= \
 	irq.o	\
 	kapi.o	\
 	sched.o	\
+	softirq.o	\
 	thread.o\

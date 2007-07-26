@@ -55,6 +55,9 @@ void __do_IRQ(unsigned int irq, struct eframe *regs)
 		desc = &bad_irqdesc;
 
 	handle_level_irq(irq, desc);
+
+	if (softirq_pending())
+		__do_softirq();
 }
 
 
