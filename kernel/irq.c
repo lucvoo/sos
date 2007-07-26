@@ -3,6 +3,8 @@
 #include <irq_stat.h>
 #include <irqflags.h>
 #include <lock.h>
+#include <softirq.h>
+#include <init.h>
 
 
 static struct irqdesc irq_descs[NR_IRQS];
@@ -17,6 +19,11 @@ static int handle_IRQ_event(unsigned int irq, struct irqaction *action)
 
 	ret = action->isr_handler(irq, action->data);
 	// FIXME: check if handled
+
+	if (ret & IRQ_CALL_DSR) {
+		action->dsr_count++;
+		softirq_raise(SOFTIRQ_DSR);
+	}
 
 	return ret;
 }
@@ -82,3 +89,27 @@ int irq_attach(struct irqaction* action, int irq)
 
 	return 0;
 }
+
+static void softirq_dsr(struct softirq_action* action)
+{
+	int irq;
+
+	for (irq = 0; irq < NR_IRQS; irq++) {
+		struct irqaction *irqaction = irq_descs[irq].action;
+		unsigned long count;
+
+		if (!irqaction || !irqaction->dsr_count)
+			continue;
+		irq_mask(irq);
+		count = irqaction->dsr_count;
+		irqaction->dsr_count = 0;
+		irq_unmask(irq);
+		irqaction->dsr_handler(irq, count, irqaction->data);
+	}
+}
+
+static void init_softirq_dsr(void)
+{
+	softirq_register(SOFTIRQ_DSR, softirq_dsr, 0);
+}
+pure_initcall(init_softirq_dsr);

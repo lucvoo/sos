@@ -14,10 +14,12 @@ typedef int (*dsr_handler_t)(int, unsigned int, void *);
 // Return values for isr & dsr handlers
 #define IRQ_NONE	0	// We didn't handled it
 #define IRQ_HANDLED	1	// It was a valid interrupt and we handled it
+#define IRQ_CALL_DSR	2
 
 struct irqaction {
 	isr_handler_t	isr_handler;
 	dsr_handler_t	dsr_handler;
+	unsigned long	dsr_count;
 	unsigned long	flags;
 	void*		data;
 };
