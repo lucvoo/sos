@@ -168,12 +168,11 @@ endif
 
 LDFLAGS+=$(LDFLAGS-y)
 
-misc/version.o: FORCE
-
 include tests/Makefile
+pgms-deps := libtarget.a arch/$(CONFIG_ARCH)/target.lds
 tests=$(progs-y:%=tests/%)
 tests/: $(tests:%=%.bin)
-$(tests): %: %.o libtarget.a misc/version.o arch/$(CONFIG_ARCH)/target.lds
+$(tests): %: %.o $(pgms-deps) misc/version.o
 	@echo "LINK	$@"
 	$(Q)$(CC) -Wl,--gc-sections					\
 		-Wl,-Map,$@.map,--cref					\
@@ -182,6 +181,9 @@ $(tests): %: %.o libtarget.a misc/version.o arch/$(CONFIG_ARCH)/target.lds
 		-Wl,--start-group -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive -Wl,--end-group	\
 		-lgcc							\
 		$< -o $@
+
+misc/version.o: $(tests:%=%.o) $(pgms-deps)
+
 endif	# tests/%
 
 endif	# skip-makefile
