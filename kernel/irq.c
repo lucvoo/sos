@@ -20,10 +20,12 @@ static int handle_IRQ_event(unsigned int irq, struct irqaction *action)
 	ret = action->isr_handler(irq, action->data);
 	// FIXME: check if handled
 
+#ifdef	CONFIG_DSR
 	if (ret & IRQ_CALL_DSR) {
 		action->dsr_count++;
 		softirq_raise(SOFTIRQ_DSR);
 	}
+#endif
 
 	return ret;
 }
@@ -71,7 +73,9 @@ void __do_IRQ(unsigned int irq, struct eframe *regs)
 void irq_create(struct irqaction* action, isr_handler_t isr_handler, dsr_handler_t dsr_handler, void* data, unsigned long flags)
 {
 	action->isr_handler = isr_handler;
+#ifdef	CONFIG_DSR
 	action->dsr_handler = dsr_handler;
+#endif
 	action->data        = data;
 	action->flags       = flags;
 }
@@ -90,6 +94,7 @@ int irq_attach(struct irqaction* action, int irq)
 	return 0;
 }
 
+#ifdef	CONFIG_DSR
 static void softirq_dsr(struct softirq_action* action)
 {
 	int irq;
@@ -113,3 +118,4 @@ static void init_softirq_dsr(void)
 	softirq_register(SOFTIRQ_DSR, softirq_dsr, 0);
 }
 pure_initcall(init_softirq_dsr);
+#endif

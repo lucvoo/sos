@@ -18,8 +18,10 @@ typedef int (*dsr_handler_t)(int, unsigned int, void *);
 
 struct irqaction {
 	isr_handler_t	isr_handler;
+#ifdef	CONFIG_DSR
 	dsr_handler_t	dsr_handler;
 	unsigned long	dsr_count;
+#endif
 	unsigned long	flags;
 	void*		data;
 };
