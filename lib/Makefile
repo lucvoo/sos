@@ -1,4 +1,5 @@
 objs-y := \
+	bitmap.o	\
 	div0.o		\
 	hexdump.o	\
 	memchr.o	\
