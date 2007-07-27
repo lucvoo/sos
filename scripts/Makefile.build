@@ -23,6 +23,7 @@ cmd_cc_s_c = $(CC) $(c_flags) -fverbose-asm -S -o $@ $<
 %.s: %.c
 	@echo "CC	$@"
 	$(Q)$(cmd_cc_s_c)
+	@scripts/basic/fixdep.sh $(depfile) $@ '$(cmd_cc_s_c)' $(dot-target).cmd
 
 cmd_cc_i_c = $(CPP) $(c_flags) -dD -o $@ $<
 %.i: %.c FORCE

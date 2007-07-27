@@ -22,7 +22,8 @@ do_makefile()
 	echo
 	echo "ifneq (\$(objs-y),)"
 	echo "objs += \$(objs-y:%=$dir/%)"
-	echo "-include \$(objs-y:%=$dir/.%.cmd)"
+	echo "-include \$(objs-y:%.o=$dir/.%.o.cmd)"
+	echo "-include \$(objs-y:%.o=$dir/.%.s.cmd)"
 	echo "endif"
 	echo "ifneq (\$(deps-y),)"
 	echo "-include \$(deps-y:%=$dir/.%.cmd)"
