@@ -23,6 +23,10 @@ endif
 
 menu "Build options"
 
+config BUG
+	bool "BUG() support"
+	default y
+
 config GC_SECTIONS
 	bool "Sections GC"
 
