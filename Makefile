@@ -97,6 +97,7 @@ ifdef CONFIG_ARCH
 CPPFLAGS-y	:= -Iinclude -include include/autoconf.h -include include/kernel.h
 CFLAGS-y	:= -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs
 CFLAGS-y	+= -nostdinc -ffreestanding
+CFLAGS-y	+= -fno-ident
 CFLAGS-y	+= -Os 
 CFLAGS-$(CONFIG_GC_SECTIONS) += -ffunction-sections -fdata-sections
 AFLAGS-y	:=-D__ASSEMBLY__ -fverbose-asm
