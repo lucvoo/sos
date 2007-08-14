@@ -3,6 +3,7 @@
 
 
 #define	__init		__section(".init.text")
+#define	__initdata	__section(".init.data")
 
 
 struct initcall {
