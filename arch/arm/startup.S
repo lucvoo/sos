@@ -1,5 +1,7 @@
 #include "arch/arch.h"
 #include "arch/mach/platform_setup.S"
+#include "arch/memory.h"
+
 
 	.section ".vectors","ax"
 
@@ -20,6 +22,8 @@ __exception_handlers:
 	.global _os_startup
 
 _os_startup:
+	ldr	sp, =(KERNEL_RAM_PADDR - 4)
+
 	// platform setup, initialize MMU, ...
 	// return:
 	//	r0: physical address of the L1 MMU table
