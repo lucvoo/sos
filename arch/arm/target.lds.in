@@ -49,7 +49,6 @@ SECTIONS
 
 	.bss : {
 		PROVIDE(__bss_start = .);
-			*(.init.task)
 			*(.bss*)
 			*(COMMON)
 		PROVIDE(__bss_end = .);

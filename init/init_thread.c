@@ -2,7 +2,7 @@
 #include <init.h>
 
 
-struct thread init_thread __attribute__((__section__(".init.task")));
+struct thread init_thread __attribute__((__section__(".bss.init_task")));
 
 static void init_thread_init(void)
 {
