@@ -2,3 +2,4 @@ CROSS_COMPILE	?= arm-linux-
 
 CFLAGS-$(CONFIG_ARMV4T)		+= -march=armv4t
 CFLAGS-$(CONFIG_ARM7TDMI)	+= -mtune=arm7tdmi
+CFLAGS-$(CONFIG_ARM720T)	+= -mtune=arm720t

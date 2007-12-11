@@ -77,7 +77,7 @@ _os_startup:
 	b	_os_start
 
 
-#if defined(CONFIG_ARM720) || defined(CONFIG_ARM7TDMI)
+#if defined(CONFIG_ARM720T) || defined(CONFIG_ARM7TDMI)
 // FIXME: move this in a separate header file
 	//  R
 	// .RVI ZFRS BLDP WCAM
