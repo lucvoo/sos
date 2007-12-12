@@ -10,4 +10,5 @@ deps-y	:= \
 	target.lds	\
 
 
-subdirs-y += lib/
+subdirs-y			+= lib/
+subdirs-$(CONFIG_MACH_XXX)	+= xxx/

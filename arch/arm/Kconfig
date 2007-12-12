@@ -32,6 +32,21 @@ config	ARM7TDMI
 	bool
 	select ARMV4T
 
+config	ARM926E
+	bool
+	select ARMV5
+
+config	ARM926EJS
+	bool
+	select ARMV5
+	select ARMV5TE
+
 
 config	ARMV4T
+	bool
+config	ARMV5
+	bool
+config	ARMV5T
+	bool
+config	ARMV5TE
 	bool
