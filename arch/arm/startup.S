@@ -62,22 +62,27 @@ sctlr_mask:
 
 post_mmu:
 	// initialize interrupt/exception environments
-#ifdef	CONFIG_FIXED_STACKS
-	// initialize stack
-	ldr     sp,=init_thread + (1 << CONFIG_FIXED_STACKS_SHIFT)
-#else
-	ldr     sp,=__startup_stack + CONFIG_STARTUP_STACK_SIZE
-#endif
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_IRQ)
 	msr     cpsr_c, r0
 	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE
+
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_UND)
+	msr     cpsr_c, r0
+	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE
+
+	mov     r0,#(PSR_I|PSR_F|PSR_MODE_ABT)
 	msr     cpsr_c, r0
 	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE
 
 	// initialize CPSR (machine state register)
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_SVC)
 	msr     cpsr_c, r0
+#ifdef	CONFIG_FIXED_STACKS
+	// initialize stack
+	ldr     sp,=init_thread + (1 << CONFIG_FIXED_STACKS_SHIFT)
+#else
+	ldr     sp,=__startup_stack + CONFIG_STARTUP_STACK_SIZE
+#endif
 
 	bl	__high_vectors
 	b	_os_start
