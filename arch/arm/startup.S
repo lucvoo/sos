@@ -44,9 +44,9 @@ _os_startup:
 
 	mov	r1, #0
 	mcr	p15, 0, r1, c7, c7, 0	@ invalidate caches
-	mcr	p15, 0, r1, c8, c7, 0	@ flush TLB (v4)
 
 	mcr	p15, 0, r0, c2, c0, 0	@ load page table pointer
+	mcr	p15, 0, r1, c8, c7, 0	@ flush TLB
 
 	mcr	p15, 0, r4, c1, c0, 0	@ write control reg
 	mrc	p15, 0, r3, c0, c0, 0	@ read id reg
