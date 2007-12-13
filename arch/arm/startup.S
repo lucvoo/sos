@@ -36,14 +36,14 @@ _os_startup:
 	bic	r4, r4, r2
 	orr	r4, r4, r3
 
-	// Set domain access
-	ldr	r1,=0xffffffff		// FIXME
-	mcr	p15, 0, r1, c3, c0, 0	@ load domain access register
-
-	adr	lr, 1f			@ load address to jump when MMU is set
-
+	ldr	lr, =post_mmu		@ load address to jump when MMU is set
 	mov	r1, #0
-	mcr	p15, 0, r1, c7, c7, 0	@ invalidate caches
+
+	MMU_SETUP
+
+	// Set domain access
+	ldr	r2,=0xffffffff
+	mcr	p15, 0, r2, c3, c0, 0	@ load domain access register
 
 	mcr	p15, 0, r0, c2, c0, 0	@ load page table pointer
 	mcr	p15, 0, r1, c8, c7, 0	@ flush TLB
@@ -54,7 +54,7 @@ _os_startup:
 	nop
 	mov pc, lr
 
-1:
+post_mmu:
 	// initialize interrupt/exception environments
 #ifdef	CONFIG_FIXED_STACKS
 	// initialize stack
@@ -77,15 +77,10 @@ _os_startup:
 	b	_os_start
 
 
-#if defined(CONFIG_ARM720T) || defined(CONFIG_ARM7TDMI)
-// FIXME: move this in a separate header file
-	//  R
-	// .RVI ZFRS BLDP WCAM
-	// ..1. 1001 ..11 1101
 sctlr_mask:
-	.word	SCTLR_F|SCTLR_R|SCTLR_A
-	.word	SCTLR_V|SCTLR_Z|SCTLR_S|SCTLR_D|SCTLR_P|SCTLR_W|SCTLR_C|SCTLR_M
-#endif
+	.word	SCTLR_CLR	// To be defined in platform_setup.S
+	.word	SCTLR_SET
+
 	.ltorg
 
 
