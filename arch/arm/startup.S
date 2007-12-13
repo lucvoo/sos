@@ -99,10 +99,14 @@ vector_swint:
 	.size   vector_swint, .-vector_swint
 
 vector_p_abt:
+	mrc	p15, 0, r1, c5, c0, 0		@ get FSR
+	mrc	p15, 0, r0, c6, c0, 0		@ get FAR
 	b	vector_p_abt
 	.size   vector_p_abt, .-vector_p_abt
 
 vector_d_abt:
+	mrc	p15, 0, r1, c5, c0, 0		@ get FSR
+	mrc	p15, 0, r0, c6, c0, 0		@ get FAR
 	b	vector_d_abt
 	.size   vector_d_abt, .-vector_d_abt
 
