@@ -69,15 +69,15 @@ post_mmu:
 	ldr     sp,=__startup_stack + CONFIG_STARTUP_STACK_SIZE
 #endif
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_IRQ)
-	msr     cpsr,r0
+	msr     cpsr_c, r0
 	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_UND)
-	msr     cpsr,r0
+	msr     cpsr_c, r0
 	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE
 
 	// initialize CPSR (machine state register)
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_SVC)
-	msr     cpsr,r0
+	msr     cpsr_c, r0
 
 	bl	__high_vectors
 	b	_os_start
