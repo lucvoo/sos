@@ -54,6 +54,12 @@ _os_startup:
 	nop
 	mov pc, lr
 
+sctlr_mask:
+	.word	SCTLR_CLR	// To be defined in platform_setup.S
+	.word	SCTLR_SET
+
+	.ltorg
+
 post_mmu:
 	// initialize interrupt/exception environments
 #ifdef	CONFIG_FIXED_STACKS
@@ -75,13 +81,6 @@ post_mmu:
 
 	bl	__high_vectors
 	b	_os_start
-
-
-sctlr_mask:
-	.word	SCTLR_CLR	// To be defined in platform_setup.S
-	.word	SCTLR_SET
-
-	.ltorg
 
 
 	.text
@@ -113,5 +112,3 @@ vector_d_abt:
 vector_fiq:
 	b	vector_fiq
 	.size   vector_fiq, .-vector_fiq
-
-	.ltorg
