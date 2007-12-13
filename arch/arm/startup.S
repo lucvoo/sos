@@ -22,7 +22,7 @@ __exception_handlers:
 	.global _os_startup
 
 _os_startup:
-	ldr	sp, =(KERNEL_RAM_PADDR - 4)
+	ldr	sp, =(KERNEL_RAM_PADDR)
 
 	// platform setup, initialize MMU, ...
 	// return:
@@ -64,16 +64,16 @@ post_mmu:
 	// initialize interrupt/exception environments
 #ifdef	CONFIG_FIXED_STACKS
 	// initialize stack
-	ldr     sp,=init_thread + (1 << CONFIG_FIXED_STACKS_SHIFT) - 8
+	ldr     sp,=init_thread + (1 << CONFIG_FIXED_STACKS_SHIFT)
 #else
-	ldr     sp,=__startup_stack + CONFIG_STARTUP_STACK_SIZE - 8
+	ldr     sp,=__startup_stack + CONFIG_STARTUP_STACK_SIZE
 #endif
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_IRQ)
 	msr     cpsr,r0
-	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE - 8
+	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_UND)
 	msr     cpsr,r0
-	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE - 8
+	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE
 
 	// initialize CPSR (machine state register)
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_SVC)
