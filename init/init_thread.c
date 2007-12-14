@@ -4,7 +4,7 @@
 
 struct thread init_thread __attribute__((__section__(".bss.init_task")));
 
-static void init_thread_init(void)
+static __init void init_thread_init(void)
 {
 	dlist_init(&init_thread.run_list);
 }
