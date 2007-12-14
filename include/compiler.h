@@ -7,6 +7,7 @@
 #define __used			__attribute__((__used__))
 #define __section(name)		__attribute__((__section__(name)))
 #define __noreturn		__attribute__((noreturn))
+#define __uninit		__attribute__((section(".uninit")))
 
 #define barrier() __asm__ __volatile__("": : :"memory")
 

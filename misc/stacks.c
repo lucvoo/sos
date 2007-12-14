@@ -1,6 +1,5 @@
 #define	DECLARE_STACK(name, size)	\
-	extern unsigned longname[];	\
-	unsigned long name[size/sizeof(unsigned long)] __attribute__((aligned(CONFIG_STACK_ALIGNMENT)))
+	char name[size] __attribute__((aligned(CONFIG_STACK_ALIGNMENT), section(".uninit." #name)))
 
 #ifdef CONFIG_INTERRUPT_STACK_SIZE
 DECLARE_STACK(__interrupt_stack, CONFIG_INTERRUPT_STACK_SIZE);

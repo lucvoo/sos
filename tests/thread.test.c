@@ -2,7 +2,8 @@
 #include <thread.h>
 #include <sched.h>
 
-static struct thread a, b;
+static struct thread a __uninit;
+static struct thread b __uninit;
 
 static void fun(void* data)
 {
@@ -16,7 +17,7 @@ static void fun(void* data)
 	} while (1);
 }
 
-static struct thread c;
+static struct thread c __uninit;
 
 static void func(void* data)
 {
