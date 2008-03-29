@@ -45,6 +45,14 @@ static inline void dlist_del(struct dlist *item)
 	__dlist_link(item->prev, item->next);
 }
 
+static inline struct dlist* dlist_pop(struct dlist* head)
+{
+	struct dlist* item = head->next;
+
+	dlist_del(item);
+	return item;
+}
+#define	dlist_pop_entry(head, type, member) dlist_entry(dlist_pop(head), type, member)
 
 static inline void dlist_replace(struct dlist *old, struct dlist *new)
 {
