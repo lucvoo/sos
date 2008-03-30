@@ -55,6 +55,8 @@ static inline void thread_flag_clear(struct thread* t, unsigned long flag)
 int  thread_create(struct thread* t, int priority, void (*entry_func)(void*), void* entry_data);
 void thread_start(struct thread* t);
 void thread_yield(void);
+void thread_sleep(void);
+void thread_wakeup(struct thread* t);
 
 void thread_load_context(struct thread* t, void (*func)(void*), void* data, void (*entry)(void));
 
