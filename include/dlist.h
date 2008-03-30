@@ -89,4 +89,14 @@ static inline int dlist_is_empty(const struct dlist *head)
 	return head->next == head;
 }
 
+
+#define dlist_foreach(pos, head) \
+	for (pos = (head)->next; pos != (head); pos = pos->next)
+
+
+#define dlist_foreach_entry(pos, head, member)				\
+	for (pos = dlist_entry((head)->next, typeof(*pos), member);	\
+	     &pos->member != (head); 					\
+	     pos = dlist_entry(pos->member.next, typeof(*pos), member))
+
 #endif
