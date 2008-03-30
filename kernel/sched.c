@@ -64,6 +64,23 @@ static void dequeue_thread_locked(struct thread* t, struct run_queue* rq)
 		rq->bitmap &= ~(1 << prio);
 }
 
+#if 0
+void dump_rq(void)
+{
+	struct run_queue* rq = &runq;
+	struct thread* t;
+	int prio;
+	printf("dump rq: idle= %p\n", rq->idle);
+	for (prio=0; prio< CONFIG_NR_THREAD_PRIORITY; prio++) {
+		if (!dlist_is_empty(&rq->queues[prio])) {
+			printf("    rq[%d]:\n", prio);
+			dlist_for_each_entry(t, &rq->queues[prio], run_list)
+				printf("\t%p\n", t);
+		}
+	}
+}
+#endif
+
 void thread_schedule(void)
 {
 	struct thread* prev;
