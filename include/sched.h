@@ -26,7 +26,7 @@ static inline int need_resched(void)
 
 void	thread_schedule(void);
 void	_thread_scheduler_start(void);
-void	thread_sleep(struct thread *t);
+void	thread_sleep(void);
 void	thread_wakeup(struct thread *t);
 
 

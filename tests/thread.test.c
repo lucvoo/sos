@@ -11,7 +11,7 @@ static void fun(void* data)
 
 	do {
 		printf("thread %s going to sleep ...\n", str);
-		thread_sleep(get_current_thread());
+		thread_sleep();
 		printf("thread %s running\n", str);
 		thread_yield();
 	} while (1);

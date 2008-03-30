@@ -149,10 +149,9 @@ void thread_yield(void)
 	thread_schedule();
 }
 
-void thread_sleep(struct thread* t)
+void thread_sleep(void)
 {
-	if (t->state == THREAD_STATE_READY)
-		dequeue_thread(t, &runq);
+	struct thread* t = get_current_thread();
 
 	t->state = THREAD_STATE_SLEEPING;
 	thread_schedule();
