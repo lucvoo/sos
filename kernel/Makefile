@@ -4,3 +4,4 @@ objs-y	:= \
 	sched.o	\
 	softirq.o	\
 	thread.o\
+	waitqueue.o	\
