@@ -55,15 +55,13 @@ static void enqueue_thread(struct thread* t, struct run_queue* rq)
 	lock_rel_irq(&rq->lock);
 }
 
-static void dequeue_thread(struct thread* t, struct run_queue* rq)
+static void dequeue_thread_locked(struct thread* t, struct run_queue* rq)
 {
 	unsigned prio = t->priority;
 
-	lock_acq_irq(&rq->lock);
 	dlist_del(&t->run_list);
 	if (dlist_is_empty(&rq->queues[prio]))
 		rq->bitmap &= ~(1 << prio);
-	lock_rel_irq(&rq->lock);
 }
 
 void thread_schedule(void)
@@ -74,6 +72,12 @@ void thread_schedule(void)
 
 need_resched:
 	lock_acq_irq(&rq->lock);
+	prev = get_current_thread();
+	thread_need_resched_clear(prev);
+
+	if (prev->state != THREAD_STATE_READY)
+		dequeue_thread_locked(prev, rq);
+
 	if (rq->bitmap == 0)
 		next = rq->idle;
 	else {
@@ -82,8 +86,6 @@ need_resched:
 		next = dlist_entry(q->next, struct thread, run_list);
 	}
 
-	prev = get_current_thread();
-	thread_need_resched_clear(prev);
 	if (prev != next) {
 		prev = context_switch(prev, next);
 		barrier();
