@@ -7,7 +7,10 @@
 	.type	__irq_svc, %function
 
 __irq_svc:
-		@ reserve a stack frame and save some register
+		@ we are in SVC mode with interrupts disabled
+		@ r0 point to a memory zone containing the old r0, the return address and PSR
+
+		@ reserve a stack frame and save r1-r12 into SP+4, SP+8 ...
 		sub     sp, sp, #S_FRAME_SIZE
 		stmib   sp, {r1 - r12}
 
@@ -17,7 +20,7 @@ __irq_svc:
 		@   r3 := spsr_IRQ
 		ldmia   r0, {r1 - r3}
 
-		@ save the the old r0 from the IRQ stack
+		@ save the 'real' r0 copied from the IRQ stack into SP+0
 		str     r1, [sp]
 
 		@ save the remaining register with a copy of the IRQ stack:
@@ -26,11 +29,18 @@ __irq_svc:
 		@   r2 := lr_IRQ
 		@   r3 := spsr_IRQ
 		@   r4 := 'orig_r0' ???
+		@ this is equivalent to doing:
+		@	str	sp_SVC,	[sp, #S_SP]
+		@	str	lr_SVC, [sp, #S_LR]
+		@	str	lr_IRQ, [sp, #S_PC]
+		@	str	spsr_IRQ, [sp, #S_PSR]
+		@	str	#-1, [sp, #S_OLD_R0]
 		add     r0, sp, #S_FRAME_SIZE
 		mov     r1, lr
 		mov     r4, #-1
 		add     r5, sp, #S_SP
 		stmia   r5, {r0 - r4}
+		@ now sp point to a full stack frame: r0-r12, sp_SVC, lr_SVC, lr_IRQ, SPSR_IRQ, -1 for old_r0
 
 		@ platform specific macro testing if there is any intr &
 		@ returning (if any) the irq number in r0 (r5,r6,lr can be used as scratch)
@@ -42,12 +52,14 @@ __irq_svc:
 		adrne	lr, 1b		// load lr with a label
 		bne	__do_IRQ
 
-		@ if none or no more:
-		@ restore spsr:
+		@ this is the place where we should do a scheduling
+
+		@ restore the original spsr:
 		ldr     r0, [sp, #S_PSR]
 		msr     spsr_cxsf, r0
 
-		@ return from interrupt:
+		@ return from interrupt processing: reload all the register and set cpsr from spsr
+		@ note: we have left from IRQ mode already in vector_irq, this is thus not a RFI
 		ldmia   sp, {r0 - pc}^
 
 	.size   __irq_svc, .-__irq_svc
@@ -68,6 +80,10 @@ __irq_invalid:
 	.type	vector_irq, %function
 
 vector_irq:
+		@ on the IRQ stack we save r0, lr_IRQ, spsr_IRQ
+		@ r0 is then loaded with the address of this stack
+		@ then we atomically jump to the IRQ routine while switching to SVC mode
+
 		@ adjust lr_IRQ
 		sub     lr, lr, #4
 
@@ -84,7 +100,7 @@ vector_irq:
 		@ load r0 with sp_IRQ
 		mov     r0, sp
 
-		@ use lr_IRQ & 0xf to determine from wich mode we were
+		@ use spsr_IRQ & 0xf to determine from wich mode we were
 		and     lr, lr, #15
 
 		@ use this to load lr with the irq routine adapted this mode
