@@ -79,7 +79,7 @@ post_mmu:
 	msr     cpsr_c, r0
 #ifdef	CONFIG_FIXED_STACKS
 	// initialize stack
-	ldr     sp,=init_thread + (1 << CONFIG_FIXED_STACKS_SHIFT)
+	ldr     sp,=init_thread + (1 << CONFIG_FIXED_STACKS_SHIFT) - 4
 #else
 	ldr     sp,=__startup_stack + CONFIG_STARTUP_STACK_SIZE
 #endif
