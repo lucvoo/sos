@@ -1,0 +1,9 @@
+config MACH
+	symbol
+	default beaglebone
+
+config	MACH_PARAMS
+	bool
+	default y
+	select CORTEX_A8
+

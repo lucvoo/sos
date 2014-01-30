@@ -1,16 +1,12 @@
 choice
 	prompt "Platform"
-	default	MACH_XXX
+	default	MACH_BEAGLEBONE
 
-config MACH_XXX
-	bool "xxx"
+config MACH_BEAGLEBONE
+	bool "BeagleBone"
 
 endchoice
 
-config MACH
-	symbol
-	default xxx if MACH_XXX
-
-if MACH_XXX
-source arch/arm/mach-xxx/Kconfig
+if MACH_BEAGLEBONE
+source arch/arm/mach-beaglebone/Kconfig
 endif

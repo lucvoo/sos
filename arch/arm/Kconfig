@@ -30,3 +30,5 @@ config	ARMV5T
 	bool
 config	ARMV5TE
 	bool
+config	CORTEX_A8
+	bool

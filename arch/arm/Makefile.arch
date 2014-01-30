@@ -9,3 +9,4 @@ CFLAGS-$(CONFIG_ARMV5T)		+= -march=armv5t
 CFLAGS-$(CONFIG_ARMV5TE)	+= -march=armv5te
 CFLAGS-$(CONFIG_ARM926)		+= -mtune=arm926tdmi
 CFLAGS-$(CONFIG_ARM926EJS)	+= -mtune=arm926ej-s
+CFLAGS-$(CONFIG_CORTEX_A8)	+= -march=armv7-a -mcpu=cortex-a8 -mtune=cortex-a8
