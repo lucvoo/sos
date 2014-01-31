@@ -29,10 +29,10 @@ _os_startup:
 	//	r0: physical address of the L1 MMU table
 	PLATFORM_SETUP
 
-	// Prepare value of SCTLR register
-	adr	r1, sctlr_mask
-	ldmia   r1, {r2, r3}	
-	mrc	p15, 0, r4, c1, c0              @ get control register
+	// Prepare SCTLR's value
+	ldr	r2, =SCTLR_CLR		// To be defined in platform_setup.S
+	ldr	r3, =SCTLR_SET
+	mrc	p15, 0, r4, c1, c0	@ get control register
 	bic	r4, r4, r2
 	orr	r4, r4, r3
 
@@ -52,11 +52,8 @@ _os_startup:
 	mrc	p15, 0, r3, c0, c0, 0	@ read id reg
 	nop
 	nop
-	mov pc, lr
 
-sctlr_mask:
-	.word	SCTLR_CLR	// To be defined in platform_setup.S
-	.word	SCTLR_SET
+	mov pc, lr
 
 	.ltorg
 
