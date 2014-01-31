@@ -1,2 +1,2 @@
-progs-y	:= link.test
+progs-y	:= hello.test
 progs-y	+= thread.test
