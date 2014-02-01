@@ -7,3 +7,9 @@ config	MACH_PARAMS
 	default y
 	select CORTEX_A8
 
+config PHYS_ADDR
+	hex
+	default 0x80000000
+config PHYS_SIZE
+	hex
+	default 0x10000000

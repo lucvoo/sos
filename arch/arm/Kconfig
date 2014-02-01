@@ -32,3 +32,13 @@ config	ARMV5TE
 	bool
 config	CORTEX_A8
 	bool
+
+
+comment "Memory"
+config	VIRT_ADDR
+	hex "Main RAM virtual address"
+	default 0x80000000
+
+config	TEXT_OFFSET
+	hex "Start of kernel image relatively to the start of the RAM"
+	default 0x00008000
