@@ -33,7 +33,7 @@ allnoconfig: $(obj)/conf
 defconfig: $(obj)/conf
 	$(Q)$< -D arch/$(CFG_ARCH)/configs/defconfig Kconfig
 
-%_defconfig: $(obj)/conf
+%_config: $(obj)/conf
 	$(Q)$< -D arch/$(CFG_ARCH)/configs/$@ Kconfig
 
 # Help text used by make help
