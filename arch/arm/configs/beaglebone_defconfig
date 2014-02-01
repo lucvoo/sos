@@ -1,6 +1,6 @@
 #
 # Automatically generated make config: don't edit
-# Fri Jan 31 13:59:54 2014
+# Sat Feb  1 10:55:56 2014
 #
 CONFIG_ARCH_ARM=y
 CONFIG_ARCH=arm
@@ -8,6 +8,12 @@ CONFIG_MACH_BEAGLEBONE=y
 CONFIG_MACH=beaglebone
 CONFIG_MACH_PARAMS=y
 CONFIG_CORTEX_A8=y
+
+#
+# Memory
+#
+CONFIG_VIRT_ADDR=0x80000000
+CONFIG_TEXT_OFFSET=0x00008000
 
 #
 # Build options
