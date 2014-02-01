@@ -108,6 +108,7 @@ arch/$(CONFIG_ARCH)/Makefile.arch: ;
 CC	:= $(CROSS_COMPILE)gcc
 AR	:= $(CROSS_COMPILE)ar
 OBJCOPY	:= $(CROSS_COMPILE)objcopy
+READELF	:= $(CROSS_COMPILE)readelf
 CPP	:= $(CC) -E
 
 SYS_INCDIR := $(shell $(CC) -print-file-name=include)
@@ -182,6 +183,10 @@ $(tests): %: %.o $(pgms-deps) misc/version.o
 		-Wl,--start-group -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive -Wl,--end-group	\
 		-lgcc							\
 		$< -o $@
+
+LOADADDR:=$(shell printf 0x%08x $$((${CONFIG_PHYS_ADDR} + ${CONFIG_TEXT_OFFSET})))
+tests/%.tftp: tests/%.bin
+	$(Q)mkimage -A $(CONFIG_ARCH) -T kernel -O linux -C none -e ${LOADADDR} -a ${LOADADDR} -d $< /tftpboot/uImage
 
 misc/version.o: $(tests:%=%.o) $(pgms-deps)
 
