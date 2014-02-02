@@ -33,6 +33,12 @@ config	ARMV5TE
 config	CORTEX_A8
 	bool
 
+config	ARM_ARCH
+	int
+	default 4 if ARMV4T
+	default 5 if ARMV5 || ARMV5T || ARMV5TE
+	default 7 if CORTEX_A8
+
 
 comment "Memory"
 config	VIRT_ADDR
