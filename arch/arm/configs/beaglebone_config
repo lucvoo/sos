@@ -1,6 +1,6 @@
 #
 # Automatically generated make config: don't edit
-# Sat Feb  1 10:55:56 2014
+# Sun Feb  2 21:19:23 2014
 #
 CONFIG_ARCH_ARM=y
 CONFIG_ARCH=arm
