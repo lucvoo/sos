@@ -3,6 +3,32 @@
 
 #include "arch/arch.h"
 
+#if CONFIG_ARM_ARCH >= 6
+static inline void __raw_irq_dis(void)
+{
+	__asm__ __volatile__("cpsid	i" ::: "memory", "cc");
+}
+
+static inline unsigned long __attribute__((warn_unused_result)) __raw_irq_save(void)
+{
+	unsigned long flags;
+
+	__asm__ __volatile__(
+	"mrs	%0, cpsr		@ irq save\n"
+"	cpsid	i\n"
+	: "=r" (flags)
+	:
+	: "memory", "cc");
+
+	return flags;
+}
+
+static inline void __raw_irq_ena(void)
+{
+	__asm__ __volatile__("cpsie	i" ::: "memory", "cc");
+}
+
+#else
 static inline void __raw_irq_dis(void)
 {
 	unsigned long tmp;
@@ -44,6 +70,8 @@ static inline void __raw_irq_ena(void)
 	: "i" (PSR_I)
 	: "memory", "cc");
 }
+
+#endif
 
 static inline void __raw_irq_rest(unsigned long flags)
 {
