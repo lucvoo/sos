@@ -105,6 +105,10 @@ AFLAGS-y	:=-D__ASSEMBLY__ -fverbose-asm
 include arch/$(CONFIG_ARCH)/Makefile.arch
 arch/$(CONFIG_ARCH)/Makefile.arch: ;
 
+CFLAGS-y	+= ${ARCHFLAGS-y}
+AFLAGS-y	+= ${ARCHFLAGS-y}
+
+
 CC	:= $(CROSS_COMPILE)gcc
 AR	:= $(CROSS_COMPILE)ar
 OBJCOPY	:= $(CROSS_COMPILE)objcopy
