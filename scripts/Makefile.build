@@ -29,6 +29,7 @@ cmd_cc_i_c = $(CPP) $(c_flags) -dD -o $@ $<
 %.i: %.c FORCE
 	@echo "CPP	$@"
 	$(Q)$(cmd_cc_i_c)
+	$(Q)less $@
 
 cmd_cc_o_c = $(CC) $(c_flags) -c -o $@ $<
 %.o: %.c
