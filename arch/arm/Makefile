@@ -11,4 +11,5 @@ deps-y	:= \
 
 
 subdirs-y			+= lib/
+subdirs-y			+= debug/
 subdirs-$(CONFIG_MACH_BEAGLEBONE)	+= mach-beaglebone/
