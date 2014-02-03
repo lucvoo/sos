@@ -86,6 +86,10 @@ parse:
 			base = 10;
 			goto number;
 
+		case 'b':
+			base = 2;
+			goto number;
+
 		number:
 			if (prec == 0)
 				prec = 8;
