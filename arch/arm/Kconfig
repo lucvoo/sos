@@ -21,6 +21,13 @@ config	ARM926EJS
 	select ARMV5
 	select ARMV5TE
 
+config	CORTEX_A8
+	bool
+	select ARMV7
+config	CORTEX_A9
+	bool
+	select ARMV7
+
 
 config	ARMV4T
 	bool
@@ -28,16 +35,24 @@ config	ARMV5
 	bool
 config	ARMV5T
 	bool
+	select ARMV5
 config	ARMV5TE
 	bool
-config	CORTEX_A8
+	select ARMV5T
+config	ARMV6
+	bool
+config	ARMV6K
+	bool
+	select ARMV6
+config	ARMV7
 	bool
 
 config	ARM_ARCH
 	int
 	default 4 if ARMV4T
-	default 5 if ARMV5 || ARMV5T || ARMV5TE
-	default 7 if CORTEX_A8
+	default 5 if ARMV5
+	default 6 if ARMV6
+	default 7 if ARMV7
 
 
 comment "Memory"
