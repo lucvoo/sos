@@ -14,7 +14,11 @@ GROUP(libtarget.a libgcc.a)
 MEMORY {
 	ram		: ORIGIN = VIRT_ADDR + TEXT_OFFSET, LENGTH = 0xFFFFFFFF
 #define	rom ram
+#ifdef	HIGH_VECTORS
 	highvectors	: ORIGIN = 0xFFFF0000, LENGTH = 0x00010000
+#else
+#define	highvectors	ram
+#endif
 }
 
 SECTIONS

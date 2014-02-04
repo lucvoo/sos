@@ -63,3 +63,12 @@ config	VIRT_ADDR
 config	TEXT_OFFSET
 	hex "Start of kernel image relatively to the start of the RAM"
 	default 0x00008000
+
+comment "Misc"
+config	HAS_VBAR
+	bool "Has VBAR"
+	depends on ARMV6K || ARMV7
+config	HIGH_VECTORS
+	bool "Use high vectors"
+	depends on !HAS_VBAR
+	default y

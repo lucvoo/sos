@@ -43,6 +43,14 @@ _os_startup:
 	.ltorg
 
 post_mmu:
+	// install the exception vectors
+#ifdef	CONFIG_HIGH_VECTORS
+	bl	__high_vectors
+#endif
+#ifdef	CONFIG_HAS_VBAR
+	ldr	r0, =__exception_handlers
+	mcr	p15, 0, r0, c12, c0, 0	@ VBAR
+#endif
 	// initialize interrupt/exception environments
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_IRQ)
 	msr     cpsr_c, r0
@@ -66,7 +74,6 @@ post_mmu:
 	ldr     sp,=__startup_stack + CONFIG_STARTUP_STACK_SIZE
 #endif
 
-	bl	__high_vectors
 	b	_os_start
 
 
@@ -102,6 +109,7 @@ vector_fiq:
 
 
 	.section ".vectors","ax"
+	.align 5
 
 __exception_handlers:
 	ldr	pc, =vector_reset	// should never be reached
