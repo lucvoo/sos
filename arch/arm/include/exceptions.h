@@ -20,7 +20,9 @@ struct eframe {
 	unsigned long	lr;
 	unsigned long	pc;
 	unsigned long	cpsr;
+#if CONFIG_ARM_ARCH < 6
 	unsigned long	old_r0;
+#endif
 };
 
 #endif

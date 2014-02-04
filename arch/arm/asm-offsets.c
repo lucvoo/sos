@@ -1,5 +1,6 @@
 #include <arch/arch.h>
 #include <thread.h>
+#include <arch/exceptions.h>
 
 #define DEFINE(sym, val) \
         asm volatile("\n->" #sym " %0 " #val "<-" : : "i" (val))
@@ -27,7 +28,9 @@ int main(void)
   DEFINE(S_LR,			offsetof(struct eframe, lr));
   DEFINE(S_PC,			offsetof(struct eframe, pc));
   DEFINE(S_PSR,			offsetof(struct eframe, cpsr));
+#if CONFIG_ARM_ARCH < 6
   DEFINE(S_OLD_R0,		offsetof(struct eframe, old_r0));
+#endif
   DEFINE(S_FRAME_SIZE,		sizeof(struct eframe));
   BLANK();
   return 0;
