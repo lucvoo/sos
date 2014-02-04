@@ -1,5 +1,6 @@
 objs-y := \
 	div0.o		\
+	hexdump.o	\
 	memchr.o	\
 	memcmp.o	\
 	memcpy.o	\
