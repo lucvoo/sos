@@ -6,4 +6,7 @@
 
 void dump_stack(const struct eframe *f, unsigned int flags);
 
+// Handler for exceptions
+void und_handler(const struct eframe *regs);
+
 #endif
