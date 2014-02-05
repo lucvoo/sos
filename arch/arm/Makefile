@@ -1,6 +1,7 @@
 objs-y	:= \
 	startup.o	\
 	switch_to.o	\
+	dump-stack.o	\
 	irq.o		\
 	context.o	\
 	traps.o		\
