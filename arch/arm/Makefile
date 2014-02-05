@@ -6,6 +6,10 @@ objs-y	:= \
 	context.o	\
 	traps.o		\
 
+objs-$(CONFIG_ARMV4)	+= undef-v4.o
+objs-$(CONFIG_ARMV6)	+= undef-v6.o
+objs-$(CONFIG_ARMV7)	+= undef-v6.o
+
 
 deps-y	:= \
 	target.lds	\

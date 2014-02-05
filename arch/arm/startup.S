@@ -83,10 +83,6 @@ vector_reset:
 	b	vector_reset
 	.size   vector_reset, .-vector_reset
 
-vector_undef:
-	b	vector_undef
-	.size   vector_undef, .-vector_undef
-
 vector_swint:
 	b	vector_swint
 	.size   vector_swint, .-vector_swint
