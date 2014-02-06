@@ -7,19 +7,43 @@
 	.global _os_startup
 
 _os_startup:
-	ldr	sp, =(KERNEL_RAM_PADDR)
+	// * We should be loaded at some multiple of 0x8000 (of a 1MB boundary)
+	// * We're in supervisor mode
+	// * MMU should be disabled
+	// * interrupts should be disabled
+	// * r0 should be zero
+	// * r1 contains the machine or platform ID
+	// * r2 contains the address of the ATAGs or the binary Device Tree
+	// We must not corrupt r1 & r2
+
+	//
+	// TODO: insure that we're in supervisor mode with interrupts disabled
+
+	// Calculate the physical (load) address
+	adr	ip, _os_startup		@ load/phys address of X
+	ldr	r3, =_os_startup	@ corresponding virtual address
+	sub	r3, r3, ip		@ virt(x) - phys(x)
+	rsb	r3, r3, #VIRT_ADDR	@ virt(0) - (virt(x) - phys(x)) = phys(0)
+
+	add	sp, r3, #TEXT_OFFSET	@ set a temporary stack just below our load address
+
+	// r1 = mach ID,
+	// r2 = ATAGs/DT, 
+	// r3 = PHYS_ADDR
 
 	// platform setup, initialize MMU, ...
 	// return:
-	//	r0: physical address of the L1 MMU table
+	//	r5&r6: SCTLR's bits to clear & set
+
+	ldr	r5, =SCTLR_CLR		// To be defined in platform_setup.S
+	ldr	r6, =SCTLR_SET
 	PLATFORM_SETUP
 
 	// Prepare SCTLR's value
-	ldr	r2, =SCTLR_CLR		// To be defined in platform_setup.S
-	ldr	r3, =SCTLR_SET
 	mrc	p15, 0, r4, c1, c0	@ get control register
-	bic	r4, r4, r2
-	orr	r4, r4, r3
+	bic	r4, r4, r5
+	orr	r4, r4, r6
+	// r4 = value to load into SCTLR
 
 	ldr	lr, =post_mmu		@ load address to jump when MMU is set
 	mov	r1, #0
@@ -27,10 +51,12 @@ _os_startup:
 	MMU_SETUP
 
 	// Set domain access
-	ldr	r2,=0xffffffff
-	mcr	p15, 0, r2, c3, c0, 0	@ load domain access register
+	ldr	r5,=0xffffffff
+	mcr	p15, 0, r5, c3, c0, 0	@ load domain access register
 
-	mcr	p15, 0, r0, c2, c0, 0	@ load page table pointer
+	mov	r6, r3			@ just below our load address
+	mcr	p15, 0, r6, c2, c0, 0	@ load TTBR0
+
 	mcr	p15, 0, r1, c8, c7, 0	@ flush TLB
 
 	mcr	p15, 0, r4, c1, c0, 0	@ write control reg
@@ -39,6 +65,8 @@ _os_startup:
 	nop
 
 	mov pc, lr
+
+2:	.long	.			@ let store our own (virtual) address
 
 	.ltorg
 
