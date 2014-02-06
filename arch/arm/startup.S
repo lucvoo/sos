@@ -1,6 +1,7 @@
 #include "arch/arch.h"
 #include "arch/mach/platform_setup.S"
 #include "arch/memory.h"
+#include "arch/cp15.h"
 
 
 	.section	".init.text","ax"
@@ -40,7 +41,7 @@ _os_startup:
 	PLATFORM_SETUP
 
 	// Prepare SCTLR's value
-	mrc	p15, 0, r4, c1, c0	@ get control register
+	mrc	SCTLR(r4)       	@ get control register
 	bic	r4, r4, r5
 	orr	r4, r4, r6
 	// r4 = value to load into SCTLR
@@ -52,15 +53,15 @@ _os_startup:
 
 	// Set domain access
 	ldr	r5,=0xffffffff
-	mcr	p15, 0, r5, c3, c0, 0	@ load domain access register
+	mcr	DACR(r5)		@ load domain access register
 
 	mov	r6, r3			@ just below our load address
-	mcr	p15, 0, r6, c2, c0, 0	@ load TTBR0
+	mcr	TTBR0(r6)       	@ load TTBR0
 
-	mcr	p15, 0, r1, c8, c7, 0	@ flush TLB
+	mcr	TLBIALL(r1)     	@ flush TLB
 
-	mcr	p15, 0, r4, c1, c0, 0	@ write control reg
-	mrc	p15, 0, r3, c0, c0, 0	@ read id reg
+	mcr	SCTLR(r4)       	@ write control reg
+	mrc	MIDR(r3)        	@ read id reg
 	nop
 	nop
 
@@ -77,7 +78,7 @@ post_mmu:
 #endif
 #ifdef	CONFIG_HAS_VBAR
 	ldr	r0, =__exception_handlers
-	mcr	p15, 0, r0, c12, c0, 0	@ VBAR
+	mcr	VBAR(r0)
 #endif
 	// initialize interrupt/exception environments
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_IRQ)
@@ -116,14 +117,14 @@ vector_swint:
 	.size   vector_swint, .-vector_swint
 
 vector_p_abt:
-	mrc	p15, 0, r1, c5, c0, 0		@ get FSR
-	mrc	p15, 0, r0, c6, c0, 0		@ get FAR
+	mrc	IFSR(r1)
+	mrc	IFAR(r0)
 	b	vector_p_abt
 	.size   vector_p_abt, .-vector_p_abt
 
 vector_d_abt:
-	mrc	p15, 0, r1, c5, c0, 0		@ get FSR
-	mrc	p15, 0, r0, c6, c0, 0		@ get FAR
+	mrc	DFSR(r1)
+	mrc	DFAR(r0)
 	b	vector_d_abt
 	.size   vector_d_abt, .-vector_d_abt
 
