@@ -5,8 +5,8 @@
 struct eframe {
 
 	unsigned long	r[13];
-	unsigned long	sp;
 	unsigned long	lr;
+	unsigned long	sp;
 	unsigned long	pc;
 	unsigned long	cpsr;
 #if CONFIG_ARM_ARCH < 6
