@@ -1,3 +1,4 @@
+#include "init-internal.h"
 #include <init.h>
 
 void __init __clear_bss(void)

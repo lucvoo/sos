@@ -1,13 +1,12 @@
+#include "init-internal.h"
 #include <idle.h>
 #include <sched.h>
 #include <kapi/kapi.h>
 #include <os.h>
 #include <init.h>
 
-void __clear_bss(void);
-void _os_initcalls(void);
-void platform_init(void);
-void timer_init(void);
+void platform_init(void);	// FIXME
+void timer_init(void);		// FIXME
 
 void _os_start(void)
 {
