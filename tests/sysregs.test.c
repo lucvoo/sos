@@ -1,3 +1,4 @@
+#include <kapi/kapi.h>
 #include <version.h>
 #include <sched.h>
 
