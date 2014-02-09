@@ -1,6 +1,6 @@
 #include <idle.h>
 #include <sched.h>
-#include <kapi.h>
+#include <kapi/kapi.h>
 #include <os.h>
 #include <init.h>
 
