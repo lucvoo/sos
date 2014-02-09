@@ -2,6 +2,7 @@
 #include <init.h>
 
 
-void __init platform_init(void)
+static void __init board_init(void)
 {
 }
+board_initcall(board_init);
