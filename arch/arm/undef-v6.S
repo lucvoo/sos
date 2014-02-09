@@ -18,23 +18,22 @@ vector_undef:
 
 	// Finish the fill the struct eframe
 	sub	sp, sp, #(S_FRAME_SIZE-8)	// -8 because lr & psr have been just saved
-	stmia	sp, {r0-r12}			// store the registers
+	stmia	sp, {r0-r12,lr}			// store the registers
 
+	add	r0, sp, #(S_FRAME_SIZE)
+	str	r0, [sp, #S_SP]
+
+	
 	// stack layout:
 	//			SP -> |  R0  |0
 	//			      | .... |
 	//			      |  R12 |12
-	//			      |      |13
-	//			      |      |14
+	//			      |  LR  |13
+	//			      |  SP  |14
 	//SP -> |  PC  |	      |  PC  |15
 	//      | SPSR |	      | SPSR |16
 	//      |      |	      |      |
 
-	// What is not saved:
-	//	* lr_x:	 ~OK: it's banked but it may be needed to debug what caused the exception
-	//	* sp_x:  ~OK: it's banked but it may be needed to debug what caused the exception
-	//	* lr_SVC: if we were in USR mode and thus lr_SVC is irrelevant
-	//                but if we were in SVC mode ...
 	// Remark:
 	//	* Only r0-r3, ip & lr, the call clobered registers, should be saved
 	//	  because the C handler will save & restore the others when needed.
@@ -42,19 +41,17 @@ vector_undef:
 
 	// FIXME: should insure that the stack is aligned at a doubleword boundary
 
+	// Real handler FIXME: move all this to an arch specific C handler
 	mov	r0, sp
-	push	{lr}
 	bl	und_handler			// Branch to C handler
-	pop	{lr}
 
-	// Skip the instruction
-	ldr	r0, [sp, #S_PC]
+	ldr	r0, [sp, #S_PC]			// Skip the instruction
 	add	r0, r0, #4
 	str	r0, [sp, #S_PC]
 
 
 	// Restore the registers and return from exception
-	ldmia	sp, {r0-r12}			// Restore working registers
+	ldmia	sp, {r0-r12,lr}			// Restore working registers
 	add	sp, sp, #(S_FRAME_SIZE-8)
 	rfeia	sp!				// Return
 
