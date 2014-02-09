@@ -9,7 +9,7 @@ void* memchr(const void *src, int c, unsigned int n)
 
 	for (i=0; i < n; i++) {
 		if (s[i] == c)
-			return (void*) &s[i];
+			return (void*) (unsigned long) &s[i];
 	}
 
 	return NULL;
