@@ -4,7 +4,6 @@ objs-y	:= \
 	dump-stack.o	\
 	irq.o		\
 	context.o	\
-	traps.o		\
 
 objs-$(CONFIG_ARMV4)	+= undef-v4.o
 objs-$(CONFIG_ARMV6)	+= undef-v6.o

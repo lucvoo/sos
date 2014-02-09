@@ -74,7 +74,10 @@ _os_startup:
 post_mmu:
 	// install the exception vectors
 #ifdef	CONFIG_HIGH_VECTORS
-	bl	__high_vectors
+	ldr	lr, =__vectors_start
+	ldmia	lr, {r5, r6, r7, r8, r9, r10, r11, r12}
+	ldr	lr, =0xFFFF0000
+	stmia	lr, {r5, r6, r7, r8, r9, r10, r11, r12}
 #endif
 #ifdef	CONFIG_HAS_VBAR
 	ldr	r0, =__exception_handlers
