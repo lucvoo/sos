@@ -33,7 +33,8 @@ vector_undef:
 	// What is not saved:
 	//	* lr_x:	 ~OK: it's banked but it may be needed to debug what caused the exception
 	//	* sp_x:  ~OK: it's banked but it may be needed to debug what caused the exception
-	//	* lr_SVC: we'll save it
+	//	* lr_SVC: if we were in USR mode and thus lr_SVC is irrelevant
+	//                but if we were in SVC mode ...
 	// Remark:
 	//	* Only r0-r3, ip & lr, the call clobered registers, should be saved
 	//	  because the C handler will save & restore the others when needed.
