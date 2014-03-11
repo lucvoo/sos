@@ -36,13 +36,17 @@ static void func(void* data)
 
 void kapi_start(void)
 {
+	static char namea[] = "a";
+	static char nameb[] = "b";
+	static char namec[] = "c";
+
 	printf(os_version);
 
-	thread_create(&a, 2, fun, "a");
-	thread_create(&b, 2, fun, "b");
+	thread_create(&a, 2, fun, namea);
+	thread_create(&b, 2, fun, nameb);
 	thread_start(&a);
 	thread_start(&b);
 
-	thread_create(&c, 2, func, "c");
+	thread_create(&c, 2, func, namec);
 	thread_start(&c);
 }
