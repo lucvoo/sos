@@ -16,7 +16,7 @@
 
 struct run_queue {
 	struct lock		lock;
-	struct dlist		queues[CONFIG_NR_THREAD_PRIORITY];
+	struct dlist_head	queues[CONFIG_NR_THREAD_PRIORITY];
 	unsigned long		bitmap;
 #ifndef	CONFIG_FIXED_STACKS
 	struct thread*		curr;
@@ -103,8 +103,8 @@ need_resched:
 		next = rq->idle;
 	else {
 		int prio = bitop_fmsb(rq->bitmap);
-		struct dlist* q = &rq->queues[prio];
-		next = dlist_entry(q->next, struct thread, run_list);
+		struct dlist_head* q = &rq->queues[prio];
+		next = dlist_peek_entry(q, struct thread, run_list);
 	}
 
 	if (prev != next) {

@@ -7,4 +7,8 @@ struct dlist {
 	struct dlist *next;
 };
 
+struct dlist_head {
+	struct dlist	list;
+};
+
 #endif

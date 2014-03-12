@@ -6,7 +6,7 @@
 
 
 struct waitqueue {
-	struct dlist	waiters;
+	struct dlist_head	waiters;
 	struct lock	lock;
 };
 
