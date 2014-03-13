@@ -145,7 +145,9 @@ void _thread_scheduler_start(void)
 {
 	struct thread* t = get_current_thread();
 
+	// t == init_thread
 	runq.idle = t;
+	t->state = THREAD_STATE_READY;	// Need this otherwise, the first schedule will try to dequeue this thread, which was never queued ...
 	thread_need_resched_set(t);
 }
 
