@@ -3,4 +3,7 @@
 
 #include <arch/mach/irq.h>
 
+struct eframe;
+void mach_irq_handler(struct eframe *regs);
+
 #endif

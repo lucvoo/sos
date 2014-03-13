@@ -2,12 +2,12 @@ objs-y	:= \
 	startup.o	\
 	switch_to.o	\
 	dump-stack.o	\
-	irq.o		\
 	context.o	\
 
 objs-$(CONFIG_ARMV4)	+= undef-v4.o
-objs-$(CONFIG_ARMV6)	+= undef-v6.o
-objs-$(CONFIG_ARMV7)	+= undef-v6.o
+objs-$(CONFIG_ARMV4)	+= irq-v4.o
+objs-$(CONFIG_ARMV6)	+= vector-v6.o
+objs-$(CONFIG_ARMV7)	+= vector-v6.o
 
 
 deps-y	:= \
