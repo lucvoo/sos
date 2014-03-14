@@ -1,0 +1,53 @@
+void am335x_intc_dump_regs(void)
+{
+	void __iomem *base_addr = (void*) INTC_BASE;
+
+	printf("\nAM335x INTC\n", __FUNCTION__);
+
+#define	DUMP(NAME)	printf("%08X: %s\n", ioread32(base_addr + INTC_ ## NAME), #NAME)
+
+	DUMP(REVISION);
+	DUMP(SYSCONFIG);
+	DUMP(SYSSTATUS);
+	DUMP(SIR_IRQ);
+	DUMP(SIR_FIQ);
+	DUMP(CONTROL);
+	DUMP(PROTECTION);
+	DUMP(IDLE);
+	DUMP(IRQ_PRIORITY);
+	DUMP(FIQ_PRIORITY);
+	DUMP(THRESHOLD);
+
+	DUMP(ITR(0));
+	DUMP(MIR(0));
+	// DUMP(MIR_CLEAR(0));
+	// DUMP(MIR_SET(0));
+	// DUMP(ISR_SET(0));
+	// DUMP(ISR_CLEAR(0));
+	DUMP(PENDING_IRQ(0));
+	DUMP(PENDING_FIQ(0));
+	DUMP(ITR(1));
+	DUMP(MIR(1));
+	// DUMP(MIR_CLEAR(1));
+	// DUMP(MIR_SET(1));
+	// DUMP(ISR_SET(1));
+	// DUMP(ISR_CLEAR(1));
+	DUMP(PENDING_IRQ(1));
+	DUMP(PENDING_FIQ(1));
+	DUMP(ITR(2));
+	DUMP(MIR(2));
+	// DUMP(MIR_CLEAR(2));
+	// DUMP(MIR_SET(2));
+	// DUMP(ISR_SET(2));
+	// DUMP(ISR_CLEAR(2));
+	DUMP(PENDING_IRQ(2));
+	DUMP(PENDING_FIQ(2));
+	DUMP(ITR(3));
+	DUMP(MIR(3));
+	// DUMP(MIR_CLEAR(3));
+	// DUMP(MIR_SET(3));
+	// DUMP(ISR_SET(3));
+	// DUMP(ISR_CLEAR(3));
+	DUMP(PENDING_IRQ(3));
+	DUMP(PENDING_FIQ(3));
+}

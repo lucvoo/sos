@@ -29,6 +29,10 @@
 #define	SPURIOUS_IRQ_MASK	(~ACTIVE_IRQ_MASK)
 
 
+#ifdef DEBUG
+#include "am335x-debug.c"
+#endif
+
 static void am335x_handle_irq(struct eframe *regs)
 {
 	void __iomem *base_addr = (void*) INTC_BASE;
