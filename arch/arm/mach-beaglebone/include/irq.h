@@ -6,20 +6,7 @@
 
 
 #ifndef	__ASSEMBLY__
-static inline void irq_mask(unsigned int irq)
-{
-	/* FIXME */
-}
-
-static inline void irq_mask_ack(unsigned int irq)
-{
-	/* FIXME */
-}
-
-static inline void irq_unmask(unsigned int irq)
-{
-	/* FIXME */
-}
+#include <hw/am335x-irq.h>
 #endif
 
 #endif
