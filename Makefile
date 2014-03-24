@@ -167,7 +167,13 @@ tests=$(progs-y:%=tests/%)
 tests/: $(tests:%=%.bin)
 $(tests): %: %.o libtarget.a misc/version.o
 	@echo "LINK	$@"
-	$(Q)$(CC) -Wl,-Map,$@.map,--cref -T$@.ld $(LDFLAGS) arch/$(CONFIG_ARCH)/startup.o misc/version.o $< -o $@
+	$(Q)$(CC) -Wl,--gc-sections					\
+		-Wl,-Map,$@.map,--cref					\
+		-T$@.ld $(LDFLAGS) 		\
+		misc/version.o						\
+		-Wl,--start-group -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive -Wl,--end-group	\
+		-lgcc							\
+		$< -o $@
 endif	# tests/%
 
 endif	# skip-makefile
