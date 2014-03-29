@@ -12,6 +12,11 @@ static int _putx(const char *buf, unsigned n, char *dest, unsigned size)
 	return n;
 }
 
+void vprintf(const char *fmt, va_list ap)
+{
+	xprintf(_putx, 0, -1, fmt, ap);
+}
+
 void printf(const char *fmt, ...)
 {
 	va_list ap;
