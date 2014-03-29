@@ -10,9 +10,10 @@ config ARCH_ARM
 endchoice
 
 
-config ARCH
-	symbol
-	default arm if ARCH_ARM
+if ARCH_ARM
+source arch/arm/Kconfig
+endif
+
 
 config	INTERRUPT_STACK_SIZE
 	int "Interrupt stack size"

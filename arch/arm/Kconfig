@@ -1,0 +1,3 @@
+config ARCH
+	symbol
+	default arm
