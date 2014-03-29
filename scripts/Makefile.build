@@ -61,6 +61,10 @@ cmd_cc_lds = $(CPP) -x assembler-with-cpp -P $(a_flags)   -o $@ $<
 	@echo "BIN	$<"
 	$(Q)$(OBJCOPY) -O binary $< $@
 # ---------------------------------------------------------------------------
+%.a:
+	@echo "AR	$@"
+	$(Q)$(AR) crs $@ $^
+# ---------------------------------------------------------------------------
 
 # Read all saved command lines and dependencies for the $(targets) we
 # may be building above.

@@ -119,12 +119,12 @@ scripts/Makefile.build: prepare
 
 
 subdirs:=$(subdirs-y)
-objs :=
+libs :=
 -include $(subdirs:%=%/.make)
 
-libtarget.a: $(objs)
+libtarget.a: $(libs)
 	@echo 'AR	$@'
-	$(Q)$(AR) crs $@ $^
+	$(Q)echo "GROUP($^)" > $@
 
 
 _all: libtarget.a FORCE

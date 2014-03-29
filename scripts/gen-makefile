@@ -21,10 +21,15 @@ do_makefile()
 		cat
 	echo
 	echo "ifneq (\$(objs-y),)"
-	echo "objs += \$(objs-y:%=$dir/%)"
+	echo "objs := \$(objs-y:%=$dir/%)"
 	echo "-include \$(objs-y:%.o=$dir/.%.o.cmd)"
 	echo "-include \$(objs-y:%.o=$dir/.%.s.cmd)"
+	echo
+	echo "$dir/lib.a: \$(objs)"
+	echo "libs += $dir/lib.a"
+	echo "$dir/: $dir/lib.a"
 	echo "endif"
+	echo
 	echo "ifneq (\$(deps-y),)"
 	echo "-include \$(deps-y:%=$dir/.%.cmd)"
 	echo "endif"
