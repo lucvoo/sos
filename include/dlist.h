@@ -93,6 +93,12 @@ static inline void dlist_move_tail(struct dlist_head *head, struct dlist *item)
 }
 
 
+static inline void dlist_insert(struct dlist *prev, struct dlist *item, struct dlist *next)
+{
+	__dlist_add(prev, item, next);
+}
+
+
 static inline int dlist_is_first(const struct dlist_head *head, const struct dlist *item)
 {
 	return item->prev == &head->list;
