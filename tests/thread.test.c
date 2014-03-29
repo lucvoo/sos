@@ -18,6 +18,8 @@ void kapi_start(void)
 {
 	_os_diag_write_string(os_version);
 
-	thread_create(&a, 2, fun, "thread a\n");
-	thread_create(&b, 2, fun, "thread b\n");
+	thread_create(&a, 2, fun, "a");
+	thread_create(&b, 2, fun, "b");
+	thread_start(&a);
+	thread_start(&b);
 }
