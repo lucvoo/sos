@@ -120,10 +120,20 @@ static inline int dlist_is_empty(const struct dlist_head *head)
 #define dlist_foreach(pos, head) \
 	for (pos = (head)->list.next; pos != &(head)->list; pos = pos->next)
 
+#define dlist_foreach_safe(pos, next, head) \
+	for (pos = (head)->list.next; next = pos->next, pos != &(head)->list; pos = next)
+
 
 #define dlist_foreach_entry(pos, head, member)				\
 	for (pos = dlist_entry((head)->list.next, typeof(*pos), member);	\
 	     &pos->member != &(head)->list; 					\
 	     pos = dlist_entry(pos->member.next, typeof(*pos), member))
+
+
+#define dlist_foreach_entry_safe(pos, next, head, member)			\
+	for (pos = dlist_entry((head)->list.next, typeof(*pos), member);	\
+	     next = dlist_entry(pos->member.next, typeof(*pos), member),	\
+	     &pos->member != &(head)->list;					\
+	     pos = next)
 
 #endif
