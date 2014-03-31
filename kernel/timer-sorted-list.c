@@ -1,5 +1,8 @@
 #include <timer.h>
+#include <timerdev.h>
 
+
+static struct timerdev *td;
 
 static struct timers {
 	struct dlist_head	head;
@@ -31,6 +34,13 @@ static void timer_dump_timers(const char *fmt, ...)
 
 static void timer_reprogram(void)
 {
+	struct timer *t;
+
+	if (dlist_is_empty(&timers.head))
+		return;
+
+	t = dlist_peek_entry(&timers.head, struct timer, node);
+	td->program(td, t->exp);
 }
 
 void timer_add(struct timer *t)
@@ -51,4 +61,32 @@ void timer_add(struct timer *t)
 void timer_del(struct timer *t)
 {
 	dlist_del(&t->node);
+	timer_reprogram();
 }
+
+
+static void timeout_process(struct timerdev *td)
+{
+	struct timer *cur;
+	struct timer *next;
+
+	dlist_foreach_entry_safe(cur, next, &timers.head, node) {
+		long delta = cur->exp - td->now(td);
+
+		if (delta > 0)
+			break;
+		dlist_del(&cur->node);
+		cur->action(cur->data);
+	}
+
+	timer_reprogram();
+}
+
+int timerdev_register(struct timerdev *newtd)
+{
+	newtd->handler = timeout_process;
+	td = newtd;
+
+	return 0;
+}
+
