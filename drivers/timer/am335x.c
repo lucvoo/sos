@@ -1,10 +1,11 @@
-#include <timer.h>
+#include <timerdev.h>
 #include <io.h>
 #include <interrupt.h>
 #include <init.h>
 #include <hw/am335x.h>
 #include <hw/am335x-irqs.h>
 #include <irq.h>
+#include <utils.h>
 
 
 #define	TIDR		0x00
@@ -21,6 +22,7 @@
 #define	TCLR		0x38
 #define		TCLR_ST		0x01
 #define		TCLR_AR		0x02
+#define		TCLR_CE		0x40
 #define	TCRR		0x3C
 #define	TLDR		0x40
 #define	TTGR		0x44
@@ -58,38 +60,66 @@ static void timer_write(void __iomem *base, unsigned int reg, int posted, unsign
 
 static int timer_isr(int irq, void* data)
 {
-	void __iomem *base = data;
+	struct timerdev *td = data;
 
-	iowrite32(base + IRQSTATUS, IRQEV_OVF);
+	iowrite32(td->base + IRQSTATUS, IRQEV_MAT);
 
 	//printf("\n%08X	timer IRQSTATUS\n", ioread32(base + IRQSTATUS));
 	//printf("\n%08X	timer TCRR\n", ioread32(base + TCRR));
 
-	return IRQ_HANDLED;
+	return IRQ_HANDLED | IRQ_CALL_DSR;
 }
 
 static int timer_dsr(int irq, unsigned int count, void* data)
 {
-	printf("\ntick! (count=%d)\n", count);
+	struct timerdev *td = data;
+
+	td->handler(td);
 	return 0;
 }
 
 
+static unsigned long timer_am335x_now(struct timerdev *td)
+{
+	unsigned long now = timer_read(td->base, TCRR, 1);
+
+	return now;
+}
+
+static int timer_am335x_program(struct timerdev *td, unsigned long ticks)
+{
+	timer_write(td->base, TMAR, 1, ticks);		// match register
+
+	return 0;
+}
+
+static struct timerdev timerdev_am335x = { 
+	.name = "am335x",
+	.freq = 32*1024,
+	.now = timer_am335x_now,
+	.program = timer_am335x_program,
+};
+
+
 static struct irqaction irq_timer;
 
-extern void am335x_intc_dump_regs(void);
 static void __init timer_init(void)
 {
-	unsigned int ticks = 100000;
-	void __iomem * base = (void*)IOBASE_DMTIMER0;
+	void __iomem *base = (void*)IOBASE_DMTIMER0;
 	int irq = IRQ_TINT0;
 
-	irq_create(&irq_timer, timer_isr, timer_dsr, base, 0);
+	timerdev_am335x.base = base;
+	timerdev_am335x.irq = irq;
+
+	irq_create(&irq_timer, timer_isr, timer_dsr, &timerdev_am335x, 0);
 	irq_attach(&irq_timer, irq);
-	timer_write(base, TLDR, 1, 0xffffffff - ticks);	// reload value
-	timer_write(base, TCRR, 1, 0xffffffff - ticks);	// initial value
-	timer_write(base, TCLR, 1, TCLR_ST|TCLR_AR);	// start & auto-reload
-	timer_write(base, IRQENABLE_SET, 0, IRQEV_OVF);	// enable interrupts
+	timer_write(base, TMAR, 1, -1);			// match register: a full cycle by default
+	timer_write(base, TLDR, 1, 0);			// reload value
+	timer_write(base, TTGR, 1, 1);			// trigger reload
+	timer_write(base, TCLR, 1, TCLR_ST|TCLR_AR|TCLR_CE);	// start, auto-reload & compare
+	timer_write(base, IRQENABLE_SET, 0, IRQEV_MAT);	// enable interrupts
 	irq_unmask(irq);
+
+	timerdev_register(&timerdev_am335x);
 }
 subsys_initcall(timer_init);
