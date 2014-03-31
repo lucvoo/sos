@@ -4,7 +4,6 @@
 
 	.text
 	.align	2
-	.global	__irq_svc
 	.type	__irq_svc, %function
 
 __irq_svc:
@@ -56,7 +55,6 @@ __irq_svc:
 
 	.text
 	.align	2
-	.global	__irq_invalid
 	.type	__irq_invalid, %function
 __irq_invalid:
 		b	__irq_invalid	// FIXME

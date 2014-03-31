@@ -2,7 +2,6 @@
 #include "arch/mach/platform_setup.S"
 
 	.section ".vectors","ax"
-	.global __exception_handlers
 
 __exception_handlers:
 	ldr	pc, =vector_reset	// should never be reached
