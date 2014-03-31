@@ -3,6 +3,7 @@ objs-y	:= \
 	irq.o	\
 	undef.o		\
 	sched.o	\
+	schedule-timeout.o	\
 	softirq.o	\
 	thread.o\
 	waitqueue.o	\
