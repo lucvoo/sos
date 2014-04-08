@@ -8,6 +8,17 @@ static const struct printf_num_vector {
 	long val;
 	const char *res;
 } vectors[] = {
+	{ "%%", 	           0, 	"%" },
+	{ "a%%", 	           0, 	"a%" },
+	{ "%%b", 	           0, 	"%b" },
+
+	{ "%x", 	           0, 	"0" },
+	{ "%x", 	       0x123, 	"123" },
+	{ "%x", 	       0xabc, 	"abc" },
+	{ "%X", 	       0xABC, 	"ABC" },
+
+	{ "t = %x", 	       0x123, 	"t = 123" },
+
 	{ "%i", 	           0, 	"0" },
 	{ "%-i", 	           0, 	"0" },
 	{ "%0i", 	           0, 	"0" },
