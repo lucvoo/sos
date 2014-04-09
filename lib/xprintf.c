@@ -2,6 +2,7 @@
 #include <printf.h>
 #include <stdarg.h>
 #include <string.h>
+#include <stdint.h>
 
 
 #include <diag.h>
@@ -21,22 +22,37 @@ enum lmod {
 };
 
 
-static unsigned int utostr(char *buf, unsigned prec, unsigned long val, unsigned int base, unsigned int flags)
+static unsigned int utostr_bin(char *buf, unsigned prec, unsigned long val, unsigned int shift, unsigned int flags)
 {
 	unsigned int n;
 	unsigned int ten = 'a' - 10;
+	unsigned int mask = (1 << shift) -1;
 
 	if (flags & F_UPPER)
 		ten = 'A' - 10;
 
-	for (n= 0; val > 0 || n < prec; val /= base, n++) {
-		unsigned int digit = val % base;
+	for (n= 0; val > 0 || n < prec; val >>= shift, n++) {
+		unsigned int digit = val & mask;
 
 		if (digit > 9)
 			digit += ten;
 		else
 			digit += '0';
 
+		*--buf = digit;
+	}
+
+	return n;
+}
+
+static unsigned int utostr_dec(char *buf, unsigned prec, unsigned long val)
+{
+	unsigned int n;
+
+	for (n= 0; val > 0 || n < prec; val /= 10, n++) {
+		unsigned int digit = val % 10;
+
+		digit += '0';
 		*--buf = digit;
 	}
 
@@ -177,7 +193,7 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 		// 5) type specifier
 		switch (c = *fmt) {
 			char *buf;
-			unsigned int base;
+			unsigned int shift;
 			unsigned long uval;
 			signed long sval;
 			int sign;
@@ -235,6 +251,7 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 			neg = 0;
 
 		case_number:
+			sign = 0;
 			if (prec == ~0U) {
 				prec = 1;
 			} else
@@ -243,13 +260,18 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 			buf = &buff[sizeof(buff)];
 
 			switch (c) {
-				unsigned int shift;
 
 			// decimal numbers
 			case 'd':
 			case 'i':
 			case 'u':
-				base = 10;
+				if (neg)
+					sign = '-';
+				else if (flags & F_PLUS)
+					sign = '+';
+				else if (flags & F_SPAC)
+					sign = ' ';
+				shift = 0;
 				break;
 
 			// bin, oct or hex numbers
@@ -270,21 +292,11 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 			case 'x':
 				shift = 4;
 			base_bin:
-				base = 1 << shift;
 				break;
 
 			default:
 				continue;
 			}
-
-			if (neg)
-				sign = '-';
-			else if (flags & F_PLUS)
-				sign = '+';
-			else if (flags & F_SPAC)
-				sign = ' ';
-			else
-				sign = 0;
 
 			if (flags & F_ZERO) {
 				prec = minw;
@@ -293,7 +305,11 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 				if (prec < 1)
 					prec = 1;
 			}
-			n = utostr(buf, prec, uval, base, flags);
+
+			if (!shift)
+				n = utostr_dec(buf, prec, uval);
+			else
+				n = utostr_bin(buf, prec, uval, shift, flags);
 			buf -= n;
 			if (sign) {
 				*--buf = sign;
