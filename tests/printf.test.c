@@ -38,6 +38,8 @@ static const struct printf_num_vector {
 	{ "%#x", 	           0, 	"0" },
 //TODO	{ "%#x", 	        0xab, 	"0xab" },
 
+	{ "%b", 	         123, 	"1111011" },
+
 	{ "abc", 	           0, 	"abc" },
 	{ "%%", 	           0, 	"%" },
 	{ "a%%", 	           0, 	"a%" },
