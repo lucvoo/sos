@@ -34,6 +34,21 @@
 #define	TLBIMVAA(R)	p15, 0, R,  c8,  c7, 3
 
 // performance monitors
+#define	PMCR(R)		p15, 0, R,  c9,	c12, 0
+#define	PMCNTENSET(R)	p15, 0, R,  c9,	c12, 1
+#define	PMCNTENCLR(R)	p15, 0, R,  c9,	c12, 2
+#define	PMOVSR(R)	p15, 0, R,  c9,	c12, 3
+#define	PMSWINC(R)	p15, 0, R,  c9,	c12, 4
+#define	PMSELR(R)	p15, 0, R,  c9,	c12, 5
+#define	PMCEID0(R)	p15, 0, R,  c9,	c12, 6
+#define	PMCEID1(R)	p15, 0, R,  c9,	c12, 7
+#define	PMCCNTR(R)	p15, 0, R,  c9,	c13, 0
+#define	PMXEVTYPER(R)	p15, 0, R,  c9,	c13, 1
+#define	PMXEVCNTR(R)	p15, 0, R,  c9,	c13, 2
+#define	PMUSERENR(R)	p15, 0, R,  c9,	c14, 0
+#define	PMINTENSET(R)	p15, 0, R,  c9,	c14, 1
+#define	PMINTENCLR(R)	p15, 0, R,  c9,	c14, 2
+#define	PMOVSSET(R)	p15, 0, R,  c9,	c14, 3
 
 //
 #define PRRR(R)		p15, 0, R, c10,  c2, 0
