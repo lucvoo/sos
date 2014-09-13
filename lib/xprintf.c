@@ -49,8 +49,36 @@ static unsigned int utostr_dec(char *buf, unsigned prec, unsigned long val)
 {
 	unsigned int n;
 
-	for (n= 0; val > 0 || n < prec; val /= 10, n++) {
-		unsigned int digit = val % 10;
+	for (n= 0; val > 0 || n < prec; n++) {
+		unsigned int digit;
+		unsigned int tmp;
+
+#define METH 2
+#if	METH == 0
+		(void) tmp;
+
+		digit = val % 10U;
+
+		val /= 10U;
+#elif	METH == 1
+		tmp = val / 10U;
+		digit = val - (tmp * 10);
+
+		val = tmp;
+#elif	METH == 2
+		tmp = (val * 0xCCCCCCCDLL) >> 35;		// !!! 64 bits multiply
+		digit = val - (tmp * 10);
+
+		val = tmp;
+#elif	METH == 3
+		if (val < 81920)
+			tmp = (val * 0xCCCD) >> 19;
+		else
+			tmp = (val * 0xCCCCCCCDLL) >> 35;	// !!! 64 bits multiply
+		digit = val - (tmp * 10);
+
+		val = tmp;
+#endif
 
 		digit += '0';
 		*--buf = digit;
