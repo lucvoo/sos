@@ -7,6 +7,7 @@ objs-y := \
 	memset.o	\
 	printf.o	\
 	snprintf.o	\
+	sqrt.o		\
 	strcmp.o	\
 	strlen.o	\
 	strncpy.o	\

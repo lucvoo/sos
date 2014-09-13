@@ -6,3 +6,4 @@ progs-y	+= fault-undef.test
 progs-y	+= timer.test
 progs-y	+= timeout.test
 progs-y	+= printf.test
+progs-y	+= sqrt.test
