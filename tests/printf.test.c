@@ -9,6 +9,7 @@ static const struct printf_num_vector {
 	const char *res;
 } vectors[] = {
 	{ "%c", 	         'a', 	"a" },
+	{ "%c", 	         'a', 	"a" },
 
 	{ "%d", 	           0, 	"0" },
 	{ "%d", 	           3, 	"3" },
@@ -5606,7 +5607,7 @@ static int dotest(void)
 		typeof(&vectors[i]) v = &vectors[i];
 		snprintf(buf, -1, v->fmt, v->val);
 		if (strcmp(v->res, buf)) {
-			printf("#ERROR:\tprintf(\"%s\", %d) := \"%s\" >< \"%s\"\n", v->fmt, v->val, v->res, buf);
+			printf("#ERROR:\tprintf(\"%s\", %d) should be \"%s\" but is \"%s\"\n", v->fmt, v->val, v->res, buf);
 			ko++;
 		} else
 			ok++;
@@ -5616,7 +5617,28 @@ static int dotest(void)
 	return ko;
 }
 
+#if 0 //	DO_PERF
+#include <perf.h>
+#include <statistics.h>
+void kapi_start(void)
+{
+	struct statistics s;
+	unsigned long ncycles;
+	int i;
+
+	statistics_init(&s);
+	for (i= 10; i-- > 0; ) {
+		perf_cycle_counter_reset();
+		dotest();
+		ncycles = perf_cycle_counter_get();
+		statistics_add(&s, ncycles);
+		printf("nbr cycle used for utostr_dec(): %lu\n", ncycles);
+	}
+	printf("\nstatistics for utostr_dec(): %luK ±%lu\n", statistics_mean(&s), statistics_sdev(&s));
+}
+#else
 void kapi_start(void)
 {
 	dotest();
 }
+#endif

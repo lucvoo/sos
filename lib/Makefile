@@ -8,6 +8,7 @@ objs-y := \
 	printf.o	\
 	snprintf.o	\
 	sqrt.o		\
+	statistics.o	\
 	strcmp.o	\
 	strlen.o	\
 	strncpy.o	\
