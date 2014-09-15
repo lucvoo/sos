@@ -5,6 +5,7 @@
 #include <lock.h>
 #include <softirq.h>
 #include <init.h>
+#include <errno.h>
 
 
 static struct irqdesc irq_descs[NR_IRQS];
@@ -85,7 +86,7 @@ int irq_attach(struct irqaction* action, int irq)
 	struct irqdesc* desc = &irq_descs[irq];
 
 	if (irq >= NR_IRQS)
-		return -1;	// FIXME: should be -EINVAL
+		return -EINVAL;
 
 	lock_acq_irq(&desc->lock);
 	desc->action = action;
