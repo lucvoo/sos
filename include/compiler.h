@@ -9,6 +9,8 @@
 #define __noreturn		__attribute__((noreturn))
 #define __uninit		__attribute__((section(".uninit")))
 
+#define inline_always		inline __attribute__ ((always_inline))
+
 #define barrier() __asm__ __volatile__("": : :"memory")
 
 #define	offsetof(type, member)	__builtin_offsetof(type, member)
