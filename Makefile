@@ -180,11 +180,11 @@ endif
 
 LDFLAGS+=$(LDFLAGS-y)
 
-include tests/Makefile
+include tests/.make
 pgms-deps := libtarget.a arch/$(CONFIG_ARCH)/target.lds
 tests=$(progs-y:%=tests/%)
 tests/: $(tests:%=%.bin)
-$(tests): %: %.o $(pgms-deps) misc/version.o
+$(tests): %: %.o $(pgms-deps) misc/version.o $(libs)
 	@echo "LINK	$@"
 	$(Q)$(CC) -Wl,--gc-sections					\
 		-Wl,-Map,$@.map,--cref					\
@@ -192,7 +192,7 @@ $(tests): %: %.o $(pgms-deps) misc/version.o
 		misc/version.o						\
 		-Wl,--start-group -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive -Wl,--end-group	\
 		-lgcc							\
-		$< -o $@
+		$< $(libs) -o $@
 
 LOADADDR:=$(shell printf 0x%08x $$((${CONFIG_PHYS_ADDR} + ${CONFIG_TEXT_OFFSET})))
 tests/%.tftp: tests/%.bin
