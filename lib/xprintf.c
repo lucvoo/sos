@@ -265,6 +265,9 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 
 			goto case_number;
 
+		case 'p':
+			lmod = lm_l;
+
 		case 'u':
 		case 'o':
 		case 'x':
@@ -314,7 +317,8 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 				dest += 2;
 				size -= 2;
 				prec = sizeof(long) * 2;
-				// fall through
+				shift = 4;
+				goto base_bin;
 			case 'X':
 				flags |= F_UPPER;
 			case 'x':

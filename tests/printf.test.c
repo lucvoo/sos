@@ -8,6 +8,7 @@ static const struct printf_num_vector {
 	long val;
 	const char *res;
 } vectors[] = {
+	{ "%p", 	           0, 	"0x00000000" },
 	{ "%c", 	         'a', 	"a" },
 	{ "%c", 	         'a', 	"a" },
 
