@@ -58,6 +58,15 @@ void timer_add(struct timer *t)
 	timer_reprogram();
 }
 
+void timer_add_rel(struct timer *t)
+{
+	unsigned long now;
+
+	now = td->now(td);
+	t->exp += now;
+	timer_add(t);
+}
+
 void timer_del(struct timer *t)
 {
 	dlist_del(&t->node);
