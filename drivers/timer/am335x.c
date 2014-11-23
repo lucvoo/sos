@@ -86,10 +86,14 @@ static unsigned long timer_am335x_now(struct timerdev *td)
 	return now;
 }
 
-static int timer_am335x_program(struct timerdev *td, unsigned long ticks)
+static int timer_am335x_program(struct timerdev *td, unsigned long val)
 {
-	timer_write(td->base, TMAR, 1, ticks);		// match register
+	long delta = timer_am335x_now(td) - val;
 
+	if (delta >= 0)
+		return -1;
+
+	timer_write(td->base, TMAR, 1, val);		// match register
 	return 0;
 }
 
