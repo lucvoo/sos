@@ -1,10 +1,12 @@
 #include <timer.h>
 #include <timerdev.h>
+#include <lock.h>
 
 
 static struct timerdev *td;
 
 static struct timers {
+	struct lock		lock;
 	struct dlist_head	head;
 } timers = {
 	.head = DLIST_HEAD_INIT(timers.head),
@@ -36,45 +38,74 @@ static void timer_dbg(struct timer *t, int dump, const char *fmt, ...)
 }
 #endif
 
-static void timer_reprogram(void)
+static void timer_program(void)
 {
 	struct timer *t;
+	int rc;
 
-	if (dlist_is_empty(&timers.head))
+loop:
+	if (dlist_is_empty(&timers.head)) {
+		timer_dbg(0, 0, "---");
 		return;
+	}
 
 	t = dlist_peek_entry(&timers.head, struct timer, node);
-	td->program(td, t->exp);
+	rc = td->program(td, t->exp);
+	timer_dbg(t, 0, "prg");
+	if (rc) {
+		dlist_del(&t->node);
+		timer_dbg(0, 0, "!!!");
+		t->action(t->data);
+		goto loop;
+	}
 }
 
-void timer_add(struct timer *t)
+static void timer_add_locked(struct timer *t)
 {
 	struct timer *cur;
+	unsigned long exp = t->exp;
 
 	dlist_foreach_entry(cur, &timers.head, node) {
-		if (cur->exp > t->exp)
+		if (cur->exp > exp)
 			break;
 	}
 
 	dlist_insert(cur->node.prev, &t->node, &cur->node);
 
 	timer_dbg(t, 1, "add", t, t->exp);
-	timer_reprogram();
+	timer_program();
+}
+
+void timer_add(struct timer *t)
+{
+	lock_acq_irq(&timers.lock);
+
+	timer_add_locked(t);
+
+	lock_rel_irq(&timers.lock);
 }
 
 void timer_add_rel(struct timer *t)
 {
 	unsigned long now;
 
+	lock_acq_irq(&timers.lock);
+
 	now = td->now(td);
 	t->exp += now;
-	timer_add(t);
+	timer_add_locked(t);
+
+	lock_rel_irq(&timers.lock);
 }
 
 void timer_del(struct timer *t)
 {
+	lock_acq_irq(&timers.lock);
+
 	dlist_del(&t->node);
-	timer_reprogram();
+	timer_program();
+
+	lock_rel_irq(&timers.lock);
 }
 
 
@@ -82,6 +113,8 @@ static void timeout_process(struct timerdev *td)
 {
 	struct timer *cur;
 	struct timer *next;
+
+	lock_acq(&timers.lock);
 
 	dlist_foreach_entry_safe(cur, next, &timers.head, node) {
 		long delta = cur->exp - td->now(td);
@@ -93,7 +126,9 @@ static void timeout_process(struct timerdev *td)
 		cur->action(cur->data);
 	}
 
-	timer_reprogram();
+	timer_program();
+
+	lock_rel(&timers.lock);
 }
 
 int timerdev_register(struct timerdev *newtd)
