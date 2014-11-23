@@ -9,13 +9,13 @@ static struct thread a __uninit;
 
 static void fun(void* data)
 {
-	unsigned long t, d;
+	unsigned long d;
 
 	printf("t = ...\n");
 
-	for (d = 1 << 15, t = d; ; d += 1 << 15, t += d) {
-		thread_schedule_timeout(t);
-		printf("t = %lx\n", t);
+	for (d = 1 << 15; ; d += 1 << 15) {
+		thread_schedule_timeout(d);
+		printf("t = %lx\n", d);
 	}
 }
 
