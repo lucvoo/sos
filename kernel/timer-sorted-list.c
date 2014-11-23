@@ -11,23 +11,27 @@ static struct timers {
 };
 
 #if defined(DEBUG)
-static void timer_dump_timers(const char *fmt, ...)
+static void timer_dbg(struct timer *t, int dump, const char *fmt, ...)
 {
 	struct timer *cur;
 	va_list ap;
 
-	printf("TIMERS:");
+	printf("\nTIMERS @%08lu:", td->now(td));
 	va_start(ap, fmt);
 	vprintf(fmt, ap);
 	va_end(ap);
-	printf(":\n");
-	dlist_foreach_entry(cur, &timers.head, node) {
-		printf("\t%p : %08lu\n", cur, cur->exp);
-	}
-	printf("\n");
+	if (t)
+		printf(": %p->exp @%08lu", t, t->exp);
+	if (dump) {
+		printf(":\n");
+		dlist_foreach_entry(cur, &timers.head, node) {
+			printf("\t%p : %08lu\n", cur, cur->exp);
+		}
+	} else
+		printf("\n");
 }
 #else
-static void timer_dump_timers(const char *fmt, ...)
+static void timer_dbg(struct timer *t, int dump, const char *fmt, ...)
 {
 }
 #endif
@@ -54,7 +58,7 @@ void timer_add(struct timer *t)
 
 	dlist_insert(cur->node.prev, &t->node, &cur->node);
 
-	timer_dump_timers("timer_add(%p:%lu)", t, t->exp);
+	timer_dbg(t, 1, "add", t, t->exp);
 	timer_reprogram();
 }
 
@@ -85,6 +89,7 @@ static void timeout_process(struct timerdev *td)
 		if (delta > 0)
 			break;
 		dlist_del(&cur->node);
+		timer_dbg(cur, 0, "exp");
 		cur->action(cur->data);
 	}
 
