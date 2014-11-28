@@ -3,6 +3,7 @@
 
 #include <types/dlist.h>
 #include <utils.h>
+#include <stddef.h>
 
 
 #define DLIST_HEAD_INIT(name)	{ .list = { &(name.list), &(name.list) } }
@@ -60,6 +61,9 @@ static inline struct dlist* dlist_peek(struct dlist_head *head)
 	struct dlist *h = &head->list;
 	struct dlist *item = h->next;
 
+	if (item == &head->list)
+		return NULL;
+
 	return item;
 }
 #define	dlist_peek_entry(head, type, member) dlist_entry(dlist_peek(head), type, member)
@@ -68,7 +72,8 @@ static inline struct dlist* dlist_pop(struct dlist_head *head)
 {
 	struct dlist *item = dlist_peek(head);
 
-	dlist_del(item);
+	if (item)
+		dlist_del(item);
 	return item;
 }
 #define	dlist_pop_entry(head, type, member) dlist_entry(dlist_pop(head), type, member)
