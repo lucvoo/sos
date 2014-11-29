@@ -1,5 +1,2 @@
-objs-y	:= \
-	stacks.o	\
-
-
+objs-y	+= stacks.o
 stacks-cflags := -Wall

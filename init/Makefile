@@ -1,6 +1,5 @@
-objs-y	:= \
-	clear_bss.o	\
-	initcalls.o	\
-	init_thread.o	\
-	main.o		\
+objs-y	+= clear_bss.o
+objs-y	+= init_thread.o
+objs-y	+= initcalls.o
+objs-y	+= main.o
 

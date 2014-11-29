@@ -1,5 +1,4 @@
-objs-y	:= \
-	diag.o	\
-	diag-hexval.o	\
-	diag-hexdump.o	\
-	diag-printf.o	\
+objs-y	+= diag-hexdump.o
+objs-y	+= diag-hexval.o
+objs-y	+= diag-printf.o
+objs-y	+= diag.o

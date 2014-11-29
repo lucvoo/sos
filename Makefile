@@ -124,12 +124,12 @@ SYS_INCDIR := $(shell $(CC) -print-file-name=include)
 CFLAGS-y   += -isystem $(SYS_INCDIR)
 #######################################################################
 subdirs-y			:= arch/$(CONFIG_ARCH)
-subdirs-y			+= misc
-subdirs-y			+= kernel
+subdirs-y			+= drivers
 subdirs-y			+= init
 subdirs-y			+= kapi
+subdirs-y			+= kernel
 subdirs-y			+= lib
-subdirs-y			+= drivers
+subdirs-y			+= misc
 
 include scripts/Makefile.build
 scripts/Makefile.build: prepare
