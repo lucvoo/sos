@@ -125,11 +125,9 @@ CFLAGS-y   += -isystem $(SYS_INCDIR)
 #######################################################################
 subdirs-y			:= arch/$(CONFIG_ARCH)
 subdirs-y			+= drivers
-subdirs-y			+= init
 subdirs-y			+= kapi
 subdirs-y			+= kernel
 subdirs-y			+= lib
-subdirs-y			+= misc
 
 include scripts/Makefile.build
 scripts/Makefile.build: prepare
@@ -184,21 +182,20 @@ LDFLAGS+=$(LDFLAGS-y)
 pgms-deps := libtarget.a arch/$(CONFIG_ARCH)/target.lds
 tests=$(progs-y:%=tests/%)
 tests/: $(tests:%=%.bin)
-$(tests): %: %.o $(pgms-deps) misc/version.o $(libs)
+$(tests): %: %.o $(pgms-deps) $(libs) kernel/version.o
 	@echo "LINK	$@"
 	$(Q)$(CC) -Wl,--gc-sections					\
 		-Wl,-Map,$@.map,--cref					\
 		-Tarch/$(CONFIG_ARCH)/target.lds $(LDFLAGS) 		\
-		misc/version.o						\
 		-Wl,--start-group -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive -Wl,--end-group	\
 		-lgcc							\
-		$< $(libs) -o $@
+		$< $(libs) kernel/version.o -o $@
 
 LOADADDR:=$(shell printf 0x%08x $$((${CONFIG_PHYS_ADDR} + ${CONFIG_TEXT_OFFSET})))
 tests/%.tftp: tests/%.bin
 	$(Q)mkimage -A $(CONFIG_ARCH) -T kernel -O linux -C none -e ${LOADADDR} -a ${LOADADDR} -d $< /tftpboot/uImage
 
-misc/version.o: $(tests:%=%.o) $(pgms-deps)
+kernel/version.o: $(tests:%=%.o) $(pgms-deps)
 
 endif	# tests/%
 

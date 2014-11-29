@@ -1,9 +1,10 @@
+subdirs-y += init/
+subdirs-y += irq/
+subdirs-y += time/
+
 objs-y	+= idle.o
-objs-y	+= irq.o
 objs-y	+= sched.o
 objs-y	+= schedule-timeout.o
-objs-y	+= softirq.o
 objs-y	+= thread.o
-objs-y	+= timer-sorted-list.o
 objs-y	+= undef.o
 objs-y	+= waitqueue.o
