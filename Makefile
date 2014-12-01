@@ -18,7 +18,11 @@ export srctree objtree VPATH
 
 
 HOSTCC		:= gcc
-HOSTCFLAGS	:= -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer
+HOSTCFLAGS	:= -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer \
+		-Wno-strict-aliasing \
+		-Wno-unused-function \
+		-Wno-unused-but-set-variable\
+
 
 export	HOSTCC HOSTCFLAGS
 
