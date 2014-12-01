@@ -20,7 +20,7 @@ cpp_flags      = -Wp,-MD,$(dir $@).$(notdir $@).d $(NOSTDINC_FLAGS) $(CPPFLAGS) 
 # ---------------------------------------------------------------------------
 
 cmd_cc_s_c = $(CC) $(c_flags) -fverbose-asm -S -o $@ $<
-%.s: %.c
+%.s: %.c scripts/basic/fixdep
 	@echo "CC	$@"
 	$(Q)$(cmd_cc_s_c)
 	@scripts/basic/fixdep.sh $(depfile) $@ '$(cmd_cc_s_c)' $(dot-target).cmd
@@ -32,7 +32,7 @@ cmd_cc_i_c = $(CPP) $(c_flags) -dD -o $@ $<
 	$(Q)less $@
 
 cmd_cc_o_c = $(CC) $(c_flags) -c -o $@ $<
-%.o: %.c
+%.o: %.c scripts/basic/fixdep
 	@echo "CC	$@"
 	$(Q)$(cmd_cc_o_c)
 	@scripts/basic/fixdep.sh $(depfile) $@ '$(cmd_cc_o_c)' $(dot-target).cmd
@@ -46,14 +46,14 @@ cmd_cc_s_S = $(CPP) $(a_flags) -dD -o $@ $<
 	$(Q)$(cmd_cc_s_S)
 
 cmd_cc_o_S = $(CC) $(a_flags) -c -o $@ $<
-%.o: %.S
+%.o: %.S scripts/basic/fixdep
 	@echo "AS	$@"
 	$(Q)$(cmd_cc_o_S)
 	@scripts/basic/fixdep.sh $(depfile) $@ '$(cmd_cc_o_S)' $(dot-target).cmd
 
 # ---------------------------------------------------------------------------
 cmd_cc_lds = $(CPP) -x assembler-with-cpp -P $(a_flags)   -o $@ $<
-%.lds: %.lds.in
+%.lds: %.lds.in scripts/basic/fixdep
 	@echo "LDS	$@"
 	$(Q)$(cmd_cc_lds) 
 	@scripts/basic/fixdep.sh $(depfile) $@ '$(cmd_cc_o_c)' $(dot-target).cmd
