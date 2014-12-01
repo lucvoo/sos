@@ -73,22 +73,12 @@ include/config/auto.conf: ;
 
 .PHONY: clean distclean
 clean: FORCE
-	$(Q)$(MAKE) -f scripts/Makefile.clean obj=tests
-	$(Q)find * -name '*.[oas]' -o -name '.*.cmd' -o -name '.*.d' -o -name '*.lds' -type f | xargs rm -f
+	@echo "CLEAN"
+	$(Q)git clean -x -d -q -e .config -e scripts/
 
-distclean-files := .config .config.old include/autoconf.h
-distclean-files	+= include/arch/asm-offsets.h
-distclean-files	+= include/arch/mach
-distclean-files += include/arch include/mach
-distclean-dirs	:= include/config/
-distclean: clean FORCE
-	$(Q)$(MAKE) -f scripts/Makefile.clean obj=scripts/kconfig
-	$(Q)$(MAKE) -f scripts/Makefile.clean obj=scripts/basic
-	$(Q)find */ -name '.make' -type f | xargs rm -f
-	@echo "CLEAN	$(distclean-files)"
-	@rm -rf $(distclean-files)
-	@echo "CLEAN	$(distclean-dirs)"
-	@rm -rf $(distclean-dirs)
+distclean: FORCE
+	@echo "DISTCLEAN"
+	@$(Q)git clean -x -d -q
 endif	# no-dot-config
 
 endif	# config-targets

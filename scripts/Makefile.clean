@@ -7,10 +7,11 @@ include $(src)/Makefile
 
 clean-files += $(hostprogs-y) $(hostprogs-n) $(hostprogs-)
 progs-files := $(progs-y) $(progs-n) $(progs-)
-clean-files += $(progs-files) $(progs-files:%=%.map)
+clean-files += $(progs-files)
 
-clean-files := $(addprefix $(obj)/,$(clean-files))
+files-to-clean := $(clean-files) $(progs-files:%=%.map) $(progs-files:%=%.bin)
+files-to-clean := $(addprefix $(obj)/,$(files-to-clean))
 
 __clean:
-	@echo "CLEAN $(clean-files)"
-	@rm -f $(clean-files)
+	@echo "CLEAN	$(obj)/:$(clean-files:%.test=%)"
+	@rm -f $(files-to-clean)
