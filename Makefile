@@ -166,8 +166,6 @@ $(asm-offsets): $(symlinks)
 namespacecheck:
 	@scripts/namespace.pl
 
-endif	# CONFIG_ARCH
-
 ifneq ($(filter tests/%,$(MAKECMDGOALS)),)
 LDFLAGS+=-static -nostdlib
 LDFLAGS-$(CONFIG_GC_SECTIONS) += -Wl,--gc-sections
@@ -198,6 +196,8 @@ tests/%.tftp: tests/%.bin
 kernel/version.o: $(tests:%=%.o) $(pgms-deps)
 
 endif	# tests/%
+
+endif	# CONFIG_ARCH
 
 endif	# skip-makefile
 
