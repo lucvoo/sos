@@ -17,8 +17,8 @@ _os_startup:
 	// * r2 contains the address of the ATAGs or the binary Device Tree
 	// We must not corrupt r1 & r2
 
-	//
-	// TODO: insure that we're in supervisor mode with interrupts disabled
+	// insure that we're in supervisor mode with interrupts disabled
+	msr	cpsr_c, #(PSR_I|PSR_F|PSR_MODE_SVC)
 
 	// Calculate the physical (load) address
 	adr	ip, _os_startup		@ load/phys address of X
