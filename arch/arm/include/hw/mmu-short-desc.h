@@ -81,4 +81,34 @@
 #define	PTE_LPAGE_TEX(x)	((x) << 12)	// memory attributes
 #define	PTE_LPAGE_XN		(0x1 << 15)	// eXecute Never
 
+////////////////////////////////////////////////////////////////////////
+#define TTBR_C			0x01		// inner-Cacheable (for non-SMP)
+#define TTBR_S			0x02		// Shareable
+#define TTBR_NOS		0x20		// Not-Outer-Shareable
+
+#define TTBR_ORGN_MASK		0x18		// Regions/outer-cacheability
+#define TTBR_ORGN_NC		0x00		// Non-Cacheable
+#define TTBR_ORGN_WA		0x08		// Writeback-writeAllocate
+#define TTBR_ORGN_WT		0x10		// WriteThrough
+#define TTBR_ORGN_WB		0x18		// WriteBack (no WriteAllocate)
+
+#define TTBR_IRGN_MASK		0x41		// Regions/outer-cacheability
+#define TTBR_IRGN_NC		0x00		// Non-Cacheable
+#define TTBR_IRGN_WA		0x40		// Writeback-writeAllocate
+#define TTBR_IRGN_WT		0x01		// WriteThrough
+#define TTBR_IRGN_WB		0x41		// WriteBack (no WriteAllocate)
+
+
+#ifdef CONFIG_SMP
+#define	TTBR_FLAGS	(TTBR_IRGN_WA|TTBR_ORGN_WA|TTBR_S|TTBR_NOS)
+#else
+#define	TTBR_FLAGS	(TTBR_IRGN_WB|TTBR_ORGN_WB)
+#endif
+
+
+// Split between TTBR0/TTBR1
+#define	TTBCR_N_NONE		0x0
+#define	TTBCR_N_2G2G		0x1
+#define	TTBCR_N_1G3G		0x2
+
 #endif
