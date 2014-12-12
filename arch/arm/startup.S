@@ -20,6 +20,10 @@ _os_startup:
 	// insure that we're in supervisor mode with interrupts disabled
 	msr	cpsr_c, #(PSR_I|PSR_F|PSR_MODE_SVC)
 
+	// FIXME: We should check if the processor ID correspond to the compiled one
+	// mrc	MIDR(r3)
+	// ...
+
 	// Calculate the physical (load) address
 	adr	ip, _os_startup		@ load/phys address of X
 	ldr	r3, =_os_startup	@ corresponding virtual address
