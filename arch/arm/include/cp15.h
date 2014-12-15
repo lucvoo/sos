@@ -109,19 +109,26 @@
 #define	PMINTENCLR(R)	p15, 0, R,  c9,	c14, 2
 #define	PMOVSSET(R)	p15, 0, R,  c9,	c14, 3
 
-//
-#define PRRR(R)		p15, 0, R, c10,  c2, 0
-#define NMRR(R)		p15, 0, R, c10,  c2, 1
-
-#define VBAR(R)		p15, 0, R, c12,  c0, 0
-#define MVBAR(R)	p15, 0, R, c12,  c0, 1
-
-#define ISR(R)		p15, 0, R, c12,  c1, 0
-
-#define CONTEXTIDR(R)	p15, 0, R, c13,  c0, 1
-#define TPIDRURW(R)	p15, 0, R, c13,  c0, 2
-#define TPIDRUR0(R)	p15, 0, R, c13,  c0, 3
-#define TPIDRPRW(R)	p15, 0, R, c13,  c0, 4
+// memory remapping
+#define	PRRR(R)		p15, 0, R, c10,  c2, 0	// Primary Region Remap Register
+#define	NMRR(R)		p15, 0, R, c10,  c2, 1	// Normal Memory Remap Register
 
 // 
-#define CNTFRQ(R)	p15, 0, R, c14,  c0, 0
+#define	VBAR(R)		p15, 0, R, c12,  c0, 0	// Vector Base Address Register †
+#define	MVBAR(R)	p15, 0, R, c12,  c0, 1	// Monitor Vector Base Address Register †
+#define	ISR(R)		p15, 0, R, c12,  c1, 0	// Interupt Status Register
+						// †: implemented only as part of security extension
+
+// process, context & thread ID
+#define	CONTEXTIDR(R)	p15, 0, R, c13,  c0, 1	// Context ID Register
+#define	TPIDRURW(R)	p15, 0, R, c13,  c0, 2	// Thread/Process ID User RW
+#define	TPIDRURO(R)	p15, 0, R, c13,  c0, 3	// Thread/Process ID User RO
+#define	TPIDRPRW(R)	p15, 0, R, c13,  c0, 4	// Thread/Process ID Privileged RW
+
+// Generic Timer Extension
+#define	CNTFRQ(R)	p15, 0, R, c14,  c0, 0	// Counter Frequency Register
+#define	CNTKCTL(R)	p15, 0, R, c14,  c1, 0	// Timer PL1 Control Register
+#define	CNTP_TVAL(R)	p15, 0, R, c14,  c2, 0	// PL1 Physical Timer Value register
+#define	CNTP_CTL(R)	p15, 0, R, c14,  c2, 1	// PL1 Physical Control register
+#define	CNTV_TVAL(R)	p15, 0, R, c14,  c3, 0	// PL1 Virtual Timer Value register
+#define	CNTV_CTL(R)	p15, 0, R, c14,  c3, 1	// PL1 Virtual Control register
