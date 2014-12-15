@@ -1,6 +1,8 @@
+#include <arch/assembly.h>
 #include "arch/arch.h"
 #include "arch/mach/platform_setup.S"
 #include "arch/memory.h"
+#include "arch/hw/mmu.h"
 #include "arch/cp15.h"
 
 
@@ -30,11 +32,18 @@ _os_startup:
 	sub	r3, r3, ip		@ virt(x) - phys(x)
 	rsb	r3, r3, #VIRT_ADDR	@ virt(0) - (virt(x) - phys(x)) = phys(0)
 
-	add	sp, r3, #TEXT_OFFSET	@ set a temporary stack just below our load address
+	@ r1: mach ID,
+	@ r2: ATAGs/DT, 
+	@ r3: PHYS_ADDR
 
-	// r1 = mach ID,
-	// r2 = ATAGs/DT, 
-	// r3 = PHYS_ADDR
+	bl	create_early_pagetable
+	mov	fp, r0
+
+	@ fp: address of early pgd
+
+	// set a temporary stack just below our pagetable
+	// FIXME: can corrupt ATAG/DTB
+	sub	sp, fp, #4
 
 	// platform setup, initialize MMU, ...
 	// return:
@@ -51,7 +60,8 @@ _os_startup:
 	// r4 = value to load into SCTLR
 
 	ldr	lr, =post_mmu		@ load address to jump when MMU is set
-	mov	r1, #0
+
+	mov	r0, #0			// often need a register with 0x00000000
 
 	MMU_SETUP
 
@@ -59,13 +69,20 @@ _os_startup:
 	ldr	r5,=0xffffffff
 	mcr	DACR(r5)		@ load domain access register
 
-	mov	r6, r3			@ just below our load address
-	mcr	TTBR0(r6)       	@ load TTBR0
+	mcr	ICIALLU(r0)		@ I+BTB cache invalidate
+	mcr	TLBIALL(r0)		@ invalidate I + D TLBs
 
-	mcr	TLBIALL(r1)     	@ flush TLB
+	mov	r5, #TTBCR_N_2G2G
+	mcr	TTBCR(r5)		@ Split 2G/2G
 
+	orr	r5, fp, #TTBR_FLAGS	@ but for now use the same table for TTBR0/1
+	mcr	TTBR0(r5)
+	mcr	TTBR1(r5)
+
+mmu_enable:
+	isb
 	mcr	SCTLR(r4)       	@ write control reg
-	mrc	MIDR(r3)        	@ read id reg
+	isb
 	nop
 	nop
 
@@ -114,6 +131,65 @@ post_mmu:
 #endif
 
 	b	_os_start
+
+////////////////////////////////////////////////////////////////////////////////
+create_early_pagetable:
+	@ r1: must be preserved
+	@ r2: must be preserved
+	@ r3: physical start of RAM
+
+	@ r0: start of page table
+	add	r0, r3, #(TEXT_OFFSET - PGD_NBR_ENT*4)
+
+	@ 1) fill all the entries with fault
+	@ rem: do this in reverse order to spare a register
+	mov	ip, #PGD_NBR_ENT
+	mov	r5, #PGD_TYPE_FAULT
+1:
+	sub	ip, ip, #1
+	cmp	ip, #0
+	str	r5, [r0, ip, lsl #2]
+	bne	1b
+
+	@ 2) create an identity mapping for mmu enable/disable
+	ldr	r4, =mmu_enable
+	sub	r4, r4, #VIRT_ADDR			@ convert virt -> phys
+	add	r4, r4, r3
+
+	ldr	r5, =PGD_INIT_MEM
+	lsr	r4, r4, #PGD_SECT_SHIFT
+	orr	r5, r5, r4, lsl #PGD_SECT_SHIFT
+	str	r5, [r0, r4, lsl #2]
+
+#define IOADDR	0x44e00000
+#define	CONFIG_EARLY_DEBUGGING
+#ifdef	CONFIG_EARLY_DEBUGGING
+	@ 3) create an identity mapping for early early debugging
+	// FIXME: for the moment only a single section
+	ldr	r4, =IOADDR
+	ldr	r5, =PGD_INIT_IO
+	lsr	r4, r4, #PGD_SECT_SHIFT
+	orr	r5, r5, r4, lsl #PGD_SECT_SHIFT
+	str	r5, [r0, r4, lsl #2]
+#endif
+
+	@ 4) create the normal memory phys -> virt mapping for the kernel
+	// FIXME: for the moment just the first 4MB
+	ldr	r5, =PGD_INIT_MEM
+	mov	r4, #(VIRT_ADDR >> PGD_SECT_SHIFT)	@ r4 = VADDR >> PGD_SECT_SHIFT
+	orr	r5, r5, r3				@ r5 = PADDR | PGD_INIT_MEM
+	add	r2, r0, r4, lsl #2			@ r0 = &pgd[vaddr >> PGD_SECT_SHIFT]
+	mov	ip, #4					@ ip = 4 << PGD_SECT_SHIFT
+1:
+	sub	ip, ip, #1
+	cmp	ip, #0
+	add	r4, r5, ip, lsl #PGD_SECT_SHIFT
+	str	r4, [r2, ip, lsl #2]
+	bne	1b
+
+	bx	lr
+ENDFUN(create_early_pagetable)
+////////////////////////////////////////////////////////////////////////////////
 
 
 	.text
