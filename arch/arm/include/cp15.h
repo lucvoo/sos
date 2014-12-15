@@ -19,7 +19,6 @@
 #define IFSR(R)		p15, 0, R,  c5,  c0, 1
 #define DFAR(R)		p15, 0, R,  c6,  c0, 0
 #define IFAR(R)		p15, 0, R,  c6,  c0, 2
-#define PAR(R)		p15, 0, R,  c7,  c4, 0
 
 // cache maintenance & address translation
 #define	ICIALLUIS(R)	p15, 0, R,  c7,  c1, 0	// Invalidate all instruction caches to PoU Inner Shareable ø
@@ -51,14 +50,21 @@
 						// †: implemented only as part of security extension
 
 // TLB operation
-#define	TLBIALLIS(R)	p15, 0, R,  c8,  c3, 0
-#define	TLBIMVAIS(R)	p15, 0, R,  c8,  c3, 1
-#define	TLBIASIDIS(R)	p15, 0, R,  c8,  c3, 2
-#define	TLBIMVAAIS(R)	p15, 0, R,  c8,  c3, 3
-#define	TLBIALL(R)	p15, 0, R,  c8,  c7, 0
-#define	TLBIMVA(R)	p15, 0, R,  c8,  c7, 1
-#define	TLBIASID(R)	p15, 0, R,  c8,  c7, 2
-#define	TLBIMVAA(R)	p15, 0, R,  c8,  c7, 3
+#define	TLBIALLIS(R)	p15, 0, R,  c8,  c3, 0	// Invalidate entire TLB IS ø
+#define	TLBIMVAIS(R)	p15, 0, R,  c8,  c3, 1	// Invalidate unified TLB entry by MVA and ASID IS ø
+#define	TLBIASIDIS(R)	p15, 0, R,  c8,  c3, 2	// Invalidate unified TLB by ASID match IS ø
+#define	TLBIMVAAIS(R)	p15, 0, R,  c8,  c3, 3	// Invalidate unified TLB entry by MVA all ASID IS ø
+#define	ITLBIALL(R)	p15, 0, R,  c8,  c5, 0	// invalidate instruction TLB
+#define	ITLBIMVA(R)	p15, 0, R,  c8,  c5, 1	// invalidate instruction TLB entry by MVA and ASID
+#define	ITLBIASID(R)	p15, 0, R,  c8,  c5, 2	// invalidate instruction TLB by ASID match
+#define	DTLBIALL(R)	p15, 0, R,  c8,  c6, 0	// invalidate data TLB
+#define	DTLBIMVA(R)	p15, 0, R,  c8,  c6, 1	// invalidate data TLB entry by MVA and ASID
+#define	DTLBIASID(R)	p15, 0, R,  c8,  c6, 2	// invalidate data TLB by ASID match
+#define	TLBIALL(R)	p15, 0, R,  c8,  c7, 0	// invalidate unified TLB
+#define	TLBIMVA(R)	p15, 0, R,  c8,  c7, 1	// invalidate unified TLB entry by MVA and ASID
+#define	TLBIASID(R)	p15, 0, R,  c8,  c7, 2	// invalidate unified TLB by ASID match
+#define	TLBIMVAA(R)	p15, 0, R,  c8,  c7, 3	// invalidate unified TLB entries by MVA all ASID ø
+						// ø: introduced as part of multiprocessor extension
 
 // performance monitors
 #define	PMCR(R)		p15, 0, R,  c9,	c12, 0
