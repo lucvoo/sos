@@ -23,9 +23,15 @@
 #define	AIDR(R)		p15, 1, R,  c0,  c0, 7	// Auxiliary ID Register IMPLEMENTATION DEFINED
 #define	CSSELR(R)	p15, 2, R,  c0,  c0, 0	// Cache Size Selection Register
 
-#define SCTLR(R)	p15, 0, R,  c1,  c0, 0
-#define SCR(R)		p15, 0, R,  c1,  c1, 0
-#define NSACR(R)	p15, 0, R,  c1,  c1, 2
+// system control registers
+#define	SCTLR(R)	p15, 0, R,  c1,  c0, 0	// System Control Register
+#define	ACTLR(R)	p15, 0, R,  c1,  c0, 1	// Auxiliary Control Register IMPLEMENTATION DEFINED
+#define	CPACR(R)	p15, 0, R,  c1,  c0, 2	// Coprocessor Access Control Register
+#define	SCR(R)		p15, 0, R,  c1,  c1, 0	// Secure Configuration Register †
+#define	SDER(R)		p15, 0, R,  c1,  c1, 1	// Secure Debug Enable Register †
+#define	NSACR(R)	p15, 0, R,  c1,  c1, 2	// Non-Secure Access Control Register †
+						// †: implemented only as part of security extension
+
 #define TTBR0(R)	p15, 0, R,  c2,  c0, 0
 #define TTBR1(R)	p15, 0, R,  c2,  c0, 1
 #define TTBCR(R)	p15, 0, R,  c2,  c0, 2
