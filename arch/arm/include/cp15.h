@@ -32,14 +32,19 @@
 #define	NSACR(R)	p15, 0, R,  c1,  c1, 2	// Non-Secure Access Control Register †
 						// †: implemented only as part of security extension
 
-#define TTBR0(R)	p15, 0, R,  c2,  c0, 0
-#define TTBR1(R)	p15, 0, R,  c2,  c0, 1
-#define TTBCR(R)	p15, 0, R,  c2,  c0, 2
-#define DFSR(R)		p15, 0, R,  c5,  c0, 0
-#define DACR(R)		p15, 0, R,  c3,  c0, 0
-#define IFSR(R)		p15, 0, R,  c5,  c0, 1
-#define DFAR(R)		p15, 0, R,  c6,  c0, 0
-#define IFAR(R)		p15, 0, R,  c6,  c0, 2
+// memory protection & control
+#define	TTBR0(R)	p15, 0, R,  c2,  c0, 0	// Translation Table Base Register 0
+#define	TTBR1(R)	p15, 0, R,  c2,  c0, 1	// Translation Table Base Register 1
+#define	TTBCR(R)	p15, 0, R,  c2,  c0, 2	// Translation Table Base Control Register
+#define	DACR(R)		p15, 0, R,  c3,  c0, 0	// Domain Access Control Register
+
+// memory system fault registers
+#define	DFSR(R)		p15, 0, R,  c5,  c0, 0	// Data Fault Status Register
+#define	IFSR(R)		p15, 0, R,  c5,  c0, 1	// Intruction Fault Status Register
+#define	ADFSR(R)	p15, 0, R,  c5,  c1, 0	// Auxiliary DFSR
+#define	AIFSR(R)	p15, 0, R,  c5,  c1, 1	// Auxiliary IFSR
+#define	DFAR(R)		p15, 0, R,  c6,  c0, 0	// Data Fault Address Register
+#define	IFAR(R)		p15, 0, R,  c6,  c0, 2	// Instruction Fault Address Register
 
 // cache maintenance & address translation
 #define	ICIALLUIS(R)	p15, 0, R,  c7,  c1, 0	// Invalidate all instruction caches to PoU Inner Shareable ø
