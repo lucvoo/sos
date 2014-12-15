@@ -1,13 +1,28 @@
-#define MIDR(R)		p15, 0, R,  c0,  c0, 0
-#define CTR(R)		p15, 0, R,  c0,  c0, 1
-#define TCMTR(R)	p15, 0, R,  c0,  c0, 2
-#define TLBTR(R)	p15, 0, R,  c0,  c0, 3
-#define MPIDR(R)	p15, 0, R,  c0,  c0, 5
-#define REVIDR(R)	p15, 0, R,  c0,  c0, 6
-#define CCSIDR(R)	p15, 1, R,  c0,  c0, 0
-#define CLIDR(R)	p15, 1, R,  c0,  c0, 1
-#define AIDR(R)		p15, 1, R,  c0,  c0, 7
-#define CSSELR(R)	p15, 2, R,  c0,  c0, 0
+#define	MIDR(R)		p15, 0, R,  c0,  c0, 0	// Main ID Register
+#define	CTR(R)		p15, 0, R,  c0,  c0, 1	// Cache Type Register
+#define	TCMTR(R)	p15, 0, R,  c0,  c0, 2	// TCM Type Register IMPLEMENTATION DEFINED
+#define	TLBTR(R)	p15, 0, R,  c0,  c0, 3	// TLB Type Register IMPLEMENTATION DEFINED
+#define	MPIDR(R)	p15, 0, R,  c0,  c0, 5	// Multiprocessor Affinity Register
+#define	REVIDR(R)	p15, 0, R,  c0,  c0, 6	// Revision ID Register a
+#define	ID_PFR0(R)	p15, 0, R,  c0,  c1, 0	// Processor Feature Register 0
+#define	ID_PFR1(R)	p15, 0, R,  c0,  c1, 1	// Processor Feature Register 1
+#define	ID_DFR0(R)	p15, 0, R,  c0,  c1, 2	// Debug Feature Register 0
+#define	ID_AFR0(R)	p15, 0, R,  c0,  c1, 3	// Auxiliary Feature Register 0
+#define	ID_MMFR0(R)	p15, 0, R,  c0,  c1, 4	// Memory Model Feature Register 0
+#define	ID_MMFR1(R)	p15, 0, R,  c0,  c1, 5	// Memory Model Feature Register 1
+#define	ID_MMFR2(R)	p15, 0, R,  c0,  c1, 6	// Memory Model Feature Register 2
+#define	ID_MMFR3(R)	p15, 0, R,  c0,  c1, 7	// Memory Model Feature Register 3
+#define	ID_ISAR0(R)	p15, 0, R,  c0,  c2, 0	// ISA Feature Register 0
+#define	ID_ISAR1(R)	p15, 0, R,  c0,  c2, 1	// ISA Feature Register 1
+#define	ID_ISAR2(R)	p15, 0, R,  c0,  c2, 2	// ISA Feature Register 2
+#define	ID_ISAR3(R)	p15, 0, R,  c0,  c2, 3	// ISA Feature Register 3
+#define	ID_ISAR4(R)	p15, 0, R,  c0,  c2, 4	// ISA Feature Register 4
+#define	ID_ISAR5(R)	p15, 0, R,  c0,  c2, 5	// ISA Feature Register 5
+#define	CCSIDR(R)	p15, 1, R,  c0,  c0, 0	// Cache Size ID Registers
+#define	CLIDR(R)	p15, 1, R,  c0,  c0, 1	// Cache Level ID Register
+#define	AIDR(R)		p15, 1, R,  c0,  c0, 7	// Auxiliary ID Register IMPLEMENTATION DEFINED
+#define	CSSELR(R)	p15, 2, R,  c0,  c0, 0	// Cache Size Selection Register
+
 #define SCTLR(R)	p15, 0, R,  c1,  c0, 0
 #define SCR(R)		p15, 0, R,  c1,  c1, 0
 #define NSACR(R)	p15, 0, R,  c1,  c1, 2
