@@ -1,0 +1,23 @@
+#ifndef	_ARCH_HW_PROC_V7_H_
+#define	_ARCH_HW_PROC_V7_H_
+
+#include <arch/arch.h>
+
+
+	// VMSAv7:
+	//   AT N
+	//  TFR M EV   F    H   R    S     B
+	// 0EEE I0EE 11I0 01A1 0RVI ZW00 01E1 1CAM
+
+	// 0000 0000 1100 0101 0000 1000 0111 1010
+
+#ifdef	CONFIG_ARMV7_COMPAT
+#define	SCTLR_COMPAT	(SCTLR_SW|SCTLR_BEN)
+#else
+#define	SCTLR_COMPAT	0
+#endif
+
+#define	SCTLR_CLR	(SCTLR_VE|SCTLR_FI|SCTLR_HA|SCTLR_RR|SCTLR_V|SCTLR_A)
+#define	SCTLR_SET	(SCTLR_I|SCTLR_Z|SCTLR_C|SCTLR_M|SCTLR_COMPAT)
+
+#endif

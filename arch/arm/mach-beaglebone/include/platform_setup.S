@@ -5,12 +5,7 @@
 	.endm
 
 
-/* Control register setting						*/
-			//  R
-			// .RVI ZFRS BLDP WCAM
-			// ..11 1001 ..11 1101
-#define	SCTLR_CLR	0
-#define	SCTLR_SET	0
-
-
+#include <arch/hw/proc-v7.h>
 #include <arch/asm-armv7.h>
+
+#define	EARLY_DEBUGING_IOADDR	0x44E00000

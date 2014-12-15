@@ -45,6 +45,15 @@
 #define	PGD_SSECT_SHIFT		24		// PGD_SECT_SHIFT + 4
 #define	PGD_SSECT_SIZE		(0x1 << PGD_SSECT_SHIFT)
 
+// Memory type
+#define	PGD_MT_MEM	(PGD_SECT_TEX(1)|PGD_SECT_C|PGD_SECT_B)	// normal, WBWA
+#define	PGD_MT_DEV	(PGD_SECT_TEX(0)|         0|PGD_SECT_B)	// device shareable
+
+// early init:
+#define	PGD_INIT_RW	(PGD_TYPE_SECT|PGD_SECT_AP0)
+#define	PGD_INIT_MEM	(PGD_INIT_RW|PGD_MT_MEM)
+#define	PGD_INIT_IO	(PGD_INIT_RW|PGD_MT_DEV)
+
 ////////////////////////////////////////////////////////////////////////
 // Middle Directory: not present
 #define	PMD_NBR_SHIFT		0
@@ -102,7 +111,7 @@
 #ifdef CONFIG_SMP
 #define	TTBR_FLAGS	(TTBR_IRGN_WA|TTBR_ORGN_WA|TTBR_S|TTBR_NOS)
 #else
-#define	TTBR_FLAGS	(TTBR_IRGN_WB|TTBR_ORGN_WB)
+#define	TTBR_FLAGS	(TTBR_ORGN_WB|TTBR_C)
 #endif
 
 
