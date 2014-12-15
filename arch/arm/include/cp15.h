@@ -21,7 +21,34 @@
 #define IFAR(R)		p15, 0, R,  c6,  c0, 2
 #define PAR(R)		p15, 0, R,  c7,  c4, 0
 
-// cache operations
+// cache maintenance & address translation
+#define	ICIALLUIS(R)	p15, 0, R,  c7,  c1, 0	// Invalidate all instruction caches to PoU Inner Shareable ø
+#define	BPIALLIS(R)	p15, 0, R,  c7,  c1, 6	// Invalidate all branch predictors Inner Shareable ø
+#define	PAR(R)		p15, 0, R,  c7,  c4, 0	// Physical Address Register
+#define	ICIALLU(R)	p15, 0, R,  c7,  c5, 0	// Invalidate all instruction caches to PoU
+#define	ICIMVAU(R)	p15, 0, R,  c7,  c5, 1	// Invalidate instruction caches by MVA to PoU
+#define	CP15ISB(R)	p15, 0, R,  c7,  c5, 4	// Instruction Synchronization Barrier operation
+#define	BPIALL(R)	p15, 0, R,  c7,  c5, 6	// Invalidate all branch predictors
+#define	BPIMVA(R)	p15, 0, R,  c7,  c5, 7	// Invalidate MVA from branch predictors
+#define	DCIMVAC(R)	p15, 0, R,  c7,  c6, 1	// Invalidate D/U cache line by MVA to PoC
+#define	DCISW(R)	p15, 0, R,  c7,  c6, 2	// Invalidate D/U cache line by set/way
+#define	ATS1CPR(R)	p15, 0, R,  c7,  c8, 0	// PL1 read translation
+#define	ATS1CPW(R)	p15, 0, R,  c7,  c8, 1	// PL1 write translation
+#define	ATS1CUR(R)	p15, 0, R,  c7,  c8, 2	// unprivileged read translation
+#define	ATS1CUW(R)	p15, 0, R,  c7,  c8, 3	// unprivileged write translation
+#define	ATS12NSOPR(R)	p15, 0, R,  c7,  c8, 4	// PL1 read translation †
+#define	ATS12NSOPW(R)	p15, 0, R,  c7,  c8, 5	// PL1 write translation †
+#define	ATS12NSOUR(R)	p15, 0, R,  c7,  c8, 6	// unprivileged read translation †
+#define	ATS12NSOUW(R)	p15, 0, R,  c7,  c8, 7	// unprivileged write translation †
+#define	DCCMVAC(R)	p15, 0, R,  c7, c10, 1	// Clean D/U cache line by MVA to PoC
+#define	DCCSW(R)	p15, 0, R,  c7, c10, 2	// Clean D/U cache line by set/way
+#define	CP15DSB(R)	p15, 0, R,  c7, c10, 4	// Data Synchronization Barrier operation
+#define	CP15DMB(R)	p15, 0, R,  c7, c10, 5	// Data Memory Barrier operation
+#define	DCCMVAU(R)	p15, 0, R,  c7, c11, 1	// Clean D/U cache line by MVA to PoU
+#define	DCCIMVAC(R)	p15, 0, R,  c7, c14, 1	// Clean and invalidate D/U cache line by MVA to PoC
+#define	DCCISW(R)	p15, 0, R,  c7, c14, 2	// Clean and invalidate D/U cache line by set/way
+						// ø: introduced as part of multiprocessor extension
+						// †: implemented only as part of security extension
 
 // TLB operation
 #define	TLBIALLIS(R)	p15, 0, R,  c8,  c3, 0
