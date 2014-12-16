@@ -3,21 +3,6 @@
 #include "arch/memory.h"
 
 
-	.section ".vectors","ax"
-
-__exception_handlers:
-	ldr	pc, =vector_reset	// should never be reached
-	ldr	pc, =vector_undef
-	ldr	pc, =vector_swint
-	ldr	pc, =vector_p_abt
-	ldr	pc, =vector_d_abt
-	.word	0			// unused
-	ldr	pc, =vector_irq
-	ldr	pc, =vector_fiq
-
-	.size __exception_handlers, . - __exception_handlers
-
-
 	.section	".init.text","ax"
 	.global _os_startup
 
@@ -114,3 +99,18 @@ vector_d_abt:
 vector_fiq:
 	b	vector_fiq
 	.size   vector_fiq, .-vector_fiq
+
+
+	.section ".vectors","ax"
+
+__exception_handlers:
+	ldr	pc, =vector_reset	// should never be reached
+	ldr	pc, =vector_undef
+	ldr	pc, =vector_swint
+	ldr	pc, =vector_p_abt
+	ldr	pc, =vector_d_abt
+	.word	0			// unused
+	ldr	pc, =vector_irq
+	ldr	pc, =vector_fiq
+
+	.size __exception_handlers, . - __exception_handlers
