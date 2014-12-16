@@ -111,14 +111,21 @@ vector_fiq:
 	.section ".vectors","ax"
 	.align 5
 
+#ifdef	CONFIG_HAS_VBAR
+#define	EXCEP(handler)	b	handler
+#else
+// The handlers will most probably be too far away from the
+// exception vector (0x00000000 or 0xffff0000) to be able to use a pc relative branch
+#define	EXCEP(handler)	ldr	pc, =handler
+#endif
 __exception_handlers:
-	ldr	pc, =vector_reset	// should never be reached
-	ldr	pc, =vector_undef
-	ldr	pc, =vector_swint
-	ldr	pc, =vector_p_abt
-	ldr	pc, =vector_d_abt
-	.word	0			// unused
-	ldr	pc, =vector_irq
-	ldr	pc, =vector_fiq
+	EXCEP(vector_reset)
+	EXCEP(vector_undef)
+	EXCEP(vector_swint)
+	EXCEP(vector_p_abt)
+	EXCEP(vector_d_abt)
+	.word	0		// unused
+	EXCEP(vector_irq)
+	EXCEP(vector_fiq)
 
 	.size __exception_handlers, . - __exception_handlers
