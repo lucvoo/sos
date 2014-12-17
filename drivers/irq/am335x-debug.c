@@ -1,10 +1,8 @@
-void am335x_intc_dump_regs(void)
+void am335x_intc_dump_regs(void __iomem *iobase)
 {
-	void __iomem *base_addr = (void*) INTC_BASE;
-
 	printf("\nAM335x INTC\n", __FUNCTION__);
 
-#define	DUMP(NAME)	printf("%08X: %s\n", ioread32(base_addr + INTC_ ## NAME), #NAME)
+#define	DUMP(NAME)	printf("%08X: %s\n", ioread32(iobase + INTC_ ## NAME), #NAME)
 
 	DUMP(REVISION);
 	DUMP(SYSCONFIG);

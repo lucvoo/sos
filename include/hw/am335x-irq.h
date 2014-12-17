@@ -30,14 +30,18 @@
 #define	SPURIOUS_IRQ_MASK	(~ACTIVE_IRQ_MASK)
 
 
+// FIXME: this really shoudl use ioremap() but ...
+#define	INTC_BASE_VADDR	L4_PER_VADDR(INTC_BASE)
+
+
 static inline void irq_ack(unsigned int irq)
 {
-	iowrite32(INTC_BASE + INTC_CONTROL, 1);
+	iowrite32(INTC_BASE_VADDR + INTC_CONTROL, 1);
 }
 
 static inline void irq_mask(unsigned int irq)
 {
-	iowrite32(INTC_BASE + INTC_MIR_SET(irq / 32), 1 << (irq % 32));
+	iowrite32(INTC_BASE_VADDR + INTC_MIR_SET(irq / 32), 1 << (irq  % 32));
 }
 
 static inline void irq_mask_ack(unsigned int irq)
@@ -48,7 +52,7 @@ static inline void irq_mask_ack(unsigned int irq)
 
 static inline void irq_unmask(unsigned int irq)
 {
-	iowrite32(INTC_BASE + INTC_MIR_CLEAR(irq / 32), 1 << (irq % 32));
+	iowrite32(INTC_BASE_VADDR + INTC_MIR_CLEAR(irq / 32), 1 << (irq  % 32));
 }
 
 #endif

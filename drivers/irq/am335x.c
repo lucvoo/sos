@@ -9,9 +9,11 @@
 #include "am335x-debug.c"
 #endif
 
+
 static void am335x_handle_irq(struct eframe *regs)
 {
-	void __iomem *base_addr = (void*) INTC_BASE;
+	// FIXME: this really should use ioremap() but ...
+	void __iomem *base_addr = (void __iomem *) L4_PER_VADDR(INTC_BASE);
 
 	do {
 		unsigned int irq;
