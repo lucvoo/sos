@@ -40,10 +40,12 @@
 // Sections
 #define	PGD_SECT_SHIFT		20		// 32 - PGD_NBR_SHIFT
 #define	PGD_SECT_SIZE		(0x1 << PGD_SECT_SHIFT)
+#define	PGD_SECT_MASK		(PGD_SECT_SIZE - 1)
 
 // Super Sections
 #define	PGD_SSECT_SHIFT		24		// PGD_SECT_SHIFT + 4
 #define	PGD_SSECT_SIZE		(0x1 << PGD_SSECT_SHIFT)
+#define	PGD_SSECT_MASK		(PGD_SSECT_SIZE - 1)
 
 // Memory type
 #define	PGD_MT_MEM	(PGD_SECT_TEX(1)|PGD_SECT_C|PGD_SECT_B)	// normal, WBWA
@@ -80,6 +82,7 @@
 
 // Second level small pages (4K)
 #define	PTE_SPAGE_SIZE		(0x1 << 12)
+#define	PTE_SPAGE_MASK		(PTE_SPAGE_SIZE - 1)
 
 #define	PTE_SPAGE_TEX(x)	((x) <<  6)	// memory attributes
 #define	PTE_SPAGE_XN		(0x1 <<  1)	// eXecute Never
