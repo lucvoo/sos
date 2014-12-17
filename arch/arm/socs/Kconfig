@@ -1,0 +1,2 @@
+config SOC_AM335X
+	bool

@@ -54,6 +54,7 @@ config	ARM_ARCH
 	default 6 if ARMV6
 	default 7 if ARMV7
 
+source arch/arm/socs/Kconfig
 
 comment "Memory"
 config	VIRT_ADDR
