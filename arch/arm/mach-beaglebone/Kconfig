@@ -6,6 +6,7 @@ config	MACH_PARAMS
 	bool
 	default y
 	select CORTEX_A8
+	select SOC_AM335X
 
 config PHYS_ADDR
 	hex
