@@ -205,12 +205,18 @@ vector_swint:
 vector_p_abt:
 	mrc	IFSR(r1)
 	mrc	IFAR(r0)
+	mov r2, #'P'
+	mov r3, lr
+	bl diag_abort
 	b	vector_p_abt
 	.size   vector_p_abt, .-vector_p_abt
 
 vector_d_abt:
 	mrc	DFSR(r1)
 	mrc	DFAR(r0)
+	mov r2, #'D'
+	mov r3, lr
+	bl diag_abort
 	b	vector_d_abt
 	.size   vector_d_abt, .-vector_d_abt
 
