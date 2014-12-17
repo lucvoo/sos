@@ -1,23 +1,24 @@
 #include <init.h>
 #include <iomap.h>
+#include <hw/am335x.h>
 #include <utils/array-size.h>
 
 
 static struct iomap_desc iomap_tbl[] = {
 	{	// L4_PER
-		.phys = 0x48000000,
-		.size = 0x01000000,
-		.virt = 0xF0000000,
+		.phys = L4_PER_PHYS,
+		.size = L4_PER_SIZE,
+		.virt = L4_PER_VIRT,
 	},
 	{	// L4_FAST
-		.phys = 0x4A000000,
-		.size = 0x01000000,
-		.virt = 0xF1000000,
+		.phys = L4_FAST_PHYS,
+		.size = L4_FAST_SIZE,
+		.virt = L4_FAST_VIRT,
 	},
 	{	// L4_WKUP
-		.phys = 0x44C00000,
-		.size = 0x00400000,
-		.virt = 0xF2000000,
+		.phys = L4_WKUP_PHYS,
+		.size = L4_WKUP_SIZE,
+		.virt = L4_WKUP_VIRT,
 	},
 };
 
