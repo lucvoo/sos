@@ -15,34 +15,35 @@ static unsigned long *get_pgd(void)
 	return (void *) (pgd & 0xFFFFF000);
 }
 
-static int iomap(const struct iomap_desc *d)
+static int iomap(unsigned long phys, unsigned long size, unsigned long virt)
 {
 	unsigned long *pgd = get_pgd();
-	unsigned long *p;
-	unsigned long f;
 	unsigned int i;
 
 	// only accept sections
-	if (d->phys & PGD_SECT_MASK)
+	if (phys & PGD_SECT_MASK)
 		return -EINVAL;
-	if (d->size & PGD_SECT_MASK)
-		return -EINVAL;
-	if (d->virt & PGD_SECT_MASK)
-		return -EINVAL;
+	phys >>= PGD_SECT_SHIFT;
 
+	if (size & PGD_SECT_MASK)
+		return -EINVAL;
+	size >>= PGD_SECT_SHIFT;
+
+	if (virt & PGD_SECT_MASK)
+		return -EINVAL;
+	virt >>= PGD_SECT_SHIFT;
+
+#if 0
 	// check if the entry are empty
-	p = &pgd[d->virt >> PGD_SECT_SHIFT];
-	i = d->size >> PGD_SECT_SHIFT;
-	for (; i--;) {
-		if ((p[i] & PGD_TYPE_MASK) != PGD_TYPE_FAULT)
+	for (i = size; i--;) {
+		if ((pgd[virt + i] & PGD_TYPE_MASK) != PGD_TYPE_FAULT)
 			return -EINVAL;
 	}
+#endif
 
 	// do the actual mapping
-	i = d->size >> PGD_SECT_SHIFT;
-	f = d->phys | PGD_INIT_IO;
-	for (; i--; f += PGD_SECT_SIZE) {
-		*p++ = f;
+	for (i = size; i--; ) {
+		pgd[virt + i] = (phys + i) << PGD_SECT_SHIFT | PGD_INIT_IO;
 	}
 
 	return 0;
@@ -53,9 +54,11 @@ int iomap_init(const struct iomap_desc *d, unsigned int nbr)
 	int rc = 0;
 
 	for (; nbr; d++, nbr--) {
-		rc = iomap(d);
-		if (rc)
+		rc = iomap(d->phys, d->size, d->virt);
+		if (rc) {
+			//printf("ioremap() fails for %08x-%08x\n", d->phys, d->phys + d->size - 1);
 			break;
+		}
 	}
 
 	return rc;
