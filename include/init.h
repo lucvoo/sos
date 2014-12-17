@@ -7,9 +7,14 @@
 #define	__init		__section(".init.text")
 
 
-#define	__initcall(level,fn) \
-	static void (*__initcall_##fn)(void) __used __section(".initcall" level ".text") = fn
+struct initcall {
+	void (*fun)(void);
+};
 
+#define	__initcall(level,fn) \
+	static struct initcall __initcall_##fn __used __section(".initcall" level ".init") = { \
+		.fun = fn, \
+	}
 
 #define	pure_initcall(fn)		__initcall("0",fn)
 #define	early_initcall(fn)		__initcall("1",fn)
