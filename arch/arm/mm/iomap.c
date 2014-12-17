@@ -1,10 +1,27 @@
 #include <iomap.h>
+#include <io.h>
 #include <arch/memory.h>
 #include <arch/hw/mmu.h>
 #include <arch/cp15.h>
 #include <stringify.h>
 #include <errno.h>
+#include <stddef.h>
 
+
+#if 0
+static void dump_pgd(const unsigned long *p)
+{
+	int i;
+
+	for (i = 0; i < PGD_NBR_ENT; i++) {
+		unsigned long val = p[i];
+
+		if (!val)
+			continue;
+		printf("PGD[%03x] = %08x\n", i, p[i]);
+	}
+}
+#endif
 
 static unsigned long *get_pgd(void)
 {
@@ -62,4 +79,29 @@ int iomap_init(const struct iomap_desc *d, unsigned int nbr)
 	}
 
 	return rc;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+void __iomem *ioremap(unsigned long phys, unsigned long size)
+{
+	unsigned long off = phys & PGD_SECT_MASK;
+	unsigned long *pgd = get_pgd();
+	unsigned long res = 0;
+	unsigned int i;
+
+
+	// lookup matching entry
+	phys = phys >> PGD_SECT_SHIFT;
+	i = PGD_NBR_ENT;
+	for (; i--;) {
+		if ((pgd[i] >> PGD_SECT_SHIFT) == phys) {
+			res = (i << PGD_SECT_SHIFT) | off;
+			break;
+		}
+	}
+
+	// FIXME: find an entry & iomap it
+	return (void __iomem *)res;
 }
