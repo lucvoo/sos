@@ -109,8 +109,12 @@ static struct irqaction irq_timer;
 
 static void __init timer_init(void)
 {
-	void __iomem *base = (void*)IOBASE_DMTIMER0;
+	void __iomem *base;
 	int irq = IRQ_TINT0;
+
+	base = ioremap(IOBASE_DMTIMER0, 0x1000);
+	if (!base)
+		return;
 
 	timerdev_am335x.base = base;
 	timerdev_am335x.irq = irq;
