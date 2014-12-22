@@ -122,6 +122,7 @@ subdirs-y			+= drivers
 subdirs-y			+= kapi
 subdirs-y			+= kernel
 subdirs-y			+= lib
+subdirs-y			+= mm
 
 include scripts/Makefile.build
 scripts/Makefile.build: prepare
