@@ -1,0 +1,1 @@
+objs-y	+= pagemap.o

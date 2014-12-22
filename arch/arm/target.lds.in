@@ -67,4 +67,7 @@ SECTIONS
 	.uninit (NOLOAD) TEXT_ALIGN : {
 			*(SORT_BY_ALIGNMENT(.uninit*))
 	} > ram
+
+	. = ALIGN(PAGE_SIZE);
+	PROVIDE(pagemap = .);
 }
