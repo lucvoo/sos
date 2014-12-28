@@ -4,6 +4,10 @@
 #include <asm-ul.h>
 #include "arch/mach/memory.h"
 
+#if defined(CONFIG_PHYS_ADDR) && !defined(PHYS_ADDR)
+#define	PHYS_ADDR	UL(CONFIG_PHYS_ADDR)
+#endif
+
 #ifndef	VIRT_ADDR
 #define	VIRT_ADDR	UL(CONFIG_VIRT_ADDR)		// Virtual RAM. Same as Linux's PAGE_OFFSET
 #endif
