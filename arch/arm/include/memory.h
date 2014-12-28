@@ -15,4 +15,21 @@
 #define	TEXT_OFFSET	UL(CONFIG_TEXT_OFFSET)
 #endif
 
+
+#ifndef __ASSEMBLY__
+
+#ifdef PHYS_ADDR
+static inline void *phys_to_virt(unsigned long phys)
+{
+	return (void *) phys + (VIRT_ADDR - PHYS_ADDR);
+}
+
+static inline unsigned long virt_to_phys(const void *virt)
+{
+	return (unsigned long) virt - (VIRT_ADDR - PHYS_ADDR);
+}
+#endif
+
+#endif
+
 #endif
