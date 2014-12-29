@@ -16,17 +16,19 @@
 #endif
 
 
-#ifndef __ASSEMBLY__
+#ifndef	__ASSEMBLY__
+
+#include <types/paddr_t.h>
 
 #ifdef PHYS_ADDR
-static inline void *phys_to_virt(unsigned long phys)
+static inline void *phys_to_virt(paddr_t phys)
 {
 	return (void *) phys + (VIRT_ADDR - PHYS_ADDR);
 }
 
-static inline unsigned long virt_to_phys(const void *virt)
+static inline paddr_t virt_to_phys(const void *virt)
 {
-	return (unsigned long) virt - (VIRT_ADDR - PHYS_ADDR);
+	return (paddr_t) virt - (VIRT_ADDR - PHYS_ADDR);
 }
 #endif
 

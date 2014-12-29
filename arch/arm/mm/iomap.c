@@ -32,7 +32,7 @@ static unsigned long *get_pgd(void)
 	return phys_to_virt(pgd & 0xFFFFF000);
 }
 
-static int iomap(unsigned long phys, unsigned long size, unsigned long virt)
+static int iomap(paddr_t phys, unsigned long size, unsigned long virt)
 {
 	unsigned long *pgd = get_pgd();
 	unsigned int i;
@@ -84,7 +84,7 @@ int iomap_init(const struct iomap_desc *d, unsigned int nbr)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void __iomem *ioremap(unsigned long phys, unsigned long size)
+void __iomem *ioremap(paddr_t phys, unsigned long size)
 {
 	unsigned long off = phys & PGD_SECT_MASK;
 	unsigned long *pgd = get_pgd();

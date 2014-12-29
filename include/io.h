@@ -2,8 +2,9 @@
 #define	_IO_H_
 
 #include <arch/io.h>
+#include <types/paddr_t.h>
 
-void __iomem *ioremap(unsigned long phys, unsigned long size);
+void __iomem *ioremap(paddr_t phys, unsigned long size);
 
 static inline void iounmap(void __iomem *addr, unsigned long size)
 {
