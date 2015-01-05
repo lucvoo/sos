@@ -32,6 +32,9 @@ static inline paddr_t virt_to_phys(const void *virt)
 }
 #endif
 
+#define	__phys_to_pfn(phys)	((unsigned long) ((phys) >> PAGE_SHIFT))
+#define	__pfn_to_phys(pfn)	(((paddr_t)(pfn)) << PAGE_SHIFT)
+
 #endif
 
 #endif
