@@ -6,7 +6,7 @@
 #include "arch/cp15.h"
 
 
-	.section	".init.text","ax"
+	.section	".startup.text","ax"
 	.global _os_startup
 
 _os_startup:

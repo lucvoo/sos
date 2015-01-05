@@ -25,6 +25,7 @@ SECTIONS
 {
 
 	.init : {
+			*(.startup.text)
 			*(.init.text)
 
 		PROVIDE(__INITCALL_LIST__ = .);
