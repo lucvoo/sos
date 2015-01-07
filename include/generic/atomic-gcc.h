@@ -68,4 +68,9 @@ static inline int atomic_cmpxchg(atomic_t *ptr, unsigned int old, unsigned int n
 	return __cmpxchg(&ptr->val, old, new);
 }
 
+
+#define	atomic_clr(ptr, msk)	({ msk & __atomic_fetch_and(ptr,~msk, __ATOMIC_SEQ_CST); })
+#define	atomic_or(ptr, msk)	({ msk & __atomic_fetch_or( ptr, msk, __ATOMIC_SEQ_CST); })
+#define	atomic_xor(ptr, msk)	({ msk & __atomic_fetch_xor(ptr, msk, __ATOMIC_SEQ_CST); })
+
 #endif
