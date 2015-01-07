@@ -1,4 +1,6 @@
 #include <page-alloc.h>
+#include <page.h>
+#include <memory.h>
 #include <dlist.h>
 #include <lock.h>
 #include <utils/array-iter.h>
@@ -25,3 +27,22 @@ static void __init page_alloc_init(void)
 	}
 }
 pure_initcall(page_alloc_init);
+
+
+static void freelist_rem(struct page *p, unsigned int order)
+{
+	struct page_freelist *fl = &page_freelists[order];
+
+	lock_acq(&fl->lock);
+	dlist_del(&p->list);
+	lock_rel(&fl->lock);
+}
+
+static void freelist_add(struct page *p, unsigned int order)
+{
+	struct page_freelist *fl = &page_freelists[order];
+
+	lock_acq(&fl->lock);
+	dlist_add_head(&fl->head, &p->list);
+	lock_rel(&fl->lock);
+}
