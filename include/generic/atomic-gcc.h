@@ -3,35 +3,41 @@
 
 // use GCC's builtins
 
+#define	__BARRIER_NONE	__ATOMIC_RELAXED
+#define	__BARRIER_FULL	__ATOMIC_SEQ_CST
+
+#ifdef	CONFIG_SMP
+#define	__BARRIER_SMP	__BARRIER_FULL
+#else
+#define	__BARRIER_SMP	__BARRIER_NONE
+#endif
 
 static inline int atomic_get(const atomic_t *ptr)
 {
-	return __atomic_load_n(&ptr->val, __ATOMIC_RELAXED);
+	return __atomic_load_n(&ptr->val, __BARRIER_NONE);
 }
 
 static inline void atomic_set(atomic_t *ptr, int val)
 {
-	__atomic_store_n(&ptr->val, val, __ATOMIC_RELAXED);
+	__atomic_store_n(&ptr->val, val, __BARRIER_NONE);
 }
 
 
 static inline void atomic_add(atomic_t *ptr, int val)
 {
-	__atomic_add_fetch(&ptr->val, val, __ATOMIC_RELAXED);
+	__atomic_add_fetch(&ptr->val, val, __BARRIER_NONE);
 }
 
 static inline void atomic_sub(atomic_t *ptr, int val)
 {
-	__atomic_sub_fetch(&ptr->val, val, __ATOMIC_RELAXED);
+	__atomic_sub_fetch(&ptr->val, val, __BARRIER_NONE);
 }
 
 static inline int atomic_add_return(atomic_t *ptr, int val)
 {
 	int new;
 
-	// FIXME: this need a SMP barrier to satisfy Linux's semantic
-	new = __atomic_add_fetch(&ptr->val, val, __ATOMIC_RELAXED);
-	// FIXME: this need a SMP barrier to satisfy Linux's semantic
+	new = __atomic_add_fetch(&ptr->val, val, __BARRIER_SMP);
 	return new;
 }
 
@@ -39,9 +45,7 @@ static inline int atomic_sub_return(atomic_t *ptr, int val)
 {
 	int new;
 
-	// FIXME: this need a SMP barrier to satisfy Linux's semantic
-	new = __atomic_sub_fetch(&ptr->val, val, __ATOMIC_RELAXED);
-	// FIXME: this need a SMP barrier to satisfy Linux's semantic
+	new = __atomic_sub_fetch(&ptr->val, val, __BARRIER_SMP);
 	return new;
 }
 
@@ -69,8 +73,8 @@ static inline int atomic_cmpxchg(atomic_t *ptr, unsigned int old, unsigned int n
 }
 
 
-#define	atomic_clr(ptr, msk)	({ msk & __atomic_fetch_and(ptr,~msk, __ATOMIC_SEQ_CST); })
-#define	atomic_or(ptr, msk)	({ msk & __atomic_fetch_or( ptr, msk, __ATOMIC_SEQ_CST); })
-#define	atomic_xor(ptr, msk)	({ msk & __atomic_fetch_xor(ptr, msk, __ATOMIC_SEQ_CST); })
+#define	atomic_clr(ptr, msk)	({ msk & __atomic_fetch_and(ptr,~msk, __BARRIER_SMP); })
+#define	atomic_or(ptr, msk)	({ msk & __atomic_fetch_or( ptr, msk, __BARRIER_SMP); })
+#define	atomic_xor(ptr, msk)	({ msk & __atomic_fetch_xor(ptr, msk, __BARRIER_SMP); })
 
 #endif
