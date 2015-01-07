@@ -30,6 +30,9 @@ static inline paddr_t virt_to_phys(const void *virt)
 {
 	return (paddr_t) virt - (VIRT_ADDR - PHYS_ADDR);
 }
+
+#define	PFN_OFFSET	(PHYS_ADDR >> PAGE_SHIFT)
+
 #endif
 
 #define	__phys_to_pfn(phys)	((unsigned long) ((phys) >> PAGE_SHIFT))
