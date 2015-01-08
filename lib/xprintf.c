@@ -66,7 +66,7 @@ static unsigned int utostr_dec(char *buf, unsigned prec, unsigned long val)
 
 		val = tmp;
 #elif	METH == 2
-		tmp = (val * 0xCCCCCCCDLL) >> 35;		// !!! 64 bits multiply
+		tmp = (val * 0xCCCCCCCDULL) >> 35;		// !!! 64 bits multiply
 		digit = val - (tmp * 10);
 
 		val = tmp;
@@ -74,7 +74,7 @@ static unsigned int utostr_dec(char *buf, unsigned prec, unsigned long val)
 		if (val < 81920)
 			tmp = (val * 0xCCCD) >> 19;
 		else
-			tmp = (val * 0xCCCCCCCDLL) >> 35;	// !!! 64 bits multiply
+			tmp = (val * 0xCCCCCCCDULL) >> 35;	// !!! 64 bits multiply
 		digit = val - (tmp * 10);
 
 		val = tmp;
