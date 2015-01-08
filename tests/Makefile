@@ -1,4 +1,5 @@
 progs-y	:= hello.test
+progs-y	+= fastmod10.test
 progs-y	+= sysregs.test
 progs-y	+= thread.test
 
