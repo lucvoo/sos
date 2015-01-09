@@ -89,3 +89,43 @@ void page_free(struct page *p, unsigned int order)
 	p->order = order;
 	atomic_xor(&p->flags, PG_free);
 }
+
+
+static struct page *freelist_pop(unsigned int order)
+{
+	struct page_freelist *fl = &page_freelists[order];
+	struct page *p;
+
+	lock_acq(&fl->lock);
+	dlist_foreach_entry(p, &fl->head, list) {
+		if (!atomic_clr(&p->flags, PG_free))
+			continue;
+		dlist_del(&p->list);
+		goto found;
+	}
+	p = NULL;
+
+found:
+	lock_rel(&fl->lock);
+
+	return p;
+}
+
+struct page *page_alloc(unsigned int order, unsigned int aflags)
+{
+	struct page *p;
+
+	if (order > MAX_ORDER)
+		return NULL;
+
+	p = freelist_pop(order);
+	if (p)
+		return p;
+
+	// try an higher order block and split it
+	p = page_alloc(order+1, aflags);
+	if (p)
+		page_free(page_to_pfn(p + (1 << order)), order);
+
+	return p;
+}
