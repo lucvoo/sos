@@ -31,6 +31,16 @@ static void __init pages_add(unsigned long pfn, unsigned long nbr)
 	}
 }
 
+static void __init pages_reserved(unsigned long pfn, unsigned int nbr)
+{
+	for (; nbr--; ) {
+		struct page *p = pfn_to_page(pfn + nbr);
+
+		p->flags = PG_reserved;
+	}
+
+	// FIXME: need a barrier?
+}
 
 static int __init paging_init(unsigned long nbr)
 {
@@ -48,6 +58,9 @@ static int __init paging_init(unsigned long nbr)
 	// add all the unused pages to the page freelists
 	pfn = __phys_to_pfn(virt_to_phys(heap_top));
 	pages_add(pfn, nbr - (pfn - PFN_OFFSET));
+
+	// and mark all the others as reserved
+	pages_reserved(PFN_OFFSET, pfn - PFN_OFFSET);
 
 	return 0;
 }
