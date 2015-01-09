@@ -10,6 +10,7 @@
 #define __uninit		__attribute__((section(".uninit")))
 
 #define inline_always		inline __attribute__ ((always_inline))
+#define __noinline		__attribute__ ((noinline))
 
 #define barrier() __asm__ __volatile__("": : :"memory")
 
