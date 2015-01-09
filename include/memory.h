@@ -8,5 +8,6 @@
 extern struct page pagemap[];
 
 #define	pfn_to_page(pfn)	&pagemap[(pfn) - PFN_OFFSET]
+#define	page_to_pfn(pag)	(((pag) - pagemap) + PFN_OFFSET)
 
 #endif
