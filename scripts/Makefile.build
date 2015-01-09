@@ -16,6 +16,16 @@ a_flags        = -Wp,-MD,$(dir $@).$(notdir $@).d $(NOSTDINC_FLAGS) $(CPPFLAGS) 
 cpp_flags      = -Wp,-MD,$(dir $@).$(notdir $@).d $(NOSTDINC_FLAGS) $(CPPFLAGS) \
 		           $($(@D)/EXTRA_CPPFLAGS) $($(basename $@)-cppflags)
 
+# sparse stuff
+ifneq ($(KBUILD_CHECKSRC),0)
+	gcc_basedir:= $(shell $(CC) -print-search-dirs | head -n1 | cut -d ' ' -f 2)
+	prt_checker = @echo "CHECK	$<"
+	def_checker = $(shell echo|$(CPP) $(c_flags) -dD - |sed '/^\# 1 "<command-line>"/,$$d'|grep '^\#define'|sed "s/^\#define \([^ ]*\) \(.*\)/ '-D\1=\2'/")
+	cmd_checker = $(Q)$(CHECK) $(CHECKFLAGS) $(def_checker) -gcc-base-dir $(gcc_basedir) $(c_flags) $<
+else
+	prt_checker = @:
+	cmd_checker = @:
+endif
 # Compile C sources (.c)
 # ---------------------------------------------------------------------------
 
@@ -33,6 +43,8 @@ cmd_cc_i_c = $(CPP) $(c_flags) -dD -o $@ $<
 
 cmd_cc_o_c = $(CC) $(c_flags) -c -o $@ $<
 %.o: %.c scripts/basic/fixdep
+	$(prt_checker)
+	$(cmd_checker)
 	@echo "CC	$@"
 	$(Q)$(cmd_cc_o_c)
 	@scripts/basic/fixdep.sh $(depfile) $@ '$(cmd_cc_o_c)' $(dot-target).cmd

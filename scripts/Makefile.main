@@ -29,6 +29,20 @@ else
 endif
 export Q
 
+####################################
+# for sparse (or some other checker)
+ifeq ("$(origin C)", "command line")
+  KBUILD_CHECKSRC := $(C)
+  CHECK		?= sparse
+  CHECKFLAGS	?= -D__STDC__ -D__STDC_HOSTED__=0 -Dunix -D__unix__ \
+		-Wbitwise
+endif
+ifndef KBUILD_CHECKSRC
+  KBUILD_CHECKSRC := 0
+endif
+
+export KBUILD_CHECKSRC CHECK CHECKFLAGS
+
 ################################################################################
 ifneq ($(filter $(no-dot-config-targets), $(MAKECMDGOALS)),)
 	ifeq ($(filter-out $(no-dot-config-targets), $(MAKECMDGOALS)),)
