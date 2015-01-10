@@ -6,6 +6,7 @@
 #include <sched.h>
 #include <types.h>
 #include <bitops/findbit.h>
+#include <diag.h>
 
 
 #if CONFIG_NR_THREAD_PRIORITY > BITS_PER_LONG
@@ -65,16 +66,19 @@ static void dequeue_thread_locked(struct thread* t, struct run_queue* rq)
 }
 
 #if 0
-void dump_rq(void)
+static void dump_rq(const char *ctxt)
 {
 	struct run_queue* rq = &runq;
 	struct thread* t;
 	int prio;
-	printf("dump rq: idle= %p\n", rq->idle);
-	for (prio=0; prio< CONFIG_NR_THREAD_PRIORITY; prio++) {
+	printf("dump rq @ %s:\n", ctxt);
+	printf("\tidle= %p\n", rq->idle);
+	printf("\tbitmap= %08lX (%lb)\n", rq->bitmap, rq->bitmap);
+
+	for (prio=0; prio < CONFIG_NR_THREAD_PRIORITY; prio++) {
 		if (!dlist_is_empty(&rq->queues[prio])) {
 			printf("    rq[%d]:\n", prio);
-			dlist_for_each_entry(t, &rq->queues[prio], run_list)
+			dlist_foreach_entry(t, &rq->queues[prio], run_list)
 				printf("\t%p\n", t);
 		}
 	}
