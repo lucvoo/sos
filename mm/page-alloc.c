@@ -125,7 +125,7 @@ struct page *page_alloc(unsigned int order, unsigned int aflags)
 	// try an higher order block and split it
 	p = page_alloc(order+1, aflags);
 	if (p)
-		page_free(page_to_pfn(p + (1 << order)), order);
+		page_free(p + (1 << order), order);
 
 	return p;
 }
