@@ -1,5 +1,6 @@
 #include <arch/arch.h>
 #include <arch/asm-offsets.h>
+#include <arch/cp15.h>
 
 
 .macro	vector_entry, name, adjust=0
@@ -71,6 +72,26 @@ vector_\name:
 	str	r0, [sp, #S_PC]
 
 	vector_exit	undef
+
+/*
+ * abort
+ */
+	vector_entry	d_abt, 8
+
+	mrc     DFAR(r1)
+	mrc     DFSR(r2)
+	bl	dabt_handler			// Branch to C handler
+
+	vector_exit	d_abt
+
+
+	vector_entry	p_abt, 4
+
+	mrc     IFAR(r1)
+	mrc     IFSR(r2)
+	bl	pabt_handler			// Branch to C handler
+
+	vector_exit	p_abt
 
 /*
  * interrupt request
