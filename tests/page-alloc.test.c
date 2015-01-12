@@ -19,17 +19,21 @@ static struct pages {
 } pages[MAX_ALLOCS];
 
 
-static unsigned long free_all_tail(unsigned int i)
+static unsigned long free_idx(unsigned int i)
+{
+	struct pages *p = &pages[i];
+	unsigned int order = p->o;
+
+	page_free(p->p, order);
+	return 1 << order;
+}
+
+static unsigned long free_all_tail(unsigned int max)
 {
 	unsigned long n = 0;
 
-	while (i--) {
-		struct pages *p = &pages[i];
-		unsigned int order = p->o;
-
-		dbg("freeing page %p (pfn = %lx)\n", p->p, page_to_pfn(p->p));
-		page_free(p->p, order);
-		n += 1 << order;
+	while (max--) {
+		n += free_idx(max);
 	}
 
 	dbg("%s(): free %lu pages\n", __func__, n);
