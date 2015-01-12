@@ -19,7 +19,7 @@ static struct pages {
 } pages[MAX_ALLOCS];
 
 
-static unsigned long free_allocated_pages(unsigned int i)
+static unsigned long free_all_tail(unsigned int i)
 {
 	unsigned long n = 0;
 
@@ -36,7 +36,7 @@ static unsigned long free_allocated_pages(unsigned int i)
 	return n;
 }
 
-static int test_alloc_free_all(void)
+static int test_alloc_free_all(const char *name, unsigned long (*free_all)(unsigned int max))
 {
 	unsigned long n = 0;
 	unsigned int i = 0;
@@ -62,16 +62,16 @@ static int test_alloc_free_all(void)
 
 	dbg("no memory left! (nbr alloc = %u)\n", i);
 
-	f = free_allocated_pages(i);
+	f = free_all(i);
 	if (f != n) {
-		printf("ERROR! %s(): f = %lu but n was %lu\n", __func__, f, n);
+		printf("ERROR! %s():%s: f = %lu but n was %lu\n", __func__, name, f, n);
 		return 1;
 	}
 
 	return 0;
 }
 
-#define RESULT(X)	if (X) ko++; else ok++
+#define RESULT(R, F)	if (R(#F, F)) ko++; else ok++
 
 static void fun(void* data)
 {
@@ -80,7 +80,7 @@ static void fun(void* data)
 	int i;
 
 	for (i = 0; i < 64; i++) {
-		RESULT(test_alloc_free_all());
+		RESULT(test_alloc_free_all, free_all_tail);
 	}
 
 	printf("TEST page-alloc: fail = %u, succeed = %i\n", ko, ok);
