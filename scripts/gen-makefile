@@ -20,6 +20,10 @@ do_makefile()
 		sed "s:^[a-zA-Z0-9_-]*-objs:$dir/&:"| \
 		cat
 	echo
+	echo "ifneq (\$(progs-y),)"
+	echo "objs-y += \$(progs-y:%=%.o)"
+	echo "endif"
+	echo
 	echo "ifneq (\$(objs-y),)"
 	echo "objs := \$(objs-y:%=$dir/%)"
 	echo "-include \$(objs-y:%.o=$dir/.%.o.cmd)"
