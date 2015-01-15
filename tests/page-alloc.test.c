@@ -6,6 +6,7 @@
 #include <page.h>
 #include <page-alloc.h>
 #include <memory.h>
+#include <debug.h>
 
 
 static struct thread t __uninit;
@@ -26,11 +27,12 @@ static unsigned long free_allocated_pages(unsigned int i)
 		struct pages *p = &pages[i];
 		unsigned int order = p->o;
 
+		dbg("freeing page %p (pfn = %lx)\n", p->p, page_to_pfn(p->p));
 		page_free(p->p, order);
 		n += 1 << order;
 	}
 
-	//printf("%s(): free %lu pages\n", __func__, n);
+	dbg("%s(): free %lu pages\n", __func__, n);
 	return n;
 }
 
@@ -52,13 +54,13 @@ static int test_alloc_free_all(void)
 			pages[i++] = ((struct pages) { p, order, });
 		}
 
-		//printf("page_alloc(%2u) => page:%p, pfn:%lx (tot:%lu)\n", order, p, page_to_pfn(p), n);
+		dbg("page_alloc(%2u) => page:%p, pfn:%lx (tot:%lu)\n", order, p, page_to_pfn(p), n);
 
 		if (!p && order == 0)
 			break;
 	}
 
-	//printf("DEBUG: no memory left! (nbr alloc = %u)\n", i);
+	dbg("no memory left! (nbr alloc = %u)\n", i);
 
 	f = free_allocated_pages(i);
 	if (f != n) {
