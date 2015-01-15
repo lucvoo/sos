@@ -30,6 +30,19 @@ static unsigned long free_idx(unsigned int i)
 	return 1 << order;
 }
 
+static unsigned long free_all_head(unsigned int max)
+{
+	unsigned long n = 0;
+	unsigned int i;
+
+	for (i = 0; i < max; i++) {
+		n += free_idx(i);
+	}
+
+	dbg("%s(): free %lu pages\n", __func__, n);
+	return n;
+}
+
 static unsigned long free_all_tail(unsigned int max)
 {
 	unsigned long n = 0;
@@ -87,6 +100,7 @@ static void fun(void* data)
 
 	for (i = 0; i < 64; i++) {
 		RESULT(test_alloc_free_all, free_all_tail);
+		RESULT(test_alloc_free_all, free_all_head);
 	}
 
 	printf("TEST page-alloc: fail = %u, succeed = %i\n", ko, ok);
