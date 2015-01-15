@@ -25,6 +25,8 @@ static unsigned long free_idx(unsigned int i)
 	unsigned int order = p->o;
 
 	page_free(p->p, order);
+
+	dbg("pf(%2u): pfn=%lx\n", order, page_to_pfn(p->p));
 	return 1 << order;
 }
 
@@ -58,13 +60,13 @@ static int test_alloc_free_all(const char *name, unsigned long (*free_all)(unsig
 			pages[i++] = ((struct pages) { p, order, });
 		}
 
-		dbg("page_alloc(%2u) => page:%p, pfn:%lx (tot:%lu)\n", order, p, page_to_pfn(p), n);
+		dbg("pa(%2u): pfn=%lx tot=%lu\n", order, page_to_pfn(p), n);
 
 		if (!p && order == 0)
 			break;
 	}
 
-	dbg("no memory left! (nbr alloc = %u)\n", i);
+	dbg("no memory left! (nbr alloc = %u, total = %lu)\n", i, n);
 
 	f = free_all(i);
 	if (f != n) {
