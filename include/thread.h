@@ -48,7 +48,7 @@ static inline void thread_flag_clear(struct thread* t, unsigned long flag)
 }
 
 
-int  thread_create(struct thread* t, int priority, void (*entry_func)(void*), void* entry_data);
+int  thread_create(struct thread* t, int prio, void (*func)(void*), void* data);
 void thread_start(struct thread* t);
 void thread_yield(void);
 void thread_sleep(void);

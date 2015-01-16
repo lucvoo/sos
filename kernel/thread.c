@@ -3,15 +3,15 @@
 #include <stddef.h>
 
 
-int thread_create(struct thread* t, int priority, void (*entry_func)(void*), void* entry_data)
+int thread_create(struct thread* t, int prio, void (*func)(void*), void* data)
 {
-	t->priority	= priority;
+	t->priority	= prio;
 	t->flags	= TIF_NEED_RESCHED;
 	t->state	= THREAD_STATE_SLEEPING;
 
 	t->run_list.next = NULL;
 
-	thread_load_context(t, entry_func, entry_data);
+	thread_load_context(t, func, data);
 
 	return 0;
 }
