@@ -116,7 +116,7 @@ static void softirq_dsr(struct softirq_action* action)
 
 static void init_softirq_dsr(void)
 {
-	softirq_register(SOFTIRQ_DSR, softirq_dsr, 0);
+	softirq_register(SOFTIRQ_DSR, softirq_dsr, NULL);
 }
 pure_initcall(init_softirq_dsr);
 #endif

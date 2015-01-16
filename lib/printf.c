@@ -14,7 +14,7 @@ static int _putx(const char *buf, unsigned n, char *dest, unsigned size)
 
 void vprintf(const char *fmt, va_list ap)
 {
-	xprintf(_putx, 0, -1, fmt, ap);
+	xprintf(_putx, NULL, -1, fmt, ap);
 }
 
 void printf(const char *fmt, ...)
@@ -22,6 +22,6 @@ void printf(const char *fmt, ...)
 	va_list ap;
 
 	va_start(ap, fmt);
-	xprintf(_putx, 0, -1, fmt, ap);
+	xprintf(_putx, NULL, -1, fmt, ap);
 	va_end(ap);
 }

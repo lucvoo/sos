@@ -62,7 +62,7 @@ static void dequeue_thread_locked(struct thread* t, struct run_queue* rq)
 	unsigned prio = t->priority;
 
 	dlist_del(&t->run_list);
-	t->run_list.next = 0;
+	t->run_list.next = NULL;
 	if (dlist_is_empty(&rq->queues[prio]))
 		rq->bitmap &= ~(1 << prio);
 }

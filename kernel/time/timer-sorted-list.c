@@ -45,7 +45,7 @@ static void timer_program(void)
 
 loop:
 	if (dlist_is_empty(&timers.head)) {
-		timer_dbg(0, 0, "---");
+		timer_dbg(NULL, 0, "---");
 		return;
 	}
 
@@ -54,7 +54,7 @@ loop:
 	timer_dbg(t, 0, "prg");
 	if (rc) {
 		dlist_del(&t->node);
-		timer_dbg(0, 0, "!!!");
+		timer_dbg(NULL, 0, "!!!");
 		t->action(t->data);
 		goto loop;
 	}
