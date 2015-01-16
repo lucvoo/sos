@@ -1,1 +1,53 @@
+* s/printf/printk/
 * error/info/debug reporting functions
+* have some decent logging system
+* cleanup early MMU mapping (remove the identity mapping)
+* add a real fault handler
+* free __init memory
+* add kmalloc (going to the full slab/kmem_cache ?)
+* generic irq operations (iomap irq base address at registration time)
+* add support for no-mmu ?
+* generic serial-out
+* add serial input
+  * add support for a small monitor (dump info, read system registers, launch tests, ...)
+* add support for DT?
+* port to raspberry-pi (ARMV6 - ARM11)
+* prepare port to MIPS?
+* watchdog drivers
+* add gpio/pinctrl driver
+* add led driver
+* add clock subsystem
+* add real timer subsystem
+* cleanup this kapi thing
+* cleanup scheduler
+* some header need to move to uapi/?
+
+* network
+  * look for ethernet driver?
+  * have a very simple stack 
+  * have support for something very simple, like TFTP or ping
+
+* Block layer
+  * infrastructure
+  * add support for some block device (SD card / eMMC)
+  * would be nice to have support for SATA ...
+
+* FS
+  * vfs
+  * FAT
+  * a very simple filesystem
+  * those are very little usefull without user space support ...
+
+* SMP
+  * add memory barriers
+  * add (spin)locks
+  * add semaphores
+  * scheduler SMP-awareness
+  * add per-cpu infrastructure ?
+
+* MM
+  * add support for highmem
+
+* ARM:
+  * add support for ARMv4/ARMv5 ?
+  * add support for LPAE ?
