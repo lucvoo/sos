@@ -1,4 +1,5 @@
 #include <thread.h>
+#include <sched.h>
 
 
 static void thread_entry(void)
@@ -9,6 +10,9 @@ static void thread_entry(void)
 	void *data = (void*) ctxt->r5;
 
 	func(data);
+
+	t->state = THREAD_STATE_EXITED;
+	thread_schedule();
 }
 
 void thread_load_context(struct thread* t, void (*func)(void*), void* data)
