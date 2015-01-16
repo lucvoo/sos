@@ -22,6 +22,27 @@ static inline struct thread* get_current_thread(void)
 	register unsigned long sp asm ("sp");
 	return (struct thread *)(sp & ~(THREAD_SIZE - 1));
 }
+
+static inline void set_current_thread(struct thread *curr)
+{
+}
+
+#else
+
+#include <stringify.h>
+#include <arch/cp15.h>
+
+static inline struct thread* get_current_thread(void)
+{
+	register struct thread *curr;
+        asm volatile("mrc " STRINGIFY(TPIDRPRW(%0)) : "=r" (curr));
+	return curr;
+}
+
+static inline void set_current_thread(struct thread *curr)
+{
+        asm volatile("mcr " STRINGIFY(TPIDRPRW(%0)) :: "r" (curr));
+}
 #endif
 
 #endif

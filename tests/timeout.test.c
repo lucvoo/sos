@@ -6,6 +6,7 @@
 
 
 static struct thread a __uninit;
+static char stack[1024];
 
 static void fun(void* data)
 {
@@ -24,6 +25,8 @@ void kapi_start(void)
 {
 	printf(os_version);
 
+	a.stack_base = stack;
+	a.stack_size = sizeof(stack);
 	thread_create(&a, 2, fun, 0);
 	thread_start(&a);
 }

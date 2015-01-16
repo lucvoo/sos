@@ -18,9 +18,6 @@ struct run_queue {
 	struct lock		lock;
 	struct dlist_head	queues[CONFIG_NR_THREAD_PRIORITY];
 	unsigned long		bitmap;
-#ifndef	CONFIG_FIXED_STACKS
-	struct thread*		curr;
-#endif
 	struct thread*		idle;
 };
 
@@ -110,11 +107,9 @@ need_resched:
 	}
 
 	if (prev != next) {
+		set_current_thread(next);
 		prev = context_switch(prev, next);
 		barrier();
-#ifndef	CONFIG_FIXED_STACKS
-		rq->curr = next;
-#endif
 	}
 	lock_rel_irq(&rq->lock);
 
