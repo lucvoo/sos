@@ -54,6 +54,10 @@ config	ARM_ARCH
 	default 6 if ARMV6
 	default 7 if ARMV7
 
+config	BITS
+	int
+	default 32
+
 source arch/arm/socs/Kconfig
 
 comment "Memory"

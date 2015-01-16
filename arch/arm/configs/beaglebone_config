@@ -1,6 +1,6 @@
 #
 # Automatically generated make config: don't edit
-# Tue Dec 30 02:36:23 2014
+# Fri Jan 16 07:29:25 2015
 #
 CONFIG_ARCH_ARM=y
 CONFIG_ARCH=arm
@@ -12,6 +12,7 @@ CONFIG_PHYS_SIZE=0x10000000
 CONFIG_CORTEX_A8=y
 CONFIG_ARMV7=y
 CONFIG_ARM_ARCH=7
+CONFIG_BITS=32
 CONFIG_SOC_AM335X=y
 
 #
