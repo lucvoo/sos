@@ -83,6 +83,8 @@ post_mmu:
 	ldr	r0, =__exception_handlers
 	mcr	VBAR(r0)
 #endif
+
+#if CONFIG_ARM_ARCH < 6
 	// initialize interrupt/exception environments
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_IRQ)
 	msr     cpsr_c, r0
@@ -95,6 +97,7 @@ post_mmu:
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_ABT)
 	msr     cpsr_c, r0
 	ldr     sp,=__exception_stack + CONFIG_EXCEPTION_STACK_SIZE
+#endif
 
 	// initialize CPSR (machine state register)
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_SVC)
