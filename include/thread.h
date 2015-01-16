@@ -17,12 +17,8 @@
 #include <dlist.h>
 
 
-typedef	void (*__entry_fun)(void*);
-
 struct thread {
 	struct cpu_context	cpu_context;
-	__entry_fun		entry_point;
-	void*			entry_data;
 	unsigned int		priority;
 	struct dlist		run_list;
 	unsigned long		flags;
