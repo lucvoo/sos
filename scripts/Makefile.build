@@ -19,9 +19,10 @@ cpp_flags      = -Wp,-MD,$(dir $@).$(notdir $@).d $(NOSTDINC_FLAGS) $(CPPFLAGS) 
 # sparse stuff
 ifneq ($(KBUILD_CHECKSRC),0)
 	gcc_basedir:= $(shell $(CC) -print-search-dirs | head -n1 | cut -d ' ' -f 2)
+	chk_flags  := -m$(CONFIG_BITS) $(CHECKFLAGS) $(CF)
 	prt_checker = @echo "CHECK	$<"
 	def_checker = $(shell echo|$(CPP) $(c_flags) -dD - |sed '/^\# 1 "<command-line>"/,$$d'|grep '^\#define'|sed "s/^\#define \([^ ]*\) \(.*\)/ '-D\1=\2'/")
-	cmd_checker = $(Q)$(CHECK) $(CHECKFLAGS) $(def_checker) -gcc-base-dir $(gcc_basedir) $(c_flags) $<
+	cmd_checker = $(Q)$(CHECK) $(chk_flags) $(def_checker) -gcc-base-dir $(gcc_basedir) $(c_flags) $<
 else
 	prt_checker = @:
 	cmd_checker = @:
