@@ -6,6 +6,7 @@
 #include <utils/array-iter.h>
 #include <atomic.h>
 #include <init.h>
+#include <debug.h>
 
 
 #define	MAX_ORDER	12
@@ -28,6 +29,55 @@ static void __init page_alloc_init(void)
 	}
 }
 pure_initcall(page_alloc_init);
+
+
+/**********************************************************************************************/
+// Check consistency of the pages in the freelists
+
+static int page_alloc_verify_page(struct page *p, unsigned int order, int i, unsigned long flags)
+{
+	if (p[i].flags != flags) {
+		dbg("%s(%p:%lx, %u) %p:%lx->flags is %lx instead of %u\n", __func__,
+			p, page_to_pfn(p), order, &p[i], page_to_pfn(&p[i]), p[i].flags, flags);
+		return 1;
+	}
+
+	return 0;
+}
+
+static int page_alloc_verify_block(struct page *p, unsigned int order)
+{
+	unsigned long size = 1 << order;
+	unsigned int i;
+	int rc;
+
+	rc = page_alloc_verify_page(p, order, 0, PG_free);
+
+	for (i = 1; i < size; i++ )
+		rc += page_alloc_verify_page(p, order, i, 0x0);
+
+	return rc;
+}
+
+static int __used page_alloc_verify(void)
+{
+	unsigned int order;
+	int rc = 0;
+
+	for (order = 0; order <= MAX_ORDER; order++) {
+		struct page_freelist *fl = &page_freelists[order];
+		struct page *p;
+
+		lock_acq(&fl->lock);
+		dlist_foreach_entry(p, &fl->head, list) {
+			rc += page_alloc_verify_block(p, order);
+		}
+		lock_rel(&fl->lock);
+	}
+
+	return rc;
+}
+/**********************************************************************************************/
 
 
 static void freelist_rem(struct page *p, unsigned int order)
