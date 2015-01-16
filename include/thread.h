@@ -54,6 +54,6 @@ void thread_yield(void);
 void thread_sleep(void);
 void thread_wakeup(struct thread* t);
 
-void thread_load_context(struct thread* t, void (*func)(void*), void* data, void (*entry)(void));
+void thread_load_context(struct thread* t, void (*func)(void*), void* data);
 
 #endif

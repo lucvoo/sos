@@ -24,10 +24,4 @@ static inline struct thread* get_current_thread(void)
 }
 #endif
 
-#define	thread_initial_context(t, func, data)	\
-do {						\
-	func = (void*) t->cpu_context.r4;	\
-	data = (void*) t->cpu_context.r5;	\
-} while (0)
-
 #endif
