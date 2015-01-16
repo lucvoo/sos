@@ -35,6 +35,7 @@ ifeq ("$(origin C)", "command line")
   KBUILD_CHECKSRC := $(C)
   CHECK		?= sparse
   CHECKFLAGS	?= -D__STDC__ -D__STDC_HOSTED__=0 -Dunix -D__unix__ \
+		-Wno-decl \
 		-Wbitwise
 endif
 ifndef KBUILD_CHECKSRC
