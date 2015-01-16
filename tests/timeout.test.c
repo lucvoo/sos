@@ -25,8 +25,6 @@ void kapi_start(void)
 {
 	printf(os_version);
 
-	a.stack_base = stack;
-	a.stack_size = sizeof(stack);
-	thread_create(&a, 2, fun, 0);
+	thread_create(&a, 2, fun, 0, stack, sizeof(stack));
 	thread_start(&a);
 }

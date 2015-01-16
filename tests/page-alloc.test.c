@@ -136,6 +136,6 @@ void kapi_start(void)
 {
 	printf(os_version);
 
-	thread_create(&t, 2, fun, NULL);
+	thread_create(&t, 2, fun, NULL, NULL, 0);
 	thread_start(&t);
 }

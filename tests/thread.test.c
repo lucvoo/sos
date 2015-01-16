@@ -42,11 +42,11 @@ void kapi_start(void)
 
 	printf(os_version);
 
-	thread_create(&a, 2, fun, namea);
-	thread_create(&b, 2, fun, nameb);
+	thread_create(&a, 2, fun, namea, NULL, 0);
+	thread_create(&b, 2, fun, nameb, NULL, 0);
 	thread_start(&a);
 	thread_start(&b);
 
-	thread_create(&c, 2, func, namec);
+	thread_create(&c, 2, func, namec, NULL, 0);
 	thread_start(&c);
 }
