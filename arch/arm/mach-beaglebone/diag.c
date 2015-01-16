@@ -3,7 +3,7 @@
 #include <arch/io.h>
 
 
-#define	DIAG_BASE	0x44e09000
+#define	DIAG_BASE	((void __iomem *) 0x44e09000)
 #define	DIAG_THR	(DIAG_BASE + 0x00)
 #define	DIAG_LSR	(DIAG_BASE + 0x14)
 

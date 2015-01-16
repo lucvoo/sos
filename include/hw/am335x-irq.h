@@ -31,7 +31,7 @@
 
 
 // FIXME: this really shoudl use ioremap() but ...
-#define	INTC_BASE_VADDR	L4_PER_VADDR(INTC_BASE)
+#define	INTC_BASE_VADDR	((void __iomem*) L4_PER_VADDR(INTC_BASE))
 
 
 static inline void irq_ack(unsigned int irq)
