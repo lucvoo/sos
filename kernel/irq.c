@@ -3,7 +3,6 @@
 #include <irq_stat.h>
 #include <irqflags.h>
 #include <lock.h>
-#include <compiler.h>
 
 
 static struct irqdesc irq_descs[NR_IRQS];

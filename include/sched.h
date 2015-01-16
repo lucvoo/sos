@@ -2,7 +2,6 @@
 #define	_SCHED_H_
 
 #include <thread.h>
-#include <compiler.h>
 
 static inline int thread_need_resched_test(const struct thread* t)
 {
