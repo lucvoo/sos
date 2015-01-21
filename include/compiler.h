@@ -12,7 +12,6 @@
 #define inline_always		inline __attribute__ ((always_inline))
 #define __noinline		__attribute__ ((noinline))
 
-#define barrier() __asm__ __volatile__("": : :"memory")
 
 #define	offsetof(type, member)	__builtin_offsetof(type, member)
 

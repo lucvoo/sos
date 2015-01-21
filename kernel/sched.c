@@ -7,6 +7,7 @@
 #include <types.h>
 #include <bitops/findbit.h>
 #include <diag.h>
+#include <barrier.h>
 
 
 #if CONFIG_NR_THREAD_PRIORITY > BITS_PER_LONG
