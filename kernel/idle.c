@@ -1,5 +1,5 @@
 #include <idle.h>
-#include <arch/mach/idle.h>
+#include <arch/idle.h>
 #include <irqflags.h>
 #include <sched.h>
 
