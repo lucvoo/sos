@@ -24,6 +24,9 @@ config GC_SECTIONS_SHOW
 	bool "Show sections GCed"
 	depends on GC_SECTIONS
 
+config	CROSS_COMPILE
+	symbol "Cross compile prefix"
+
 endmenu
 
 
