@@ -21,7 +21,8 @@ do_makefile()
 		cat
 	echo
 	echo "ifneq (\$(progs-y),)"
-	echo "objs-y += \$(progs-y:%=%.o)"
+	echo "-include \$(progs-y:%=$dir/.%.o.cmd)"
+	echo "-include \$(progs-y:%=$dir/.%.s.cmd)"
 	echo "endif"
 	echo
 	echo "ifneq (\$(objs-y),)"
