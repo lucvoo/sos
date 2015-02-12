@@ -143,7 +143,10 @@ libtarget.a: $(libs)
 
 _all: libtarget.a FORCE
 
-symlinks:= include/arch include/mach
+symlinks := include/arch
+ifdef CONFIG_MACH
+symlinks += include/mach
+endif
 .PHONY: prepare
 prepare: $(symlinks) $(asm-offsets)
 
