@@ -147,6 +147,9 @@ symlinks := include/arch
 ifdef CONFIG_MACH
 symlinks += include/mach
 endif
+ifdef CONFIG_SOC
+symlinks += include/soc
+endif
 .PHONY: prepare
 prepare: $(symlinks) $(asm-offsets)
 
@@ -156,6 +159,10 @@ include/arch: .config
 	@touch $@/$$; rm $@/$$	# force $@ dir to be older than .config
 include/mach: SRC=arch/$(CONFIG_ARCH)/mach-$(CONFIG_MACH)/include
 include/mach: .config
+	@echo "SYMLINK	$@"
+	$(Q) if [ -d "${SRC}" ]; then ln -sfn "../${SRC}" $@; touch $@/$$; rm $@/$$; fi
+include/soc: SRC=arch/$(CONFIG_ARCH)/socs/$(CONFIG_SOC)/include
+include/soc: .config
 	@echo "SYMLINK	$@"
 	$(Q) if [ -d "${SRC}" ]; then ln -sfn "../${SRC}" $@; touch $@/$$; rm $@/$$; fi
 

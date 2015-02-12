@@ -3,3 +3,4 @@ autoconf.h
 arch
 plat
 mach
+soc
