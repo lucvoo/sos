@@ -1,6 +1,6 @@
 #include <arch/assembly.h>
 #include "arch/arch.h"
-#include "arch/mach/platform_setup.S"
+#include <mach/platform_setup.S>
 #include "arch/memory.h"
 #include "arch/hw/mmu.h"
 #include "arch/cp15.h"

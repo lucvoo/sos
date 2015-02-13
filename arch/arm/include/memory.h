@@ -2,7 +2,7 @@
 #define	_ARCH_MEMORY_H_
 
 #include <asm-ul.h>
-#include "arch/mach/memory.h"
+#include <mach/memory.h>
 
 #if defined(CONFIG_PHYS_ADDR) && !defined(PHYS_ADDR)
 #define	PHYS_ADDR	UL(CONFIG_PHYS_ADDR)

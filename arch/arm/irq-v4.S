@@ -1,5 +1,5 @@
 #include <arch/arch.h>
-#include <arch/mach/irq.S>
+#include <mach/irq.S>
 #include <arch/asm-offsets.h>
 
 	.text
