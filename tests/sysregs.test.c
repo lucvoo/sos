@@ -1,9 +1,9 @@
 #include <kapi/kapi.h>
 #include <version.h>
 #include <sched.h>
+#include <debug.h>
 
 
-extern void dump_system_regs(void);
 void kapi_start(void)
 {
 	printf(os_version);
