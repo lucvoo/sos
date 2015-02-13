@@ -34,7 +34,7 @@ static int handle_IRQ_event(unsigned int irq, struct irqaction *action)
 static void handle_level_irq(unsigned int irq, struct irqdesc *desc)
 {
 	struct irqaction *action;
-	int ret;
+	int ret __unused;
 
 	lock_acq(&desc->lock);
 	irq_mask_ack(irq);

@@ -73,12 +73,18 @@ config	FIXED_STACKS_SHIFT
 	range 12 14
 	default 14
 
+config	SOFTIRQ
+	bool "Need softirq?"
+	default n
+
 config	KSOFTIRQ
 	bool "Use a specific thread for delaying softirq"
+	depends on SOFTIRQ
 	default n
 	
 config	DSR
 	bool "Want DSR?"
+	depends on SOFTIRQ
 	default n
 
 config	REMOVE_INIT_SECTIONS

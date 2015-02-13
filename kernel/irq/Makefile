@@ -1,2 +1,2 @@
 objs-y	+= irq.o
-objs-y	+= softirq.o
+objs-$(CONFIG_SOFTIRQ)	+= softirq.o
