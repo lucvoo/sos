@@ -139,7 +139,7 @@ libtarget.a: $(libs)
 
 _all: libtarget.a FORCE
 
-symlinks:= include/arch include/mach include/arch/mach
+symlinks:= include/arch include/mach
 .PHONY: prepare
 prepare: $(symlinks) $(asm-offsets)
 
@@ -151,10 +151,6 @@ include/mach: SRC=arch/$(CONFIG_ARCH)/mach-$(CONFIG_MACH)/include
 include/mach: .config
 	@echo "SYMLINK	$@"
 	$(Q) if [ -d "${SRC}" ]; then ln -sfn "../${SRC}" $@; touch $@/$$; rm $@/$$; fi
-include/arch/mach: include/arch
-	@echo "SYMLINK	$@"
-	$(Q)ln -sfn ../mach-$(CONFIG_MACH)/include $@
-	@touch $@/$$; rm $@/$$	# force $@ dir to be older than .config
 
 $(asm-offsets): $(symlinks)
 
