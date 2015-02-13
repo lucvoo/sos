@@ -32,6 +32,16 @@ struct thread {
 #endif
 
 
+static inline unsigned long thread_get_stack_top(const struct thread *t)
+{
+#ifndef	CONFIG_FIXED_STACKS
+	return (unsigned long)t->stack_base + t->stack_size;
+#else
+	return (unsigned long)t + THREAD_SIZE;
+#endif
+}
+
+
 static inline int thread_flag_test(const struct thread* t, unsigned long flag)
 {
 	return t->flags & flag;
