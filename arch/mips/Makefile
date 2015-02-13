@@ -5,3 +5,5 @@ objs-y	+= 	switch_to.o
 
 deps-y	:= \
 	target.lds	\
+
+subdirs-y			+= debug/
