@@ -1,2 +1,5 @@
-/* arch/arm/debug/dump_system_regs.c */
-void dump_system_regs(void);
+#ifndef	_ARCH_DEBUG_H_
+#define	_ARCH_DEBUG_H_
+
+
+#endif

@@ -1,4 +1,4 @@
-#include <arch/debug.h>
+#include <debug.h>
 #include <arch/cp15.h>
 #include <stringify.h>
 
