@@ -1,0 +1,36 @@
+config ARCH
+	symbol
+	default mips
+
+
+config	ENDIAN_BIG
+	bool
+config	ENDIAN_LITTLE
+	bool
+config	CPU_HAS_SYNC
+	bool
+
+config	MIPS32
+	bool
+
+config	CPU_MIPS32R2
+	bool "MIPS32 Release 2"
+	select MIPS32
+	select CPU_HAS_SYNC
+
+config	BITS
+	int
+	default 32 if MIPS32
+
+comment "Memory"
+config	PHYS_ADDR
+	hex
+	default 0x80000000
+
+config	VIRT_ADDR
+	hex
+	default 0x80000000
+
+config	TEXT_OFFSET
+	hex "Start of kernel image relatively to the start of the RAM"
+	default 0x00008000
