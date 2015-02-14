@@ -1,0 +1,7 @@
+config SOC_JZ4780
+	bool
+
+
+if SOC_JZ4780
+source arch/mips/socs/jz4780/Kconfig
+endif

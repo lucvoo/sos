@@ -1,0 +1,3 @@
+config	SOC
+	symbol
+	default	jz4780
