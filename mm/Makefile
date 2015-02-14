@@ -1,2 +1,2 @@
-objs-y	+= page-alloc.o
-objs-y	+= pagemap.o
+objs-$(CONFIG_MM_PAGE)		+= page-alloc.o
+objs-$(CONFIG_MM_PAGE)		+= pagemap.o

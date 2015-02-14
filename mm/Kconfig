@@ -1,0 +1,7 @@
+menu "Memory Management"
+
+config MM_PAGE
+	bool "Manage memory into pages"
+	default y
+
+endmenu

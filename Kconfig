@@ -94,3 +94,5 @@ config	REMOVE_INIT_SECTIONS
 config	HZ
 	int "tick frequency"
 	default 100
+
+source mm/Kconfig
