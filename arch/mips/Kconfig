@@ -18,6 +18,10 @@ config	CPU_MIPS32R2
 	select MIPS32
 	select CPU_HAS_SYNC
 
+config	ABI_EABI
+	bool "Use EABI"
+	default y
+
 config	BITS
 	int
 	default 32 if MIPS32
