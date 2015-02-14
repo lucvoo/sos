@@ -1,1 +1,1 @@
-
+objs-y	+= diag.o
