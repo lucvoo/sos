@@ -1,0 +1,17 @@
+config MACH
+	symbol
+	default ci20
+
+config	MACH_PARAMS
+	bool
+	default y
+	select CPU_MIPS32R2
+	select SOC_JZ4780
+	select ENDIAN_LITTLE
+
+config PHYS_ADDR
+	hex
+	default 0x80000000
+config PHYS_SIZE
+	hex
+	default 0x10000000

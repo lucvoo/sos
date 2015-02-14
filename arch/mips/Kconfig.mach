@@ -1,0 +1,12 @@
+choice
+	prompt "Boards"
+	default	MACH_CI20
+
+config MACH_CI20
+	bool "ci20"
+
+endchoice
+
+if MACH_CI20
+source arch/mips/mach-ci20/Kconfig
+endif

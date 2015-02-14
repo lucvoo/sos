@@ -9,3 +9,5 @@ deps-y	:= \
 subdirs-y			+= debug/
 
 subdirs-y			+= socs/
+
+subdirs-$(CONFIG_MACH_CI20)	+= mach-ci20/
