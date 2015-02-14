@@ -7,3 +7,5 @@ deps-y	:= \
 	target.lds	\
 
 subdirs-y			+= debug/
+
+subdirs-y			+= socs/

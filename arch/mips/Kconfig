@@ -22,6 +22,8 @@ config	BITS
 	int
 	default 32 if MIPS32
 
+source arch/mips/socs/Kconfig
+
 comment "Memory"
 config	PHYS_ADDR
 	hex
