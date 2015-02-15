@@ -1,0 +1,6 @@
+name	size	    	Virtual addr	Physical addr	access	mapped	cached
+------------------------------------------------------------------------------
+kseg2	0x40000000	0xC0000000			kernel	Y	Y?
+kseg1	0x20000000	0xA0000000	0x00000000	kernel	N	N
+kseg0	0x20000000	0x80000000	0x00000000	kernel	N	Y
+kuseg	0x80000000	0x00000000			kernel	Y	Y?
