@@ -50,3 +50,6 @@
 * ARM:
   * add support for ARMv4/ARMv5 ?
   * add support for LPAE ?
+
+* MIPS:
+  * add support for interrupts & other exceptions
