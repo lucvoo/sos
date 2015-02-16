@@ -12,7 +12,6 @@
   * add support for a small monitor (dump info, read system registers, launch tests, ...)
 * add support for DT?
 * port to raspberry-pi (ARMV6 - ARM11)
-* prepare port to MIPS?
 * watchdog drivers
 * add gpio/pinctrl driver
 * add led driver
