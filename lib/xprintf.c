@@ -192,6 +192,8 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 
 				prec = prec * 10 + d;
 			}
+			if (prec > sizeof(buff))
+				prec = sizeof(buff);
 		}
 
 		// 4) length modifiers
