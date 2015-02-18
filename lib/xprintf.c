@@ -24,14 +24,15 @@ enum lmod {
 
 static unsigned int utostr_bin(char *buf, unsigned prec, unsigned long val, unsigned int shift, unsigned int flags)
 {
-	unsigned int n;
 	unsigned int ten = 'a' - 10;
 	unsigned int mask = (1 << shift) -1;
+	char *endb = buf - prec;
+	char *buf0 = buf;
 
 	if (flags & F_UPPER)
 		ten = 'A' - 10;
 
-	for (n= 0; val > 0 || n < prec; val >>= shift, n++) {
+	for (; val > 0 || endb < buf; val >>= shift) {
 		unsigned int digit = val & mask;
 
 		if (digit > 9)
@@ -42,14 +43,15 @@ static unsigned int utostr_bin(char *buf, unsigned prec, unsigned long val, unsi
 		*--buf = digit;
 	}
 
-	return n;
+	return buf0 - buf;
 }
 
 static unsigned int utostr_dec(char *buf, unsigned prec, unsigned long val)
 {
-	unsigned int n;
+	char *endb = buf - prec;
+	char *buf0 = buf;
 
-	for (n= 0; val > 0 || n < prec; n++) {
+	for (; val > 0 || endb < buf;) {
 		unsigned int digit;
 		unsigned int tmp;
 
@@ -84,7 +86,7 @@ static unsigned int utostr_dec(char *buf, unsigned prec, unsigned long val)
 		*--buf = digit;
 	}
 
-	return n;
+	return buf0 - buf;
 }
 
 
