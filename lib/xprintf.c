@@ -14,6 +14,7 @@
 #define	F_PLUS	0x10
 #define	F_APOS	0x20
 #define	F_UPPER	0x40
+#define	F_SEP8	0x80
 
 enum lmod {
 	lm_none,
@@ -28,12 +29,16 @@ static unsigned int utostr_bin(char *buf, unsigned prec, unsigned long val, unsi
 	unsigned int mask = (1 << shift) -1;
 	char *endb = buf - prec;
 	char *buf0 = buf;
+	unsigned int d;
 
 	if (flags & F_UPPER)
 		ten = 'A' - 10;
 
-	for (; val > 0 || endb < buf; val >>= shift) {
+	for (d = 0; val > 0 || endb < buf; val >>= shift) {
 		unsigned int digit = val & mask;
+
+		if ((flags & F_SEP8) && ((d % 8) == 0) && (d > 0))
+			*--buf = '.';
 
 		if (digit > 9)
 			digit += ten;
@@ -41,6 +46,7 @@ static unsigned int utostr_bin(char *buf, unsigned prec, unsigned long val, unsi
 			digit += '0';
 
 		*--buf = digit;
+		d++;
 	}
 
 	return buf0 - buf;
@@ -114,7 +120,7 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 	char *begin = dest;
 
 	while (1) {
-		char buff[sizeof(unsigned long)*8 +1];		// enough for output in base 2
+		char buff[sizeof(unsigned long)*8 +8];		// enough for output in base 2 & seps
 		unsigned int minw;
 		unsigned int prec;
 		unsigned int idx;
@@ -311,6 +317,8 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 
 			// bin, oct or hex numbers
 			case 'b':
+				if (flags & F_CARD)
+					flags |= F_SEP8;
 				shift = 1;
 				goto base_bin;
 			case 'o':
