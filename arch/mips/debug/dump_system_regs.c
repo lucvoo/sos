@@ -2,17 +2,28 @@
 #include <arch/regs-copro.h>
 
 
-#define	dump__cp0(NAME, REG)					\
+#define	dump_reg(INS, NAME, ARG)				\
 	do {	unsigned long r;				\
-		asm volatile("mfc0\t%0," #REG : "=r" (r));	\
-		printf("%s:\t%08X\n", NAME, r);			\
+		asm volatile(INS "\t%0," ARG : "=r" (r));	\
+		printf("%s:\t%08X (%#035b)\n", NAME, r, r);	\
 	} while (0)
 
-#define	dump_cp0(NAME, REG)	dump__cp0(NAME, REG)
+#define	ARG2(A, B)	#A "," #B
+#define	dump_cp0(REG)		dump_reg("mfc0", #REG, ARG2(REG))
 
 
 void dump_system_regs(void)
 {
 	printf("\n");
-	dump_cp0("c0 status", c0_status);
+	dump_cp0(c0_status);
+	dump_cp0(c0_cause);
+	dump_cp0(c0_intctl);
+	dump_cp0(c0_hwrena);
+	dump_cp0(c0_count);
+	dump_cp0(c0_prid);
+	dump_cp0(c0_ebase);
+	dump_cp0(c0_config);
+	dump_cp0(c0_config1);
+	dump_cp0(c0_config2);
+	dump_cp0(c0_config3);
 }
