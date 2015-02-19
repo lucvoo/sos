@@ -2,13 +2,31 @@
 #define	_MIPS_REGS_H_
 
 
+#define	c0_index	$0, 0
+
+#define	c0_random	$1, 0
+
+#define	c0_entrylo0	$2, 0
+
+#define	c0_entrylo1	$3, 0
+
 #define	c0_context	$4, 0
+
+#define	c0_contextconfig $4, 1
+
+#define	c0_pagemask	$5, 0
+
+#define	c0_pagegrain	$5, 1
+
+#define	c0_wired	$6, 0
 
 #define	c0_hwrena	$7, 0
 
 #define	c0_badvaddr	$8, 0
 
 #define	c0_count	$9, 0
+
+#define	c0_entryhi	$10, 0
 
 #define	c0_compare	$11, 0
 
@@ -80,6 +98,64 @@
 #define	c0_config6	$16, 6
 
 #define	c0_config7	$16, 7
+
+#define	c0_lladdr	$17, 0
+
+#define	c0_watchlo	$18, 0
+
+#define	c0_watchhi	$19, 0
+
+#define	c0_xcontext	$20, 0
+
+#define	c0_debug	$23, 0
+
+#define	c0_tracecontrol	$23, 1
+
+#define	c0_tracecontrol2 $23, 2
+
+#define	c0_usertracedata $23, 3
+
+#define	c0_tracebpc	$23, 4
+
+#define	c0_depc		$24, 0
+
+#define	c0_perfcnt	$25, 0
+
+#define	c0_errctl	$26, 0
+
+#define	c0_cacheerr	$27, 0
+
+#define	c0_taglo	$28, 0
+
+#define	c0_datalo	$28, 1
+
+#define	c0_taglo1	$28, 2
+
+#define	c0_datalo1	$28, 3
+
+#define	c0_taglo2	$28, 4
+
+#define	c0_datalo2	$28, 5
+
+#define	c0_taglo3	$28, 6
+
+#define	c0_datalo3	$28, 7
+
+#define	c0_taghi	$29, 0
+
+#define	c0_datahi	$29, 1
+
+#define	c0_taghi1	$29, 2
+
+#define	c0_datahi1	$29, 3
+
+#define	c0_taghi2	$29, 4
+
+#define	c0_datahi2	$29, 5
+
+#define	c0_taghi3	$29, 6
+
+#define	c0_datahi3	$29, 7
 
 #define	c0_errorepc	$30, 0
 
