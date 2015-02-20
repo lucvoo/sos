@@ -1,0 +1,39 @@
+Interrupts disabled if any of:
+	c0_status.IE == 0
+	c0_status.EXL == 1
+	c0_status.ERL == 1
+	c0_debug.DM == 1
+
+Exceptions processing:
+* if c0_status.EXL == 0:
+	* c0_epc <- restart PC (+ branch delay flag set if needed: c0_cause.BD)
+* if c0_status.EXL == 1 ...
+	* c0_epc & c0_cause.BD are not changed!
+* c0_cause.excode & c0_cause.CE are set depending on the exception
+* c0_status.EXL is set
+* the code at the vector corresponding to the exception is executed
+
+Exception return:
+* ERET:
+	if c0_status.ERL == 0:
+		PC = c0_errorepc
+		c0_status.ERL = 0
+	else if c0_status.EXL == 0:
+		PC = c0_epc
+		c0_status.EXL = 0
+
+	clear load linked flag
+
+	clear all hazard
+
+exception vectors:
+==================
+			ROM entry point		RAM entry point
+			Status.BEV == 1		Status.BEV == 0
+
+Reset & NMI		0xBFC00000		-
+Simple TLB refill	0xBFC00200		BASE + 0x000
+Cache error		0xBFC00300		BASE + 0x100 (forced into KSEG1)
+Generic			0xBFC00380		BASE + 0x180
+Interrupt Special	0xBFC00400		BASE + 0x200
+ (Cause.IV == 1)
