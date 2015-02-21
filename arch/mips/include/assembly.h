@@ -19,6 +19,20 @@ name:	.frame	sp, framesize, ra
 	.size	name, .-name
 
 
+.macro	GLOB	name, glob
+	.ifc	\glob,global
+	.global	\name
+	.endif
+.endm
+
+
+#define	ENTRY(name, glob)	\
+	GLOB	name, glob;	\
+	.type	name, @function;\
+	.ent	name;		\
+name:
+
+
 #include <generic/assembly.h>
 
 #endif
