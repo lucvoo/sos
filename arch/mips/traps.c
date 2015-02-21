@@ -48,3 +48,15 @@ void __handle_exceptions(struct eframe *regs, unsigned long cause, unsigned long
 
 	dump_stack(regs, 0);
 }
+
+
+extern void __handle_undef(struct eframe *regs);
+void __handle_undef(struct eframe *regs)
+{
+	printf("\nERROR: undefined instruction @0x%08lx: %08X\n", regs->epc, *(unsigned long *)regs->epc);
+	dump_stack(regs, 0);
+
+	// FIXME: how to handle this?
+	//	for the moment, just skip the offending instruction
+	regs->epc += 4;
+}
