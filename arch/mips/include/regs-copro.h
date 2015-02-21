@@ -62,6 +62,8 @@
 #define	c0_srsmap	$12, 3
 
 #define	c0_cause	$13, 0
+#define		CAUSE_CODE_OFF	2
+#define		CAUSE_CODE_MSK	0x0000007C
 
 #define	c0_epc		$14, 0
 

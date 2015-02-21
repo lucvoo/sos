@@ -3,7 +3,7 @@
 
 
 // FIXME: this is cpu/subarch specific
-#define	ST0_CLRMSK	(ST0_KSU|ST0_ERL|ST0_EXL|ST0_IE)
+#define	ST0_CLRMSK	(ST0_KSU|ST0_BEV|ST0_ERL|ST0_EXL|ST0_IE)
 #define	ST0_SETMSK	(ST0_CU0)
 
 	.section	".startup.text","ax"
@@ -36,6 +36,9 @@ _os_startup:
 	la	sp, __startup_stack + CONFIG_STARTUP_STACK_SIZE
 #endif
 
+	// initialize exception vectors
+	la	t0, __ex_base
+	mtc0	t0, c0_ebase
 
 	// continue with C code
 	j	_os_start
