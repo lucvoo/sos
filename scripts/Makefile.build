@@ -114,6 +114,7 @@ $(asm-offsets): arch/$(CONFIG_ARCH)/asm-offsets.s
 	sed -ne '/^->/{s:^->\([^ ]*\) #*\([^ ]*\) \(.*\)<-.*:#define	\1	\2	/* \3 */:; s:->::; p;}' $<; \
 	echo ""; \
 	echo "#endif" ) > $@
+-include arch/$(CONFIG_ARCH)/.asm-offsets.s.cmd
 
 scripts/Makefile.build: scripts/basic/fixdep
 scripts/basic/%:
