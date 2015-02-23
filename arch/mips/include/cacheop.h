@@ -32,4 +32,10 @@
 #define	CACHEOP_I_IDX_STA	(CACHEOP_LI | CACHEOP_IDX_STA)
 #define	CACHEOP_I_LOCK		(CACHEOP_LI | CACHEOP_LOCK)
 
+
+// Cache coherency attribute
+// 'D' field of EntryLo0 & EntryLo1 & c0_config.K0
+#define	CACHE_COHERENCY_UNCACHED	2
+#define	CACHE_COHERENCY_CACHEABLE	3
+
 #endif
