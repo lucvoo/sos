@@ -8,8 +8,7 @@
 		printf("%s:\t%08X (%#035b)\n", NAME, r, r);	\
 	} while (0)
 
-#define	ARG2(A, B)	#A "," #B
-#define	dump_cp0(REG)		dump_reg("mfc0", #REG, ARG2(REG))
+#define	dump_cp0(REG)		dump_reg("mfc0", #REG, REG)
 
 
 void dump_system_regs(void)
