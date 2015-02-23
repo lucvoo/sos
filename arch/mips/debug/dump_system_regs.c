@@ -1,5 +1,6 @@
 #include <debug.h>
 #include <arch/regs-copro.h>
+#include <soc/regs-copro.h>
 
 
 #define	dump_reg(INS, NAME, ARG)				\
@@ -25,4 +26,11 @@ void dump_system_regs(void)
 	dump_cp0(c0_config1);
 	dump_cp0(c0_config2);
 	dump_cp0(c0_config3);
+#ifdef	CONFIG_SOC_JZ4780
+	printf("-- SOC --\n");
+	dump_cp0(c0_config7);
+	dump_cp0(c0_core_ctrl);
+	dump_cp0(c0_core_stat);
+	dump_cp0(c0_core_reim);
+#endif
 }
