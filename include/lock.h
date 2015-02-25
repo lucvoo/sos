@@ -1,30 +1,17 @@
 #ifndef	_LOCK_H_
 #define	_LOCK_H_
 
-#ifndef CONFIG_SMP
-struct lock {
-	// FIXME: SMP
-};
+
+#include <generic/lock-none.h>
 
 
-#define LOCK_UNLOCKED	(struct lock) { }
+#define LOCK_UNLOCKED	(struct lock) LOCK_INIT
 #define DEFINE_LOCK(x)	struct lock x = LOCK_UNLOCKED
 
 static inline void lock_init(struct lock *lock)
 {
 	*lock = LOCK_UNLOCKED;
 }
-
-static inline void __lock_acq(struct lock *lock)
-{
-	(void) lock;
-}
-
-static inline void __lock_rel(struct lock *lock)
-{
-	(void) lock;
-}
-#endif
 
 
 #include <irqflags.h>
