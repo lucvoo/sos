@@ -87,6 +87,15 @@ config	DSR
 	depends on SOFTIRQ
 	default n
 
+config	HAS_SMP
+	bool
+	default n
+
+config	SMP
+	bool "SMP support"
+	depends on HAS_SMP
+	default y
+
 config	REMOVE_INIT_SECTIONS
 	bool "Remove init sections when not needed anymore"
 	default y

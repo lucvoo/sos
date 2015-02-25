@@ -1,3 +1,8 @@
 config	SOC
 	symbol
 	default	jz4780
+
+config	SOC_PARAMS
+	bool
+	default y
+	select HAS_SMP
