@@ -15,4 +15,6 @@
 
 #define	offsetof(type, member)	__builtin_offsetof(type, member)
 
+#define	__aligned(N)		__attribute__((aligned(N)))
+
 #endif
