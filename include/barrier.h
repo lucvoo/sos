@@ -3,4 +3,6 @@
 
 #include <arch/barrier.h>
 
+#define	mb_get(X)		*((volatile typeof(X) *) &(X))
+
 #endif
