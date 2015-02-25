@@ -13,19 +13,31 @@ static inline void lock_init(struct lock *lock)
 	*lock = LOCK_UNLOCKED;
 }
 
-
-#include <irqflags.h>
-
 static inline void lock_acq(struct lock *lock)
 {
 	__lock_acq(lock);
 }
+
+static inline void lock_rel(struct lock *lock)
+{
+	__lock_rel(lock);
+}
+
+
+#include <irqflags.h>
 
 static inline void lock_acq_irq(struct lock *lock)
 {
 	__local_irq_dis();
 	__lock_acq(lock);
 }
+
+static inline void lock_rel_irq(struct lock *lock)
+{
+	__lock_rel(lock);
+	__local_irq_ena();
+}
+
 
 static inline unsigned long __must_check lock_acq_save(struct lock *lock)
 {
@@ -35,18 +47,6 @@ static inline unsigned long __must_check lock_acq_save(struct lock *lock)
 	__lock_acq(lock);
 
 	return flags;
-}
-
-
-static inline void lock_rel(struct lock *lock)
-{
-	__lock_rel(lock);
-}
-
-static inline void lock_rel_irq(struct lock *lock)
-{
-	__lock_rel(lock);
-	__local_irq_ena();
 }
 
 static inline void lock_rel_rest(struct lock *lock, unsigned long flags)
