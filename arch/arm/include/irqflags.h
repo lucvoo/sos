@@ -9,7 +9,7 @@ static inline void __raw_irq_dis(void)
 	__asm__ __volatile__("cpsid	i" ::: "memory", "cc");
 }
 
-static inline unsigned long __attribute__((warn_unused_result)) __raw_irq_save(void)
+static inline unsigned long __must_check __raw_irq_save(void)
 {
 	unsigned long flags;
 
@@ -42,7 +42,7 @@ static inline void __raw_irq_dis(void)
 	: "memory", "cc");
 }
 
-static inline unsigned long __attribute__((warn_unused_result)) __raw_irq_save(void)
+static inline unsigned long __must_check __raw_irq_save(void)
 {
 	unsigned long flags;
 	unsigned long tmp;

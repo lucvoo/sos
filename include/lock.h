@@ -40,7 +40,7 @@ static inline void lock_acq_irq(struct lock *lock)
 	__lock_acq(lock);
 }
 
-static inline unsigned long __attribute__((warn_unused_result)) lock_acq_save(struct lock *lock)
+static inline unsigned long __must_check lock_acq_save(struct lock *lock)
 {
 	unsigned long flags;
 

@@ -12,6 +12,7 @@
 #define inline_always		inline __attribute__ ((always_inline))
 #define __noinline		__attribute__ ((noinline))
 
+#define	__must_check		__attribute__((warn_unused_result))
 
 #define	offsetof(type, member)	__builtin_offsetof(type, member)
 
