@@ -2,7 +2,11 @@
 #define	_LOCK_H_
 
 
+#ifndef CONFIG_SMP
 #include <generic/lock-none.h>
+#else
+#include <generic/lock-ticket.h>
+#endif
 
 
 #define LOCK_UNLOCKED	(struct lock) LOCK_INIT
