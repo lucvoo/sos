@@ -13,4 +13,5 @@ progs-y	+= thread.test
 progs-y	+= timeout.test
 progs-y	+= timer.test
 
+progs-$(CONFIG_SMP)	+= lock.test
 progs-$(CONFIG_SMP)	+= smp.test
