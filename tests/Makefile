@@ -12,3 +12,5 @@ progs-y	+= sysregs.test
 progs-y	+= thread.test
 progs-y	+= timeout.test
 progs-y	+= timer.test
+
+progs-$(CONFIG_SMP)	+= smp.test
