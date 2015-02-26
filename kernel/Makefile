@@ -1,5 +1,6 @@
 subdirs-y += init/
 subdirs-y += irq/
+subdirs-y += sync/
 subdirs-y += time/
 
 objs-y	+= idle.o
