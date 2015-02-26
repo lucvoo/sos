@@ -8,6 +8,7 @@ progs-y	+= hello.test
 progs-$(CONFIG_MM_PAGE)	+= page-alloc.test
 progs-y	+= printf.test
 progs-y	+= sqrt.test
+progs-y	+= sema.test
 progs-y	+= sysregs.test
 progs-y	+= thread.test
 progs-y	+= timeout.test
