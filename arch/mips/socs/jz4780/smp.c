@@ -43,20 +43,3 @@ void __smp_init(void)
 	c0_chgbits(c0_core_reim, CORE_REIM_ENTRY_MSK, entry - KSEG0_BASE + KSEG1_BASE);
 	c0_chgbits(c0_core_ctrl, CORE_CTRL_SW_RST1|CORE_CTRL_RPC1, CORE_CTRL_RPC1);
 }
-
-#include <diag.h>
-#include <debug.h>
-#include <arch/test/fault.h>
-void __smp_start(void)
-{
-	_os_diag_write_string("OK?\n");
-
-	dump_system_regs();
-
-        undef_instruction();
-
-	_os_diag_write_string("OK!\n");
-
-	while (1)
-		;
-}
