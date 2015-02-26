@@ -1,10 +1,16 @@
 #include <exceptions.h>
 #include <arch/asm-offsets.h>
 
+#ifdef	CONFIG_SMP
+#include <soc/smp.h>
+#else
+#define	__coreid()	0
+#endif
+
 
 void dump_stack(const struct eframe *f, unsigned int flags)
 {
-	printf("PC %08lx, status %08lx, cause %08lx\n", f->epc, f->status, f->cause);
+	printf("PC %08lx  status %08lx cause %08lx core %d\n", f->epc, f->status, f->cause, __coreid());
 	printf("r0 %08lx, at %08lx, v0 %08lx, v1 %08lx\n", f->r[0], f->r[1], f->r[2], f->r[3]);
 	printf("a0 %08lx, a1 %08lx, a2 %08lx, a3 %08lx\n", f->r[4], f->r[5], f->r[6], f->r[7]);
 	printf("t0 %08lx, t1 %08lx, t2 %08lx, t3 %08lx\n", f->r[8], f->r[9], f->r[10], f->r[11]);
