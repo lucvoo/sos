@@ -9,10 +9,7 @@ static void thread_entry(void)
 	void (*func)(void*) = (void *) ctxt->s[0];
 	void *data = (void*) ctxt->s[1];
 
-	func(data);
-
-	t->state = THREAD_STATE_EXITED;
-	thread_schedule();
+	__thread_start(func, data);
 }
 
 void thread_load_context(struct thread* t, void (*func)(void*), void* data)

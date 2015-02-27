@@ -152,6 +152,26 @@ void _thread_scheduler_start(void)
 	thread_need_resched_set(t);
 }
 
+/**
+* Thread entry point.
+*
+* Called by thread_entry() which do the arch specific part.
+*/
+void __thread_start(void (*fun)(void *data), void *data)
+{
+	struct run_queue* rq = &runq;
+	struct thread *t;
+
+	fun(data);
+
+	t = get_current_thread();
+	t->state = THREAD_STATE_EXITED;
+	thread_schedule();
+
+	// FIXME: free stack
+	// thread_join()?
+}
+
 void thread_start(struct thread* t)
 {
 	struct run_queue* rq = &runq;

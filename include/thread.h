@@ -65,5 +65,6 @@ void thread_sleep(void);
 void thread_wakeup(struct thread* t);
 
 void thread_load_context(struct thread* t, void (*func)(void*), void* data);
+void __thread_start(void (*fun)(void *data), void *data);
 
 #endif
