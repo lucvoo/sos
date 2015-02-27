@@ -162,6 +162,15 @@ void __thread_start(void (*fun)(void *data), void *data)
 	struct run_queue* rq = &runq;
 	struct thread *t;
 
+	// This release the lock taken by thread_schedule() the first time
+	// this thread is scheduled.
+	// This is needed because normally the context is saved & loaded by
+	// thread_schedule() but the first context is loaded with the starting
+	// function & data and thsu the first schedule make the thread to NOT
+	// returns from schedule() (only the previous thread call it) but
+	// instead executing its starting function.
+	lock_rel_irq(&rq->lock);
+
 	fun(data);
 
 	t = get_current_thread();
