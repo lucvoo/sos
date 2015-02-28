@@ -6,4 +6,6 @@
 
 #define	__coreid()	(c0_getval(c0_ebase) & 0x00000007)
 
+#define	NR_CPUS		2
+
 #endif
