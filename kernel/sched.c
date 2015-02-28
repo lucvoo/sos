@@ -106,18 +106,20 @@ need_resched:
 	prev = get_current_thread();
 	thread_need_resched_clear(prev);
 
-	if (prev->state != THREAD_STATE_READY)
-		dequeue_thread_locked(prev, rq);
-
-	if (rq->bitmap == 0)
-		next = rq->idle;
-	else {
+	if (rq->bitmap != 0) {
 		int prio = bitop_fmsb(rq->bitmap);
 		struct dlist_head* q = &rq->queues[prio];
-		next = dlist_peek_entry(q, struct thread, run_list);
+		next = dlist_pop_entry(q, struct thread, run_list);
+		dequeue_thread_adjust(next, rq, prio);
+	} else if (prev->state == THREAD_STATE_READY) {
+		next = prev;
+	} else {
+		next = rq->idle;
 	}
 
 	if (prev != next) {
+		if (prev->state == THREAD_STATE_READY)
+			enqueue_thread_locked(prev, rq);
 		set_current_thread(next);
 		prev = context_switch(prev, next);
 		barrier();
@@ -155,7 +157,7 @@ void _thread_scheduler_start(void)
 
 	// t == init_thread
 	runq.idle = t;
-	t->state = THREAD_STATE_READY;	// Need this otherwise, the first schedule will try to dequeue this thread, which was never queued ...
+	t->state = THREAD_STATE_IDLE;
 	t->priority   = 0;
 	t->state      = 0;
 	t->flags      = 0;
@@ -204,13 +206,6 @@ void thread_start(struct thread* t)
 
 void thread_yield(void)
 {
-	struct thread* t = get_current_thread();
-	struct run_queue* rq = &runq;
-
-	lock_acq_irq(&rq->lock);
-	dlist_move_tail(&rq->queues[t->priority], &t->run_list);
-	lock_rel_irq(&rq->lock);
-
 	thread_schedule();
 }
 
