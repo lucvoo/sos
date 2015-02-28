@@ -44,15 +44,27 @@ static struct thread* context_switch(struct thread* prev, struct thread* next)
 	return prev;
 }
 
-static void enqueue_thread(struct thread* t, struct run_queue* rq)
+static void enqueue_thread_locked(struct thread* t, struct run_queue* rq)
 {
 	unsigned prio = t->priority;
 
-	lock_acq_irq(&rq->lock);
 	if (!t->run_list.next)
 		dlist_add_tail(&rq->queues[prio], &t->run_list);
 	rq->bitmap |= 1 << prio;
+}
+
+static void enqueue_thread(struct thread* t, struct run_queue* rq)
+{
+	lock_acq_irq(&rq->lock);
+	enqueue_thread_locked(t, rq);
 	lock_rel_irq(&rq->lock);
+}
+
+static void dequeue_thread_adjust(struct thread* t, struct run_queue* rq, unsigned int prio)
+{
+	t->run_list.next = NULL;
+	if (dlist_is_empty(&rq->queues[prio]))
+		rq->bitmap &= ~(1 << prio);
 }
 
 static void dequeue_thread_locked(struct thread* t, struct run_queue* rq)
@@ -60,9 +72,7 @@ static void dequeue_thread_locked(struct thread* t, struct run_queue* rq)
 	unsigned prio = t->priority;
 
 	dlist_del(&t->run_list);
-	t->run_list.next = NULL;
-	if (dlist_is_empty(&rq->queues[prio]))
-		rq->bitmap &= ~(1 << prio);
+	dequeue_thread_adjust(t, rq, prio);
 }
 
 #if 0
