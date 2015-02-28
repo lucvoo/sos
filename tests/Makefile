@@ -15,4 +15,5 @@ progs-y	+= timeout.test
 progs-y	+= timer.test
 
 progs-$(CONFIG_SMP)	+= lock.test
+progs-$(CONFIG_SMP)	+= sema-smp.test
 progs-$(CONFIG_SMP)	+= smp.test
