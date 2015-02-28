@@ -8,6 +8,7 @@
 #include <bitops/findbit.h>
 #include <diag.h>
 #include <barrier.h>
+#include <smp.h>
 
 
 #if CONFIG_NR_THREAD_PRIORITY > BITS_PER_LONG
@@ -19,7 +20,7 @@ struct run_queue {
 	struct lock		lock;
 	struct dlist_head	queues[CONFIG_NR_THREAD_PRIORITY];
 	unsigned long		bitmap;
-	struct thread*		idle;
+	struct thread*		idle[NR_CPUS];
 };
 
 static struct run_queue runq;
@@ -114,7 +115,7 @@ need_resched:
 	} else if (prev->state == THREAD_STATE_READY) {
 		next = prev;
 	} else {
-		next = rq->idle;
+		next = rq->idle[__coreid()];
 	}
 
 	if (prev != next) {
@@ -156,7 +157,7 @@ void _thread_scheduler_start(void)
 	struct thread* t = get_current_thread();
 
 	// t == init_thread
-	runq.idle = t;
+	runq.idle[__coreid()] = t;
 	t->state = THREAD_STATE_IDLE;
 	t->priority   = 0;
 	t->state      = 0;
