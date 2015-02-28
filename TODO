@@ -1,3 +1,4 @@
+* add names to threads (configurable?)
 * s/printf/printk/
 * error/info/debug reporting functions
 * have some decent logging system
@@ -38,10 +39,12 @@
   * those are very little usefull without user space support ...
 
 * SMP
-  * add memory barriers
-  * add (spin)locks
-  * add semaphores
-  * scheduler SMP-awareness
+  ✓ add memory barriers
+  ✓ add (spin)locks
+  ✓ add semaphores
+  ~ scheduler SMP-awareness
+    * wakeup: need to choose a good CPU (same as last or idle)
+    * wakeup: may need to wakeup others CPUs (IPI)
   * add per-cpu infrastructure ?
 
 * MM
