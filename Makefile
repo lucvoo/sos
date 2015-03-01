@@ -193,6 +193,7 @@ $(tests): %: %.o $(pgms-deps) $(libs) kernel/version.o
 		-Wl,--start-group -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive -Wl,--end-group	\
 		-lgcc							\
 		$< $(libs) kernel/version.o -o $@
+	@cp $@ kimage.elf
 
 LOADADDR:=$(shell printf 0x%08x $$((${CONFIG_PHYS_ADDR} + ${CONFIG_TEXT_OFFSET})))
 tests/%.tftp: tests/%.bin
