@@ -196,7 +196,7 @@ $(tests): %: %.o $(pgms-deps) $(libs) kernel/version.o
 
 LOADADDR:=$(shell printf 0x%08x $$((${CONFIG_PHYS_ADDR} + ${CONFIG_TEXT_OFFSET})))
 tests/%.tftp: tests/%.bin
-	$(Q)mkimage -A $(CONFIG_ARCH) -T kernel -O linux -C none -e ${LOADADDR} -a ${LOADADDR} -d $< /tftpboot/uImage
+	$(Q)mkimage -A $(CONFIG_ARCH) -T kernel -O linux -C none -e ${LOADADDR} -a ${LOADADDR} -d $< /tftpboot/$(CONFIG_MACH).uimg
 
 kernel/version.o: $(tests:%=%.o) $(pgms-deps)
 
