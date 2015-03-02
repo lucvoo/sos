@@ -11,7 +11,6 @@ struct timerdev {
 	unsigned long freq;
 
 	void __iomem *base;
-	int irq;
 
 	void (*handler)(struct timerdev *td);
 };

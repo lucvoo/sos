@@ -117,7 +117,6 @@ static void __init timer_init(void)
 		return;
 
 	timerdev_am335x.base = base;
-	timerdev_am335x.irq = irq;
 
 	irq_create(&irq_timer, timer_isr, timer_dsr, &timerdev_am335x, 0);
 	irq_attach(&irq_timer, irq);
