@@ -58,7 +58,7 @@ static void timer_write(void __iomem *base, unsigned int reg, int posted, unsign
 }
 
 
-static int timer_isr(int irq, void* data)
+static int timer_isr(struct irqdesc *desc, void* data)
 {
 	struct timerdev *td = data;
 
@@ -70,7 +70,7 @@ static int timer_isr(int irq, void* data)
 	return IRQ_HANDLED | IRQ_CALL_DSR;
 }
 
-static int timer_dsr(int irq, unsigned int count, void* data)
+static int timer_dsr(struct irqdesc *desc, unsigned int count, void* data)
 {
 	struct timerdev *td = data;
 

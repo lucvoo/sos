@@ -9,8 +9,8 @@ void __do_IRQ(unsigned int irq, struct eframe *regs);
 void __do_softirq(void);
 
 
-typedef int (*isr_handler_t)(int, void *);
-typedef int (*dsr_handler_t)(int, unsigned int, void *);
+typedef int (*isr_handler_t)(struct irqdesc *desc, void *);
+typedef int (*dsr_handler_t)(struct irqdesc *desc, unsigned int, void *);
 
 // Return values for isr & dsr handlers
 #define IRQ_NONE	0	// We didn't handled it

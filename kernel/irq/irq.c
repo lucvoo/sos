@@ -16,11 +16,11 @@ static struct irqdesc bad_irqdesc = {
 };
 
 
-static int handle_IRQ_event(unsigned int irq, struct irqaction *action)
+static int handle_IRQ_event(struct irqdesc *desc, struct irqaction *action)
 {
 	int ret;
 
-	ret = action->isr_handler(irq, action->data);
+	ret = action->isr_handler(desc, action->data);
 	// FIXME: check if handled
 
 	if (ret & IRQ_CALL_DSR) {
@@ -44,7 +44,7 @@ static void handle_level_irq(unsigned int irq, struct irqdesc *desc)
 
 	lock_rel(&desc->lock);
 
-	ret = handle_IRQ_event(irq, action);
+	ret = handle_IRQ_event(desc, action);
 
 	lock_acq(&desc->lock);
 
@@ -123,7 +123,7 @@ static void softirq_dsr(struct softirq_action* action)
 		count = irqaction->dsr_count;
 		irqaction->dsr_count = 0;
 		irq_unmask(desc);
-		irqaction->dsr_handler(irq, count, irqaction->data);
+		irqaction->dsr_handler(desc, count, irqaction->data);
 	}
 }
 
