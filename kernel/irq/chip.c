@@ -1,18 +1,17 @@
-#include <interrupt.h>
 #include <irqdesc.h>
-#include <arch/irq.h>	// For NR_IRQS
+#include <irqchip.h>
 
 
-static struct irqdesc irq_descs[NR_IRQS];
-
-struct irqdesc *irq_get_desc(void *parent, unsigned int irq)
+struct irqdesc *irq_get_desc(struct irqchip *chip, unsigned int irq)
 {
 	struct irqdesc *desc;
 
-	if (irq >= NR_IRQS)
+	if (!chip)
+		chip = &mach_irqchip;
+	if (irq >= chip->irq_nbr)
 		return NULL;
 
-	desc = &irq_descs[irq];
+	desc = &chip->descs[irq];
 
 	if (desc->irq != irq)
 		desc->irq = irq;

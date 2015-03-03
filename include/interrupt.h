@@ -32,6 +32,5 @@ struct irqaction {
 
 int irq_attach(struct irqdesc *desc, struct irqaction* action);
 void irq_create(struct irqaction* action, isr_handler_t isr_handler, dsr_handler_t dsr_handler, void* data, unsigned long flags);
-struct irqdesc *irq_get_desc(void *parent, unsigned int irq);
 
 #endif

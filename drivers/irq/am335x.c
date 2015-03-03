@@ -36,6 +36,8 @@ static inline void am33xx_irq_unmask(struct irqdesc *desc)
 }
 
 
+static struct irqdesc	irqdescs[INTC_NBR_IRQ];
+
 struct irqchip mach_irqchip = {
 	// FIXME: this really should use ioremap()
 	.iobase 	= (void __iomem *) L4_PER_VADDR(INTC_BASE),
@@ -44,6 +46,7 @@ struct irqchip mach_irqchip = {
 	.mask		= am33xx_irq_mask,
 	.unmask		= am33xx_irq_unmask,
 	.irq_nbr	= INTC_NBR_IRQ,
+	.descs		= irqdescs,
 };
 
 /*****************************************************************************/

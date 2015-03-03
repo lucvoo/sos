@@ -14,6 +14,7 @@ struct irqchip {
 	void			(*unmask)(struct irqdesc *desc);
 
 	unsigned short		irq_nbr;
+	struct irqdesc		*descs;
 };
 
 extern struct irqchip mach_irqchip;
