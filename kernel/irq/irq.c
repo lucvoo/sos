@@ -87,6 +87,8 @@ void irq_create(struct irqaction* action, isr_handler_t isr_handler, dsr_handler
 	action->isr_handler = isr_handler;
 #ifdef	CONFIG_DSR
 	action->dsr_handler = dsr_handler;
+	action->dsr_count = 0;
+	action->dsr_next = NULL;
 #endif
 	action->data        = data;
 	action->flags       = flags;
@@ -99,6 +101,9 @@ int irq_attach(struct irqdesc *desc, struct irqaction* action)
 
 	lock_acq_irq(&desc->lock);
 	desc->action = action;
+#ifdef	CONFIG_DSR
+	action->desc = desc;
+#endif
 	lock_rel_irq(&desc->lock);
 
 	return 0;
@@ -122,21 +127,22 @@ struct irqdesc *irq_get_desc(void *parent, unsigned int irq)
 #ifdef	CONFIG_DSR
 static void softirq_dsr(struct softirq_action* action)
 {
-	int irq;
+	struct irqaction *curr;
 
-	for (irq = 0; irq < NR_IRQS; irq++) {
-		struct irqdesc *desc = &irq_descs[irq];
-		struct irqaction *irqaction = irq_descs[irq].action;
-		unsigned long count;
+	lock_acq_irq(&dsr_lock);
+	while ((curr = dsr_list)) {
+		unsigned int count;
 
-		if (!irqaction || !irqaction->dsr_count)
-			continue;
-		irq_mask(desc);
-		count = irqaction->dsr_count;
-		irqaction->dsr_count = 0;
-		irq_unmask(desc);
-		irqaction->dsr_handler(desc, count, irqaction->data);
+		dsr_list = curr->dsr_next;
+		count = curr->dsr_count;
+		curr->dsr_count = 0;
+		lock_rel_irq(&dsr_lock);
+
+		curr->dsr_handler(curr->desc, count, curr->data);
+
+		lock_acq_irq(&dsr_lock);
 	}
+	lock_rel_irq(&dsr_lock);
 }
 
 static void init_softirq_dsr(void)

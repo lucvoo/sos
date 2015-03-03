@@ -23,6 +23,8 @@ struct irqaction {
 #ifdef	CONFIG_DSR
 	dsr_handler_t	dsr_handler;
 	unsigned long	dsr_count;
+	struct irqaction*	dsr_next;
+	struct irqdesc*		desc;
 #endif
 	unsigned long	flags;
 	void*		data;
