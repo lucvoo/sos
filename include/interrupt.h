@@ -3,6 +3,7 @@
 
 
 struct eframe;
+struct irqdesc;
 
 void __do_IRQ(unsigned int irq, struct eframe *regs);
 void __do_softirq(void);
@@ -26,7 +27,7 @@ struct irqaction {
 	void*		data;
 };
 
-int irq_attach(struct irqaction* action, int irq);
+int irq_attach(struct irqdesc *desc, struct irqaction* action);
 void irq_create(struct irqaction* action, isr_handler_t isr_handler, dsr_handler_t dsr_handler, void* data, unsigned long flags);
 struct irqdesc *irq_get_desc(void *parent, unsigned int irq);
 

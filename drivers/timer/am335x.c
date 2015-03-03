@@ -109,6 +109,7 @@ static struct irqaction irq_timer;
 
 static void __init timer_init(void)
 {
+	struct irqdesc *desc;
 	void __iomem *base;
 	int irq = IRQ_TINT0;
 
@@ -116,10 +117,12 @@ static void __init timer_init(void)
 	if (!base)
 		return;
 
+	desc = irq_get_desc(NULL, IRQ_TINT0);
+
 	timerdev_am335x.base = base;
 
 	irq_create(&irq_timer, timer_isr, timer_dsr, &timerdev_am335x, 0);
-	irq_attach(&irq_timer, irq);
+	irq_attach(desc, &irq_timer);
 	timer_write(base, TMAR, 1, -1);			// match register: a full cycle by default
 	timer_write(base, TLDR, 1, 0);			// reload value
 	timer_write(base, TTGR, 1, 1);			// trigger reload

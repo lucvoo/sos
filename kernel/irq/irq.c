@@ -80,11 +80,9 @@ void irq_create(struct irqaction* action, isr_handler_t isr_handler, dsr_handler
 	action->flags       = flags;
 }
 
-int irq_attach(struct irqaction* action, int irq)
+int irq_attach(struct irqdesc *desc, struct irqaction* action)
 {
-	struct irqdesc* desc = &irq_descs[irq];
-
-	if (irq >= NR_IRQS)
+	if (!desc)
 		return -EINVAL;
 
 	lock_acq_irq(&desc->lock);
