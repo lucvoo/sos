@@ -5,6 +5,7 @@
 struct eframe;
 struct irqdesc;
 
+void __irq_handler(struct irqdesc *desc, struct eframe *regs);
 void __do_IRQ(unsigned int irq, struct eframe *regs);
 void __do_softirq(void);
 

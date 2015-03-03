@@ -30,7 +30,7 @@ static int handle_IRQ_event(struct irqdesc *desc, struct irqaction *action)
 	return ret;
 }
 
-static void handle_level_irq(unsigned int irq, struct irqdesc *desc)
+static void handle_level_irq(struct irqdesc *desc)
 {
 	struct irqaction *action;
 	int ret __unused;
@@ -54,19 +54,31 @@ out_unlock:
 	lock_rel(&desc->lock);
 }
 
-void __do_IRQ(unsigned int irq, struct eframe *regs)
+/**
+* Normal entry for the main irqchip
+*/
+void __irq_handler(struct irqdesc *desc, struct eframe *regs)
 {
-	struct irqdesc *desc = irq_descs + irq;
 
 	(void) regs;
 
-	if (irq >= NR_IRQS)
+	if (!desc)
 		desc = &bad_irqdesc;
 
-	handle_level_irq(irq, desc);
+	handle_level_irq(desc);
 
 	if (softirq_pending())
 		__do_softirq();
+}
+
+/**
+* Entry point for main irqchip written in asm.
+*/
+void __do_IRQ(unsigned int irq, struct eframe *regs)
+{
+	struct irqdesc *desc = irq_get_desc(NULL, irq);
+
+	return __irq_handler(desc, regs);
 }
 
 
