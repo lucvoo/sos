@@ -9,6 +9,7 @@ struct irqaction;
 
 struct irqdesc {
 	struct irqaction*	action;
+	unsigned int		irq;
 	struct lock		lock;
 };
 

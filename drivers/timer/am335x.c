@@ -111,7 +111,6 @@ static void __init timer_init(void)
 {
 	struct irqdesc *desc;
 	void __iomem *base;
-	int irq = IRQ_TINT0;
 
 	base = ioremap(IOBASE_DMTIMER0, 0x1000);
 	if (!base)
@@ -128,7 +127,7 @@ static void __init timer_init(void)
 	timer_write(base, TTGR, 1, 1);			// trigger reload
 	timer_write(base, TCLR, 1, TCLR_ST|TCLR_AR|TCLR_CE);	// start, auto-reload & compare
 	timer_write(base, IRQENABLE_SET, 0, IRQEV_MAT);	// enable interrupts
-	irq_unmask(irq);
+	irq_unmask(desc);
 
 	timerdev_register(&timerdev_am335x);
 }

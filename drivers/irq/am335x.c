@@ -1,4 +1,5 @@
 #include <irqchip.h>
+#include <irqdesc.h>
 #include <io.h>
 #include <hw/am335x.h>
 #include <hw/am335x-irq.h>
@@ -11,23 +12,25 @@
 #define	INTC_NBR_IRQ	128
 
 
-static inline void am33xx_irq_ack(int irq)
+static inline void am33xx_irq_ack(struct irqdesc *desc)
 {
 	void __iomem *iobase = mach_irqchip.iobase;
 
 	iowrite32(iobase + INTC_CONTROL, 1);
 }
 
-static inline void am33xx_irq_mask(int irq)
+static inline void am33xx_irq_mask(struct irqdesc *desc)
 {
 	void __iomem *iobase = mach_irqchip.iobase;
+	unsigned int irq = desc->irq;
 
 	iowrite32(iobase + INTC_MIR_SET(irq / 32), 1 << (irq  % 32));
 }
 
-static inline void am33xx_irq_unmask(int irq)
+static inline void am33xx_irq_unmask(struct irqdesc *desc)
 {
 	void __iomem *iobase = mach_irqchip.iobase;
+	unsigned int irq = desc->irq;
 
 	iowrite32(iobase + INTC_MIR_CLEAR(irq / 32), 1 << (irq  % 32));
 }

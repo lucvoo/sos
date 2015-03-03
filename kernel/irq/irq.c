@@ -36,7 +36,7 @@ static void handle_level_irq(unsigned int irq, struct irqdesc *desc)
 	int ret __unused;
 
 	lock_acq(&desc->lock);
-	irq_mask_ack(irq);
+	irq_mask_ack(desc);
 
 	action = desc->action;
 	if (unlikely(!action))		// leave it unmasked!
@@ -48,7 +48,7 @@ static void handle_level_irq(unsigned int irq, struct irqdesc *desc)
 
 	lock_acq(&desc->lock);
 
-	irq_unmask(irq);
+	irq_unmask(desc);
 
 out_unlock:
 	lock_rel(&desc->lock);
@@ -101,6 +101,9 @@ struct irqdesc *irq_get_desc(void *parent, unsigned int irq)
 
 	desc = &irq_descs[irq];
 
+	if (desc->irq != irq)
+		desc->irq = irq;
+
 	return desc;
 }
 
@@ -110,15 +113,16 @@ static void softirq_dsr(struct softirq_action* action)
 	int irq;
 
 	for (irq = 0; irq < NR_IRQS; irq++) {
+		struct irqdesc *desc = &irq_descs[irq];
 		struct irqaction *irqaction = irq_descs[irq].action;
 		unsigned long count;
 
 		if (!irqaction || !irqaction->dsr_count)
 			continue;
-		irq_mask(irq);
+		irq_mask(desc);
 		count = irqaction->dsr_count;
 		irqaction->dsr_count = 0;
-		irq_unmask(irq);
+		irq_unmask(desc);
 		irqaction->dsr_handler(irq, count, irqaction->data);
 	}
 }

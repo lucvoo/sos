@@ -3,14 +3,15 @@
 
 #include <iomem.h>
 
+struct irqdesc;
 
 struct irqchip {
 	const char		*name;
 	void __iomem		*iobase;
-	void			(*ack)(int irq);
-	void			(*mask)(int irq);
-	void			(*mask_ack)(int irq);
-	void			(*unmask)(int irq);
+	void			(*ack)(struct irqdesc *desc);
+	void			(*mask)(struct irqdesc *desc);
+	void			(*mask_ack)(struct irqdesc *desc);
+	void			(*unmask)(struct irqdesc *desc);
 
 	unsigned short		irq_nbr;
 };
