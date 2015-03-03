@@ -1,5 +1,4 @@
-#include <interrupt.h>
-#include <arch/irq.h>
+#include <irqchip.h>
 #include <io.h>
 #include <hw/am335x.h>
 #include <hw/am335x-irq.h>
@@ -9,11 +8,48 @@
 #include "am335x-debug.c"
 #endif
 
+#define	INTC_NBR_IRQ	128
+
+
+static inline void am33xx_irq_ack(int irq)
+{
+	void __iomem *iobase = mach_irqchip.iobase;
+
+	iowrite32(iobase + INTC_CONTROL, 1);
+}
+
+static inline void am33xx_irq_mask(int irq)
+{
+	void __iomem *iobase = mach_irqchip.iobase;
+
+	iowrite32(iobase + INTC_MIR_SET(irq / 32), 1 << (irq  % 32));
+}
+
+static inline void am33xx_irq_unmask(int irq)
+{
+	void __iomem *iobase = mach_irqchip.iobase;
+
+	iowrite32(iobase + INTC_MIR_CLEAR(irq / 32), 1 << (irq  % 32));
+}
+
+
+struct irqchip mach_irqchip = {
+	// FIXME: this really should use ioremap()
+	.iobase 	= (void __iomem *) L4_PER_VADDR(INTC_BASE),
+	.name		= "am33xx-intc",
+	.ack		= am33xx_irq_ack,
+	.mask		= am33xx_irq_mask,
+	.unmask		= am33xx_irq_unmask,
+	.irq_nbr	= INTC_NBR_IRQ,
+};
+
+/*****************************************************************************/
+#include <interrupt.h>
+struct eframe;
 
 static void am335x_handle_irq(struct eframe *regs)
 {
-	// FIXME: this really should use ioremap() but ...
-	void __iomem *base_addr = (void __iomem *) L4_PER_VADDR(INTC_BASE);
+	void __iomem *base_addr = mach_irqchip.iobase;
 
 	do {
 		unsigned int irq;

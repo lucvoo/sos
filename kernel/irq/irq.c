@@ -1,5 +1,6 @@
 #include <interrupt.h>
 #include <irq.h>
+#include <irqdesc.h>
 #include <irq_stat.h>
 #include <irqflags.h>
 #include <lock.h>
