@@ -131,4 +131,4 @@ static void __init timer_init(void)
 
 	timerdev_register(&timerdev_am335x);
 }
-subsys_initcall(timer_init);
+board_core_initcall(timer_init);

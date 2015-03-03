@@ -3,6 +3,7 @@
 #include <io.h>
 #include <hw/am335x.h>
 #include <hw/am335x-irq.h>
+#include <init.h>
 
 
 #ifdef DEBUG
@@ -37,17 +38,24 @@ static inline void am33xx_irq_unmask(struct irqdesc *desc)
 
 
 static struct irqdesc	irqdescs[INTC_NBR_IRQ];
+struct irqchip	mach_irqchip;
 
-struct irqchip mach_irqchip = {
-	// FIXME: this really should use ioremap()
-	.iobase 	= (void __iomem *) L4_PER_VADDR(INTC_BASE),
-	.name		= "am33xx-intc",
-	.ack		= am33xx_irq_ack,
-	.mask		= am33xx_irq_mask,
-	.unmask		= am33xx_irq_unmask,
-	.irq_nbr	= INTC_NBR_IRQ,
-	.descs		= irqdescs,
-};
+static void am335x_irq_init(void)
+{
+	void __iomem *iobase = ioremap(INTC_BASE, 0x1000);
+	struct irqchip *chip = &mach_irqchip;
+
+	// FIXME: should be dynamically allocated
+	chip->iobase	= iobase;
+	chip->name	= "am33xx-intc";
+	chip->irq_nbr	= INTC_NBR_IRQ;
+	chip->descs	= irqdescs;
+
+	chip->ack	= am33xx_irq_ack;
+	chip->mask	= am33xx_irq_mask;
+	chip->unmask	= am33xx_irq_unmask;
+}
+board_irq_initcall(am335x_irq_init);
 
 /*****************************************************************************/
 #include <interrupt.h>
