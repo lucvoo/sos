@@ -94,6 +94,18 @@ int irq_attach(struct irqaction* action, int irq)
 	return 0;
 }
 
+struct irqdesc *irq_get_desc(void *parent, unsigned int irq)
+{
+	struct irqdesc *desc;
+
+	if (irq >= NR_IRQS)
+		return NULL;
+
+	desc = &irq_descs[irq];
+
+	return desc;
+}
+
 #ifdef	CONFIG_DSR
 static void softirq_dsr(struct softirq_action* action)
 {
