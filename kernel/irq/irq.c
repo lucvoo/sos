@@ -8,8 +8,6 @@
 #include "dsr.h"
 
 
-static struct irqdesc irq_descs[NR_IRQS];
-
 static struct irqdesc bad_irqdesc = {
 };
 
@@ -105,19 +103,4 @@ int irq_attach(struct irqdesc *desc, struct irqaction* action)
 	lock_rel_irq(&desc->lock);
 
 	return 0;
-}
-
-struct irqdesc *irq_get_desc(void *parent, unsigned int irq)
-{
-	struct irqdesc *desc;
-
-	if (irq >= NR_IRQS)
-		return NULL;
-
-	desc = &irq_descs[irq];
-
-	if (desc->irq != irq)
-		desc->irq = irq;
-
-	return desc;
 }
