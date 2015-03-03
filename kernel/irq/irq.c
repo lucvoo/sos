@@ -7,6 +7,7 @@
 #include <softirq.h>
 #include <init.h>
 #include <errno.h>
+#include "softirq-dsr.h"
 
 
 static struct irqdesc irq_descs[NR_IRQS];
@@ -22,12 +23,9 @@ static int handle_IRQ_event(unsigned int irq, struct irqaction *action)
 	ret = action->isr_handler(irq, action->data);
 	// FIXME: check if handled
 
-#ifdef	CONFIG_DSR
 	if (ret & IRQ_CALL_DSR) {
-		action->dsr_count++;
-		softirq_raise(SOFTIRQ_DSR);
+		softirq_raise_dsr(action);
 	}
-#endif
 
 	return ret;
 }
