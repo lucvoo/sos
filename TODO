@@ -55,4 +55,4 @@
   * add support for LPAE ?
 
 * MIPS:
-  * add support for interrupts & other exceptions
+  ✓ add support for interrupts & other exceptions

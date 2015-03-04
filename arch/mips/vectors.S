@@ -58,12 +58,20 @@ ENDFUN(__ex_generic)
 
 .align	7
 ENTRY(vec_irq, local)
+	ex_entry
 
-	// FIXME/TODO
-
-	eret
+	move	a0, sp
+	la	ra, ret_from_interrupt
+	j	mach_irq_handler
 ENDFUN(vec_irq)
 
+ENTRY(ret_from_interrupt, local)
+	restore_regs_all
+
+	// FIXME: scheduling
+
+	eret
+ENDFUN(ret_from_interrupt)
 
 
 ENTRY(ret_from_exception, local)
@@ -96,7 +104,7 @@ ENDFUN(vec_undef)
         .type   __exception_vectors, @object
         .size   __exception_vectors, 128
 __exception_vectors:
-        .word	vec_unhandled	// int
+        .word	vec_irq		// int (most probably taken by the dedicated vector (if c0_cause.IV == 1))
         .word	vec_unhandled	// tlbm
         .word	vec_unhandled	// tlbl
         .word	vec_unhandled	// tlbs
