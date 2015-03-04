@@ -1,5 +1,6 @@
 #include <debug.h>
 #include <arch/regs-copro.h>
+#include <arch/memory.h>
 #include <soc/regs-copro.h>
 
 
@@ -11,6 +12,15 @@
 
 #define	dump_cp0(REG)		dump_reg("mfc0", #REG, REG)
 
+#define	dump_mmio(BASE, OFF)					\
+	do {							\
+		unsigned long r;				\
+		r = ioread32(KSEG1_BASE + BASE + OFF);		\
+		printf(#OFF ":\t%08x (%#035b)\n", r, r);	\
+	} while (0)
+
+
+#include <soc/dump-regs.h>
 
 void dump_system_regs(void)
 {
