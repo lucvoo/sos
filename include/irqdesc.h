@@ -9,6 +9,7 @@ struct irqchip;
 
 struct irqdesc {
 	struct irqaction*	action;
+	struct irqchip*		chip;
 	unsigned int		irq;		// relative to the chip
 	struct lock		lock;
 };

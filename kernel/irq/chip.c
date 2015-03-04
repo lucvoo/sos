@@ -24,6 +24,7 @@ void irqchip_init(struct irqdesc *parent, struct irqchip *chip)
 	for (i = 0; i < chip->irq_nbr; i++) {
 		struct irqdesc *desc = &chip->descs[i];
 
+		desc->chip = chip;
 		desc->irq = i;
 		lock_init(&desc->lock);
 	}
