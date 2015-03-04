@@ -69,6 +69,22 @@
 #define	c0_cause	__COPRO_REG($13, 0)
 #define		CAUSE_CODE_OFF	2
 #define		CAUSE_CODE_MSK	0x0000007C
+#define		CAUSE_IP0	(1 << 8)
+#define		CAUSE_IP1	(1 << 9)
+#define		CAUSE_IP2	(1 <<10)
+#define		CAUSE_IP3	(1 <<11)
+#define		CAUSE_IP4	(1 <<12)
+#define		CAUSE_IP5	(1 <<13)
+#define		CAUSE_IP6	(1 <<14)
+#define		CAUSE_IP7	(1 <<15)
+#define		CAUSE_IP_OFF	8
+#define		CAUSE_IP_MSK	0x0000FF00
+#define		CAUSE_WP	(1 <<22)
+#define		CAUSE_IV	(1 <<23)
+#define		CAUSE_PCI	(1 <<26)
+#define		CAUSE_DC	(1 <<27)
+#define		CAUSE_TI	(1 <<30)
+#define		CAUSE_BD	(1 <<31)
 
 #define	c0_epc		__COPRO_REG($14, 0)
 
