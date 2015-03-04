@@ -15,14 +15,14 @@
 
 static inline void am33xx_irq_ack(struct irqdesc *desc)
 {
-	void __iomem *iobase = mach_irqchip.iobase;
+	void __iomem *iobase = desc->chip->iobase;
 
 	iowrite32(iobase + INTC_CONTROL, 1);
 }
 
 static inline void am33xx_irq_mask(struct irqdesc *desc)
 {
-	void __iomem *iobase = mach_irqchip.iobase;
+	void __iomem *iobase = desc->chip->iobase;
 	unsigned int irq = desc->irq;
 
 	iowrite32(iobase + INTC_MIR_SET(irq / 32), 1 << (irq  % 32));
@@ -30,7 +30,7 @@ static inline void am33xx_irq_mask(struct irqdesc *desc)
 
 static inline void am33xx_irq_unmask(struct irqdesc *desc)
 {
-	void __iomem *iobase = mach_irqchip.iobase;
+	void __iomem *iobase = desc->chip->iobase;
 	unsigned int irq = desc->irq;
 
 	iowrite32(iobase + INTC_MIR_CLEAR(irq / 32), 1 << (irq  % 32));
@@ -66,7 +66,7 @@ struct eframe;
 static void am335x_handle_irq(struct eframe *regs)
 {
 	struct irqchip *chip = &mach_irqchip;
-	void __iomem *base_addr = mach_irqchip.iobase;
+	void __iomem *base_addr = chip->iobase;
 
 	do {
 		unsigned int irq;

@@ -7,20 +7,20 @@
 
 static inline void irq_ack(struct irqdesc *desc)
 {
-	if (mach_irqchip.ack)
-		mach_irqchip.ack(desc);
+	if (desc->chip->ack)
+		desc->chip->ack(desc);
 }
 
 static inline void irq_mask(struct irqdesc *desc)
 {
-	if (mach_irqchip.mask)
-		mach_irqchip.mask(desc);
+	if (desc->chip->mask)
+		desc->chip->mask(desc);
 }
 
 static inline void irq_mask_ack(struct irqdesc *desc)
 {
-	if (mach_irqchip.mask_ack)
-		mach_irqchip.mask_ack(desc);
+	if (desc->chip->mask_ack)
+		desc->chip->mask_ack(desc);
 	else {
 		irq_mask(desc);
 		irq_ack(desc);
@@ -29,8 +29,8 @@ static inline void irq_mask_ack(struct irqdesc *desc)
 
 static inline void irq_unmask(struct irqdesc *desc)
 {
-	if (mach_irqchip.unmask)
-		mach_irqchip.unmask(desc);
+	if (desc->chip->unmask)
+		desc->chip->unmask(desc);
 }
 
 #endif
