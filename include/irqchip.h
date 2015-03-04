@@ -2,8 +2,8 @@
 #define	_IRQCHIP_H_
 
 #include <iomem.h>
+#include <irqdesc.h>
 
-struct irqdesc;
 
 struct irqchip {
 	const char		*name;
@@ -14,7 +14,7 @@ struct irqchip {
 	void			(*unmask)(struct irqdesc *desc);
 
 	unsigned short		irq_nbr;
-	struct irqdesc		*descs;
+	struct irqdesc		descs[];
 };
 
 void irqchip_init(struct irqdesc *parent, struct irqchip *chip);
