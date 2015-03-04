@@ -63,10 +63,10 @@ struct eframe;
 
 static void am335x_handle_irq(struct eframe *regs)
 {
+	struct irqchip *chip = &mach_irqchip;
 	void __iomem *base_addr = mach_irqchip.iobase;
 
 	do {
-		struct irqdesc *desc;
 		unsigned int irq;
 
 		// Process the current interrupt
@@ -74,8 +74,7 @@ static void am335x_handle_irq(struct eframe *regs)
 		// if (irq & SPURIOUS_IRQ_MASK)
 		//	=> __do_IRQ() will treat it as spurious because it will be out-of-range
 
-		desc = irq_get_desc(NULL, irq);
-		__irq_handler(desc, regs);
+		__irq_handler(&chip->descs[irq], regs);
 
 	} while (ioread32(base_addr + INTC_PENDING_IRQ(0))
 	      || ioread32(base_addr + INTC_PENDING_IRQ(1))
