@@ -13,8 +13,18 @@ struct irqdesc *irq_get_desc(struct irqchip *chip, unsigned int irq)
 
 	desc = &chip->descs[irq];
 
-	if (desc->irq != irq)
-		desc->irq = irq;
-
 	return desc;
+}
+
+
+void irqchip_init(struct irqdesc *parent, struct irqchip *chip)
+{
+	unsigned int i;
+
+	for (i = 0; i < chip->irq_nbr; i++) {
+		struct irqdesc *desc = &chip->descs[i];
+
+		desc->irq = i;
+		lock_init(&desc->lock);
+	}
 }

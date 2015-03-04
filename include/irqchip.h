@@ -18,5 +18,6 @@ struct irqchip {
 };
 
 extern struct irqchip mach_irqchip;
+void irqchip_init(struct irqdesc *parent, struct irqchip *chip);
 
 #endif
