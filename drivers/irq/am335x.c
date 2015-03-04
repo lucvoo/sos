@@ -38,12 +38,12 @@ static inline void am33xx_irq_unmask(struct irqdesc *desc)
 
 
 static struct irqdesc	irqdescs[INTC_NBR_IRQ];
-struct irqchip	mach_irqchip;
+static struct irqchip	am335x_irqchip;
 
 static void am335x_irq_init(void)
 {
 	void __iomem *iobase = ioremap(INTC_BASE, 0x1000);
-	struct irqchip *chip = &mach_irqchip;
+	struct irqchip *chip = &am335x_irqchip;
 
 	// FIXME: should be dynamically allocated
 	chip->iobase	= iobase;
@@ -65,7 +65,7 @@ struct eframe;
 
 static void am335x_handle_irq(struct eframe *regs)
 {
-	struct irqchip *chip = &mach_irqchip;
+	struct irqchip *chip = &am335x_irqchip;
 	void __iomem *base_addr = chip->iobase;
 
 	do {
