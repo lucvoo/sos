@@ -32,6 +32,7 @@ void irqchip_init(struct irqdesc *parent, struct irqchip *chip)
 
 		desc->chip = chip;
 		desc->irq = i;
+		desc->handler = chip->default_handler;
 		lock_init(&desc->lock);
 	}
 }

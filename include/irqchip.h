@@ -13,6 +13,8 @@ struct irqchip {
 	void			(*mask_ack)(struct irqdesc *desc);
 	void			(*unmask)(struct irqdesc *desc);
 
+	void			(*default_handler)(struct irqdesc *desc);
+
 	unsigned short		irq_nbr;
 	struct irqdesc		descs[];
 };
