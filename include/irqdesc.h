@@ -17,4 +17,7 @@ struct irqdesc {
 
 struct irqdesc *irq_get_desc(struct irqchip *chip, unsigned int irq);
 
+
+void irq_handle_level(struct irqdesc *desc);
+
 #endif

@@ -25,7 +25,13 @@ static int handle_IRQ_event(struct irqdesc *desc, struct irqaction *action)
 	return ret;
 }
 
-static void handle_level_irq(struct irqdesc *desc)
+/*
+ * IRQ flow handler for 'level' IRQ
+ *	->mask_ack()
+ *	handle_IRQ_event()
+ *	->eoi()
+ */
+void irq_handle_level(struct irqdesc *desc)
 {
 	struct irqaction *action;
 	int ret __unused;
@@ -62,7 +68,7 @@ void __irq_handler(struct irqdesc *desc, struct eframe *regs)
 		desc = &bad_irqdesc;
 	handler = desc->handler;
 	if (!handler)
-		handler = handle_level_irq;
+		handler = irq_handle_level;
 
 	handler(desc);
 
