@@ -11,6 +11,8 @@ static inline void dump_regs_soc(void)
 	dump_cp0(c0_core_ctrl);
 	dump_cp0(c0_core_stat);
 	dump_cp0(c0_core_reim);
+	dump_cp0(c0_mailbox0);
+	dump_cp0(c0_mailbox1);
 
 	dump_mmio(INTC_BASE, INTC_ICSR(0));
 	dump_mmio(INTC_BASE, INTC_ICSR(1));

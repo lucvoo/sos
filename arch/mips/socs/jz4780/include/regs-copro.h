@@ -27,4 +27,7 @@
 #define	CORE_REIM_IRQ1		(1 <<  9)
 #define	CORE_REIM_ENTRY_MSK	0xFFFF0000
 
+#define	c0_mailbox0	__COPRO_REG($20, 0)
+#define	c0_mailbox1	__COPRO_REG($20, 1)
+
 #endif
