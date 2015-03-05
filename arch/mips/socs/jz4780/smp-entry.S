@@ -48,6 +48,10 @@ ENTRY(__jz4780_smp_sec_cpu_entry, global)
 	lw	gp, 0(t5)
 	lw	sp, THR_CPU_SP(gp)
 
+	// enable MBOX interrupt
+	ori	t0, ST0_IM3
+	mtc0	t0, c0_status
+
 	la	t6, __smp_start
 	jr.hb	t6
 ENDFUN(__jz4780_smp_sec_cpu_entry)
