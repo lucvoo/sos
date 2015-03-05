@@ -8,6 +8,7 @@ struct irqaction;
 struct irqchip;
 
 struct irqdesc {
+	void			(*handler)(struct irqdesc *desc);
 	struct irqaction*	action;
 	struct irqchip*		chip;
 	unsigned int		irq;		// relative to the chip
