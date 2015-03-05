@@ -20,4 +20,6 @@ struct irqdesc *irq_get_desc(struct irqchip *chip, unsigned int irq);
 
 void irq_handle_level(struct irqdesc *desc);
 
+void irq_handle_desc(struct irqdesc *desc);	// small helper calling its own handler
+
 #endif

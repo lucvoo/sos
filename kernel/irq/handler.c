@@ -55,22 +55,28 @@ out_unlock:
 	lock_rel(&desc->lock);
 }
 
+void irq_handle_desc(struct irqdesc *desc)
+{
+	void (*handler)(struct irqdesc *) = desc->handler;
+
+	if (!handler)
+		handler = irq_handle_level;
+
+	handler(desc);
+}
+
 /**
 * Normal entry for the main irqchip
 */
 void __irq_handler(struct irqdesc *desc, struct eframe *regs)
 {
-	void (*handler)(struct irqdesc *);
 
 	(void) regs;
 
 	if (!desc)
 		desc = &bad_irqdesc;
-	handler = desc->handler;
-	if (!handler)
-		handler = irq_handle_level;
 
-	handler(desc);
+	irq_handle_desc(desc);
 
 	if (softirq_pending())
 		__do_softirq();
