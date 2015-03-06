@@ -6,7 +6,6 @@
 * add a real fault handler
 * free __init memory
 * add kmalloc (going to the full slab/kmem_cache ?)
-* generic irq operations (iomap irq base address at registration time)
 * add support for no-mmu ?
 * generic serial-out
 * add serial input
@@ -21,6 +20,13 @@
 * cleanup this kapi thing
 * cleanup scheduler
 * some header need to move to uapi/?
+
+* IRQ
+  ✓ generic irq operations (iomap irq base address at registration time)
+  ~ chained interrupts
+	✓ infrastructure
+	* if all desc of child chip are masked, so should be the parent
+  * irq_mask()/irq_unmask() should be nestable/recursive
 
 * network
   * look for ethernet driver?
