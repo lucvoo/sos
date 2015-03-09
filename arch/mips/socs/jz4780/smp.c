@@ -77,7 +77,7 @@ void __smp_init(void)
 
 	// setup the mailboxes' irq handler
 	irq_create(&mbox_action, mbox_irq_handler, NULL, NULL, 0);
-	irq_attach(irq_get_desc(NULL, IRQ_MBOX), &mbox_action);
+	irq_attach(irq_get_desc("cpuintc", IRQ_MBOX), &mbox_action);
 
 	c0_clrbits(c0_core_reim, 0x1);
 	c0_setval(c0_mailbox0, 0x0);

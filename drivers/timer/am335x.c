@@ -116,7 +116,7 @@ static void __init timer_init(void)
 	if (!base)
 		return;
 
-	desc = irq_get_desc(NULL, IRQ_TINT0);
+	desc = irq_get_desc("intc", IRQ_TINT0);
 
 	timerdev_am335x.base = base;
 

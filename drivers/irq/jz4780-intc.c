@@ -76,7 +76,7 @@ static void jz4780_intc_irq_init(void)
 	struct irqdesc *parent;
 	void __iomem *iobase;
 
-	parent = irq_get_desc(NULL, IRQ_CPU_INTC);
+	parent = irq_get_desc("cpuintc", IRQ_CPU_INTC);
 	parent->handler = jz4780_intc_irq_handler;
 
 	iobase = ioremap(INTC_BASE, INTC_SIZE);
