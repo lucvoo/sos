@@ -48,7 +48,7 @@ static void am335x_irq_init(void)
 	struct irqchip *chip = &am33xx_intctrl.chip;
 
 	chip->iobase	= iobase;
-	chip->name	= "am33xx-intc";
+	chip->name	= "intc";
 	chip->irq_nbr	= INTC_NBR_IRQ;
 
 	chip->ack	= am33xx_irq_ack;

@@ -81,7 +81,7 @@ static void jz4780_intc_irq_init(void)
 
 	iobase = ioremap(INTC_BASE, INTC_SIZE);
 
-	chip->name	= "jz4780-intc";
+	chip->name	= "intc";
 	chip->irq_nbr	= NBR_IRQS;
 	chip->iobase	= iobase;
 

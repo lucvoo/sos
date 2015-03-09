@@ -37,7 +37,7 @@ static void mips_irq_init(void)
 {
 	struct irqchip *chip = &mips_intctrl.chip;
 
-	chip->name	= "mips-cpu";
+	chip->name	= "cpuintc";
 	chip->irq_nbr	= NBR_IRQS;
 
 	chip->ack	= mips_irq_mask;
