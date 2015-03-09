@@ -15,7 +15,7 @@ struct irqdesc {
 	struct lock		lock;
 };
 
-struct irqdesc *irq_get_desc(struct irqchip *chip, unsigned int irq);
+struct irqdesc *irq_get_desc(const char *name, unsigned int irq);
 
 
 void irq_handle_level(struct irqdesc *desc);

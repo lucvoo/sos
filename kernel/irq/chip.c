@@ -5,12 +5,11 @@
 static struct irqchip *irqchip_root;
 
 
-struct irqdesc *irq_get_desc(struct irqchip *chip, unsigned int irq)
+struct irqdesc *irq_get_desc(const char *name, unsigned int irq)
 {
+	struct irqchip *chip = irqchip_root;
 	struct irqdesc *desc;
 
-	if (!chip)
-		chip = irqchip_root;
 	if (irq >= chip->irq_nbr)
 		return NULL;
 
