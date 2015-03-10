@@ -131,6 +131,11 @@ static void timeout_process(struct timerdev *td)
 	lock_rel(&timers.lock);
 }
 
+unsigned long timerdev_read(void)
+{
+	return td->now(td);
+}
+
 int timerdev_register(struct timerdev *newtd)
 {
 	newtd->handler = timeout_process;

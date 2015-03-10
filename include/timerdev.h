@@ -16,5 +16,6 @@ struct timerdev {
 };
 
 int timerdev_register(struct timerdev *td);
+unsigned long timerdev_read(void);
 
 #endif
