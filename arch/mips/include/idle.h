@@ -4,7 +4,9 @@
 
 static void mach_idle(void)
 {
-	//asm ("wait");
+#ifndef	CONFIG_WAIT_BROKEN
+	asm ("wait");
+#endif
 }
 
 #endif

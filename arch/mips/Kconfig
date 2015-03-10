@@ -9,6 +9,8 @@ config	ENDIAN_LITTLE
 	bool
 config	CPU_HAS_SYNC
 	bool
+config	WAIT_BROKEN
+	bool
 
 config	MIPS32
 	bool

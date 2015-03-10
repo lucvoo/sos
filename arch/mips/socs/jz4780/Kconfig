@@ -6,3 +6,4 @@ config	SOC_PARAMS
 	bool
 	default y
 	select HAS_SMP
+	select WAIT_BROKEN
