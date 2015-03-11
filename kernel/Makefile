@@ -1,5 +1,6 @@
 subdirs-y += init/
 subdirs-y += irq/
+subdirs-$(CONFIG_SMP) += smp/
 subdirs-y += sync/
 subdirs-y += time/
 
