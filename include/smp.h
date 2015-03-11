@@ -7,6 +7,9 @@
 #define	NR_CPUS		1
 #else
 #include <arch/smp.h>
+
+void smp_ipi_schedule_one(unsigned int cpu);
+void smp_ipi_schedule_all(void);
 #endif
 
 #endif
