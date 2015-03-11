@@ -20,6 +20,7 @@ struct run_queue {
 	struct lock		lock;
 	struct dlist_head	queues[CONFIG_NR_THREAD_PRIORITY];
 	unsigned long		bitmap;
+	unsigned int		nr_running;
 	struct thread*		idle[NR_CPUS];
 };
 
@@ -49,8 +50,10 @@ static void enqueue_thread_locked(struct thread* t, struct run_queue* rq)
 {
 	unsigned prio = t->priority;
 
-	if (!t->run_list.next)
+	if (!t->run_list.next) {
 		dlist_add_tail(&rq->queues[prio], &t->run_list);
+		rq->nr_running++;
+	}
 	rq->bitmap |= 1 << prio;
 }
 
@@ -73,6 +76,7 @@ static void dequeue_thread_locked(struct thread* t, struct run_queue* rq)
 	unsigned prio = t->priority;
 
 	dlist_del(&t->run_list);
+	rq->nr_running--;
 	dequeue_thread_adjust(t, rq, prio);
 }
 
@@ -83,6 +87,7 @@ static void dump_rq(const char *ctxt)
 	struct thread* t;
 	int prio;
 	printf("dump rq @ %s:\n", ctxt);
+	printf("\tnr = %u\n", rq->nr_running);
 	printf("\tidle= %p\n", rq->idle);
 	printf("\tbitmap= %08lX (%lb)\n", rq->bitmap, rq->bitmap);
 
@@ -111,6 +116,7 @@ need_resched:
 		int prio = bitop_fmsb(rq->bitmap);
 		struct dlist_head* q = &rq->queues[prio];
 		next = dlist_pop_entry(q, struct thread, run_list);
+		rq->nr_running--;
 		dequeue_thread_adjust(next, rq, prio);
 	} else if (prev->state == THREAD_STATE_READY) {
 		next = prev;
