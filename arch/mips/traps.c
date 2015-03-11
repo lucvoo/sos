@@ -1,4 +1,6 @@
 #include <exceptions.h>
+#include <arch/copro.h>
+#include <arch/regs-copro.h>
 
 
 static const char *exception_names[] = {
@@ -59,4 +61,17 @@ void __handle_undef(struct eframe *regs)
 	// FIXME: how to handle this?
 	//	for the moment, just skip the offending instruction
 	regs->epc += 4;
+}
+
+void __handle_tlb(struct eframe *regs, unsigned long cause);
+void __handle_tlb(struct eframe *regs, unsigned long cause)
+{
+	unsigned int code = (cause & CAUSE_CODE_MSK) >> CAUSE_CODE_OFF;
+	const char *name = exception_names[code];
+	unsigned long addr;
+
+	addr = c0_getval(c0_badvaddr);
+
+	printf("\nERROR: % 5s exception for %08lx\n", name, addr);
+	dump_stack(regs, 0);
 }

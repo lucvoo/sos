@@ -99,15 +99,24 @@ ENTRY(vec_undef, local)
 ENDFUN(vec_undef)
 
 
+ENTRY(vec_tlb, local)
+	ex_entry
+
+	move	a0, sp
+	la	ra, ret_from_exception
+	j	__handle_tlb
+ENDFUN(vec_tlb)
+
+
         .section        .data,"aw",@progbits
         .align  2
         .type   __exception_vectors, @object
         .size   __exception_vectors, 128
 __exception_vectors:
         .word	vec_irq		// int (most probably taken by the dedicated vector (if c0_cause.IV == 1))
-        .word	vec_unhandled	// tlbm
-        .word	vec_unhandled	// tlbl
-        .word	vec_unhandled	// tlbs
+        .word	vec_tlb		// tlbm
+        .word	vec_tlb		// tlbl
+        .word	vec_tlb		// tlbs
         .word	vec_unhandled	// adel
         .word	vec_unhandled	// ades
         .word	vec_unhandled	// ibe
