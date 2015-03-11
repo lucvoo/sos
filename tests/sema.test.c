@@ -13,24 +13,30 @@ static struct thread a __uninit;
 static struct thread b __uninit;
 static struct thread c __uninit;
 
+
+static void random_delay(void)
+{
+	unsigned long delta;
+
+	delta = ((sprng() | 1) & 0x7)  << 5;
+	thread_schedule_timeout(delta);
+}
+
 static void fun(void* data)
 {
 	const char* str = data;
 
 	do {
-		unsigned long delta;
 
 		printf("thread %s try semaphore\n", str);
 		semaphore_wait(&sema);
 		printf("thread %s got semaphore\n", str);
-		thread_yield();
+
+		random_delay();
+
 		printf("thread %s rel semaphore\n", str);
 		semaphore_post(&sema);
 		printf("thread %s pos semaphore\n", str);
-#if 0
-		delta = ((sprng() | 1) & 0x7)  << 5;
-		thread_schedule_timeout(delta);
-#endif
 	} while (1);
 }
 
