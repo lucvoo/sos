@@ -7,9 +7,6 @@
 #define	NR_CPUS		1
 #else
 #include <arch/smp.h>
-
-void __smp_init(void);
-void __smp_start(void);
 #endif
 
 #endif

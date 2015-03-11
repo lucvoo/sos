@@ -1,3 +1,4 @@
+#include <smp/init.h>
 #include <arch/copro.h>
 #include <arch/memory.h>
 #include <io.h>

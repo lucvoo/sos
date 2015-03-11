@@ -1,7 +1,7 @@
 #include <kapi/kapi.h>
 #include <version.h>
 #include <sched.h>
-#include <smp.h>
+#include <smp/init.h>
 #include <lock.h>
 
 

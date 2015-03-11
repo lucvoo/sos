@@ -2,6 +2,7 @@
 #include <version.h>
 #include <thread.h>
 #include <sched.h>
+#include <smp/init.h>
 #include <smp.h>
 #include <semaphore.h>
 
