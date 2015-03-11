@@ -7,5 +7,6 @@
 #define	SMP_IPI_SCHEDULE	0x00000004
 
 void __smp_ipi_send(unsigned int cpu, unsigned int msg);
+void __smp_ipi_process(unsigned long msg);
 
 #endif

@@ -15,6 +15,8 @@
 #include <interrupt.h>
 #include <irqdesc.h>
 #include <lock.h>
+#include <smp/ipi.h>
+#include <sched.h>
 
 #define	IRQ_MBOX		3 // on MIPS internal irqs
 
@@ -53,8 +55,7 @@ static int mbox_irq_handler(struct irqdesc *desc, void *data)
 	}
 	lock_rel(&core_regs_lock);
 
-	// FIXME: do something with the message
-	(void) msg;
+	__smp_ipi_process(msg);
 
 	return IRQ_HANDLED;
 }

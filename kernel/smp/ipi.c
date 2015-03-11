@@ -15,3 +15,12 @@ void smp_ipi_schedule_all(void)
 	for (i = 0; i < NR_CPUS; i++)
 		smp_ipi_schedule_one(i);
 }
+
+
+void __smp_ipi_process(unsigned long msg)
+{
+	if (msg & SMP_IPI_SCHEDULE)
+		thread_need_resched_set(get_current_thread());
+
+	// FIXME: process the other bits/messages
+}
