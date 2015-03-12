@@ -22,6 +22,7 @@ struct run_queue {
 	unsigned long		bitmap;
 	unsigned int		nr_running;
 	struct thread*		idle_thread[NR_CPUS];
+	unsigned int		idle[NR_CPUS];
 };
 
 static struct run_queue runq;
@@ -101,6 +102,77 @@ static void dump_rq(const char *ctxt)
 }
 #endif
 
+#ifdef CONFIG_SMP
+static void smp_set_idle(struct run_queue *rq, unsigned int cpu, int val)
+{
+	rq->idle[cpu] = val;
+}
+
+static inline int cpu_is_idle(struct run_queue *rq, unsigned int cpu)
+{
+	// Must be called with @rq->lock hold
+
+	return rq->idle[cpu] != 0;
+}
+
+/*
+ * Stupid load balancing:
+ *	if we have more than one thread on the queue
+ *	and there is an idle cpu
+ *	then ask this cpu the reschedule
+ * We acccess the run queue without locking it, it's fine.
+ * At worst we wake up a cpu for nothing or we miss an opportunity
+ * to run a process on another cpu but everything is still OK.
+ */
+static void smp_load_balancing(struct run_queue* rq)
+{
+	unsigned int cpu;
+	unsigned int i;
+	unsigned int n;
+
+	if (NR_CPUS == 1)
+		return;
+
+	n = rq->nr_running;		// Quick test, with rq unlocked
+	if (n == 0)
+		return;
+
+	lock_acq_irq(&rq->lock);
+	n = rq->nr_running;
+	if (n == 0)			// Test again with the lock hold.
+		goto end;
+
+	// Notify the first idle CPU.
+	// This will strongly favour the CPUs with the lowest ID,
+	// which is fine and will let the highest ones in low-power.
+	cpu = __coreid();
+	for (i = 0; i < NR_CPUS; i++) {
+		if (i == cpu)
+			continue;
+		if (!cpu_is_idle(rq, i))
+			continue;
+
+		smp_ipi_schedule_one(i);
+
+		// We could do this until nr_running == 0, but
+		// - the cpu just notified will take one thread
+		//   and itself try to balance
+		// - better to release the rq lock ASAP
+		break;
+	}
+end:
+	lock_rel_irq(&rq->lock);
+}
+#else
+static void smp_set_idle(struct run_queue *rq, unsigned int cpu, int val)
+{
+}
+
+static void smp_load_balancing(struct run_queue* rq)
+{
+}
+#endif
+
 void thread_schedule(void)
 {
 	struct thread* prev;
@@ -120,10 +192,12 @@ need_resched:
 		next = dlist_pop_entry(q, struct thread, run_list);
 		rq->nr_running--;
 		dequeue_thread_adjust(next, rq, prio);
+		smp_set_idle(rq, cpu, 0);
 	} else if (prev->state == THREAD_STATE_READY) {
 		next = prev;
 	} else {
 		next = rq->idle_thread[cpu];
+		smp_set_idle(rq, cpu, 1);
 	}
 
 	if (prev != next) {
@@ -134,6 +208,8 @@ need_resched:
 		barrier();
 	}
 	lock_rel_irq(&rq->lock);
+
+	smp_load_balancing(rq);
 
 	if (thread_need_resched_test(prev))
 		goto need_resched;

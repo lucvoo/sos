@@ -48,9 +48,9 @@
   ✓ add memory barriers
   ✓ add (spin)locks
   ✓ add semaphores
-  ~ scheduler SMP-awareness
-    * wakeup: need to choose a good CPU (same as last or idle)
-    * wakeup: may need to wakeup others CPUs (IPI)
+  ✓ scheduler SMP-awareness
+    ✓ wakeup: need to choose a good CPU (same as last or idle)
+    ✓ wakeup: may need to wakeup others CPUs (IPI)
   * add per-cpu infrastructure ?
 
 * MM
