@@ -60,6 +60,23 @@ static int mbox_irq_handler(struct irqdesc *desc, void *data)
 	return IRQ_HANDLED;
 }
 
+void __smp_ipi_send(unsigned int cpu, unsigned int msg)
+{
+	lock_acq(&core_regs_lock);
+	switch (cpu) {
+	case 0:
+		c0_setbits(c0_mailbox0, msg);
+		break;
+	case 1:
+		c0_setbits(c0_mailbox1, msg);
+		break;
+	default:
+		// FIXME
+		break;
+	}
+	lock_rel(&core_regs_lock);
+}
+
 static struct irqaction mbox_action;
 /******************************************************************************/
 
