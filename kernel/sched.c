@@ -106,9 +106,11 @@ void thread_schedule(void)
 	struct thread* prev;
 	struct thread* next;
 	struct run_queue* rq = &runq;
+	unsigned int cpu;
 
 need_resched:
 	lock_acq_irq(&rq->lock);
+	cpu = __coreid();
 	prev = get_current_thread();
 	thread_need_resched_clear(prev);
 
@@ -121,7 +123,7 @@ need_resched:
 	} else if (prev->state == THREAD_STATE_READY) {
 		next = prev;
 	} else {
-		next = rq->idle_thread[__coreid()];
+		next = rq->idle_thread[cpu];
 	}
 
 	if (prev != next) {
