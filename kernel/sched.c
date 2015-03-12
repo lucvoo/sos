@@ -21,7 +21,7 @@ struct run_queue {
 	struct dlist_head	queues[CONFIG_NR_THREAD_PRIORITY];
 	unsigned long		bitmap;
 	unsigned int		nr_running;
-	struct thread*		idle[NR_CPUS];
+	struct thread*		idle_thread[NR_CPUS];
 };
 
 static struct run_queue runq;
@@ -88,7 +88,7 @@ static void dump_rq(const char *ctxt)
 	int prio;
 	printf("dump rq @ %s:\n", ctxt);
 	printf("\tnr = %u\n", rq->nr_running);
-	printf("\tidle= %p\n", rq->idle);
+	printf("\tidle_thread= %p\n", rq->idle_thread[cpu]);
 	printf("\tbitmap= %08lX (%lb)\n", rq->bitmap, rq->bitmap);
 
 	for (prio=0; prio < CONFIG_NR_THREAD_PRIORITY; prio++) {
@@ -121,7 +121,7 @@ need_resched:
 	} else if (prev->state == THREAD_STATE_READY) {
 		next = prev;
 	} else {
-		next = rq->idle[__coreid()];
+		next = rq->idle_thread[__coreid()];
 	}
 
 	if (prev != next) {
@@ -163,7 +163,7 @@ void _thread_scheduler_start(void)
 	struct thread* t = get_current_thread();
 
 	// t == init_thread
-	runq.idle[__coreid()] = t;
+	runq.idle_thread[__coreid()] = t;
 	t->state = THREAD_STATE_IDLE;
 	t->priority   = 0;
 	t->state      = 0;
