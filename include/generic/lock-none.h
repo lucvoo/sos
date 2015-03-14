@@ -11,12 +11,12 @@ struct lock {
 
 #define LOCK_INIT	{ }
 
-static inline void __lock_acq(struct lock *lock)
+static inline void _lock_acq(struct lock *lock)
 {
 	(void) lock;
 }
 
-static inline void __lock_rel(struct lock *lock)
+static inline void _lock_rel(struct lock *lock)
 {
 	(void) lock;
 }
