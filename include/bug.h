@@ -3,7 +3,7 @@
 
 
 #ifdef CONFIG_BUG
-#include <generic/bug.h>
+#include <arch/bug.h>
 
 #define	BUG()								\
 	do {								\
