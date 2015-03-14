@@ -1,6 +1,7 @@
 #include <exceptions.h>
 #include <arch/copro.h>
 #include <arch/regs-copro.h>
+#include <trap.h>
 
 
 static const char *exception_names[] = {
@@ -88,6 +89,11 @@ void __handle_trap(struct eframe *regs)
 		code = (instruction >> 0) & 0xffff;
 
 	switch (code) {
+	case TRAP_BUG:
+		printf("\nBUG!\n", code);
+		dump_stack(regs, 0);
+		while (1)
+			;
 	default:
 		dump_stack(regs, 0);
 		printf("\nUNHANDLED TRAP: %04x\n", code);
