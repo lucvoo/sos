@@ -108,6 +108,15 @@ ENTRY(vec_tlb, local)
 ENDFUN(vec_tlb)
 
 
+ENTRY(vec_trap, local)
+	ex_entry
+
+	move	a0, sp
+	la	ra, ret_from_exception
+	j	__handle_trap
+ENDFUN(vec_trap)
+
+
         .section        .data,"aw",@progbits
         .align  2
         .type   __exception_vectors, @object
@@ -126,7 +135,7 @@ __exception_vectors:
         .word	vec_undef	// ri (Reserved/undefined Instruction)
         .word	vec_unhandled	// cpu
         .word	vec_unhandled	// ov
-        .word	vec_unhandled	// tr
+        .word	vec_trap	// tr
         .word	vec_unhandled
         .word	vec_unhandled	// fpe
         .word	vec_unhandled

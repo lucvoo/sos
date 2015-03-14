@@ -75,3 +75,21 @@ void __handle_tlb(struct eframe *regs, unsigned long cause)
 	printf("\nERROR: % 5s exception for %08lx\n", name, addr);
 	dump_stack(regs, 0);
 }
+
+void __handle_trap(struct eframe *regs);
+void __handle_trap(struct eframe *regs)
+{
+	unsigned int instruction = *(unsigned long*) regs->epc;
+	unsigned int code = 0;
+
+	if ((instruction >> 26) == 0x00)	// TNE
+		code = (instruction >> 6) & 0x3ff;
+	if ((instruction >> 26) == 0x01)	// TNEI
+		code = (instruction >> 0) & 0xffff;
+
+	switch (code) {
+	default:
+		dump_stack(regs, 0);
+		printf("\nUNHANDLED TRAP: %04x\n", code);
+	}
+}
