@@ -1,7 +1,8 @@
 #ifndef _ARCH_TEST_FAULT_H_
 #define _ARCH_TEST_FAULT_H_
 
+#include <trap.h>
 
-#define	undef_instruction()	__asm__ __volatile(".word 0xe7F123F4")
+#define	undef_instruction()	_undef(TRAP_TEST)
 
 #endif
