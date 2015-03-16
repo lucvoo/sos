@@ -1,3 +1,5 @@
+#include <trap.h>
+#include <kernel/bug.h>
 #include <exceptions.h>
 
 
@@ -8,6 +10,10 @@ void __und_handler(const struct eframe *regs)
 
 
 	switch (*pc) {
+	case TRAP_BUG:
+		__bug(regs, NULL, NULL, 0);
+		break;
+
 	default:
 		und_handler(regs);
 	}
