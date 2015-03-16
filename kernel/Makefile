@@ -4,6 +4,7 @@ subdirs-$(CONFIG_SMP) += smp/
 subdirs-y += sync/
 subdirs-y += time/
 
+objs-y	+= bug.o
 objs-y	+= idle.o
 objs-y	+= sched.o
 objs-y	+= schedule-timeout.o
