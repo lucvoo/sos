@@ -3,6 +3,7 @@ objs-y	+= 	dump-stack.o
 objs-y	+= 	init.o
 objs-y	+= 	startup.o
 objs-y	+= 	switch_to.o
+objs-y	+= 	traps.o
 
 
 objs-$(CONFIG_ARMV4)	+= irq-v4.o

@@ -64,7 +64,7 @@ vector_\name:
  */
 	vector_entry	undef, 4
 
-	bl	und_handler			// Branch to C handler
+	bl	__und_handler			// Branch to C handler
 
 	// Real handler FIXME: move all this to an arch specific C handler
 	ldr	r0, [sp, #S_PC]			// Skip the instruction
