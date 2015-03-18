@@ -2,6 +2,7 @@ objs-y	+= sprng.o
 
 
 progs-y	+= bug.test
+progs-y	+= bug_on.test
 progs-y	+= fastmod10.test
 progs-y	+= fault-undef.test
 progs-y	+= findbit.test
