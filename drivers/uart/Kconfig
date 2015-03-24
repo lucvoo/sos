@@ -2,3 +2,8 @@ menuconfig UART
 	bool "UART"
 	default y
 
+config UART_16550
+	bool "16550 & compatible"
+	depends on UART
+	default n
+
