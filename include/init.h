@@ -26,8 +26,9 @@ struct initcall {
 #define	board_core_initcall(fn)		__initcall("5d",fn)
 #define	board_initcall(fn)		__initcall("5e",fn)
 #define	board_late_initcall(fn)		__initcall("5f",fn)
-#define	device_initcall(fn)		__initcall("6",fn)
-#define	late_initcall(fn)		__initcall("7",fn)
+#define	driver_initcall(fn)		__initcall("6",fn)
+#define	device_initcall(fn)		__initcall("7",fn)
+#define	late_initcall(fn)		__initcall("8",fn)
 
 
 #ifdef	CONFIG_REMOVE_INIT_SECTIONS
