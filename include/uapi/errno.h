@@ -6,5 +6,6 @@
 #define	EINVAL		2
 #define	ENOMEM		3
 #define	ENODEV		4
+#define	EEXIST		5
 
 #endif
