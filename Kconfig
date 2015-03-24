@@ -109,3 +109,5 @@ config	HZ
 	default 100
 
 source mm/Kconfig
+
+source drivers/Kconfig
