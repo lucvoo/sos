@@ -10,4 +10,12 @@ unsigned int strlen(const char *str);
 void strncpy(char *dst, const char *src, unsigned int max);
 int strtoul(const char *str, unsigned int *val);
 
+static inline int streq(const char *a, const char *b)
+{
+	if (a == b)
+		return 1;
+
+	return !strcmp(a, b);
+}
+
 #endif
