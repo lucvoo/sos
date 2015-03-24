@@ -11,6 +11,8 @@ struct uart_ops {
 struct uart {
 	const char*		name;
 	struct uart_ops*	ops;
+
+	struct uart*		next;
 };
 
 #endif
