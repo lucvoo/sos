@@ -1,5 +1,6 @@
 #include "driver.h"
 #include <lock.h>
+#include <uartdev.h>
 #include <errno.h>
 #include <string.h>
 
@@ -34,4 +35,14 @@ int uart_register_dev(struct uart *p)
 	lock_rel(&uart_devices.lock);
 
 	return rc;
+}
+
+struct uart* uart_get_dev(const char *name)
+{
+	struct uart *p;
+
+	// Not locked but OK
+	p = lookup_dev(name);
+
+	return p;
 }
