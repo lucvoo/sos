@@ -77,7 +77,9 @@ cmd_cc_lds = $(CPP) -x assembler-with-cpp -P $(a_flags)   -o $@ $<
 # ---------------------------------------------------------------------------
 %.a:
 	@echo "AR	$@"
+	@if [ -n "$(filter-out $^,$(deps_$@))" ]; then rm -f $@; fi	# rm the lib if it contains old members
 	$(Q)$(AR) crs $@ $^
+	@echo "deps_$@ := $^" > $(depfile) #$(@D)/.$(@F).d
 # ---------------------------------------------------------------------------
 
 # Read all saved command lines and dependencies for the $(targets) we

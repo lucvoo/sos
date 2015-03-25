@@ -30,6 +30,7 @@ do_makefile()
 	echo "-include \$(objs-y:%.o=$dir/.%.o.cmd)"
 	echo "-include \$(objs-y:%.o=$dir/.%.s.cmd)"
 	echo
+	echo "-include $dir/.lib.a.d"
 	echo "$dir/lib.a: \$(objs)"
 	echo "libs += $dir/lib.a"
 	echo "$dir/: $dir/lib.a"
