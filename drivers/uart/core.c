@@ -1,5 +1,5 @@
 #include <uartdev.h>
-#include <uart.h>
+#include "core.h"
 
 
 int uart_start(struct uart *up)
