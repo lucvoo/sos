@@ -12,9 +12,7 @@ int uart_stop(struct uart *up)
 	return up->ops->stop(up);
 }
 
-void uart_rx_handler(struct uart *up, void *data, uart_rx_insert_t insert , uart_rx_handle_t handle)
+void uart_rx_handler(struct uart *up, struct uart_rx *rx)
 {
-	up->rx_data = data;
-	up->rx_insert = insert;
-	up->rx_handle = handle;
+	up->rx = rx;
 }

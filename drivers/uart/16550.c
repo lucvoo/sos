@@ -46,7 +46,7 @@ static unsigned int uart_16550_rx_chars(struct uart *up, unsigned int lsr)
 			goto done;
 		}
 
-		up->rx_insert(up, up->rx_data, ch, flag);
+		up->rx->push_char(up->rx, ch, flag);
 
 done:
 		lsr = reg_r(p, UART_LSR);
@@ -77,7 +77,7 @@ static int uart_16550_isr(struct irqdesc *desc, void *data)
 	lsr = reg_r(p, UART_LSR);
 	if (lsr & (UART_LSR_DR|UART_LSR_BI)) {
 		lsr = uart_16550_rx_chars(up, lsr);
-		if (up->rx_handle)
+		if (up->rx->handle)
 			rc |= IRQ_CALL_DSR;
 	}
 	if (lsr & (UART_LSR_THRE))
@@ -90,7 +90,7 @@ static int uart_16550_dsr(struct irqdesc *desc, unsigned int count, void *data)
 {
 	struct uart *up = data;
 
-	up->rx_handle(up, up->rx_data);
+	up->rx->handle(up->rx);
 
 	return 0;
 }
