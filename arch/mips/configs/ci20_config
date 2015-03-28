@@ -1,6 +1,6 @@
 #
 # Automatically generated make config: don't edit
-# Tue Mar 24 22:39:39 2015
+# Sat Mar 28 03:20:30 2015
 #
 # CONFIG_ARCH_ARM is not set
 CONFIG_ARCH_MIPS=y
@@ -21,6 +21,7 @@ CONFIG_ABI_EABI=y
 CONFIG_SOC_JZ4780=y
 CONFIG_SOC=jz4780
 CONFIG_SOC_PARAMS=y
+CONFIG_JTAG_ENABLE=y
 CONFIG_MACH_CI20=y
 
 #
@@ -53,3 +54,4 @@ CONFIG_HZ=100
 #
 CONFIG_MM_PAGE=y
 CONFIG_UART=y
+# CONFIG_UART_16550 is not set
