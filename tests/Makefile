@@ -16,6 +16,7 @@ progs-y	+= thread.test
 progs-y	+= timeout.test
 progs-y	+= timer.test
 progs-$(CONFIG_UART)		+= uart.test
+progs-$(CONFIG_UART)		+= uart-rxbuf.test
 
 progs-$(CONFIG_SMP)	+= lock.test
 progs-$(CONFIG_SMP)	+= sema-smp.test
