@@ -127,6 +127,7 @@ subdirs-y			+= kapi
 subdirs-y			+= kernel
 subdirs-y			+= lib
 subdirs-y			+= mm
+subdirs-$(CONFIG_NET)		+= net
 
 include scripts/Makefile.build
 scripts/Makefile.build: prepare
