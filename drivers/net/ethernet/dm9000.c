@@ -5,6 +5,7 @@
 #include <io.h>
 #include <irqdesc.h>
 #include <init.h>
+#include <string.h>
 
 
 struct dm9000 {
@@ -112,6 +113,7 @@ struct dm9000_cfg {
 	unsigned long	iodata;
 	const char*	intctrl;
 	unsigned int	irq;
+	const char*	macaddr;
 };
 
 static int dm9000_probe(struct dm9000 *dev, const struct dm9000_cfg *cfg)
@@ -163,6 +165,9 @@ static int dm9000_probe(struct dm9000 *dev, const struct dm9000_cfg *cfg)
 	// TODO: add MII
 
 	dm9000_eeprom_get_macaddr(dev);
+	if (!macaddr_is_valid(&dev->ndev.macaddr)) {
+		memcpy(&dev->ndev.macaddr, cfg->macaddr, 6);
+	}
 
 	rc = netdev_register(&dev->ndev);
 	return rc;
@@ -176,7 +181,7 @@ static struct dm9000 dm9000_dev;
 
 static void dm9000_init(void)
 {
-#define	DM9000_ENTRY(I, B, IC, IX)	{ I, B, IC, IX, },
+#define	DM9000_ENTRY(I, B, IC, IX, MA)	{ I, B, IC, IX, MA, },
 	const struct dm9000_cfg dm9000_cfg[1] = {
 #include <mach/config-dm9000.h>
 	};
