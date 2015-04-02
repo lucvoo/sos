@@ -1,5 +1,6 @@
 menu "Drivers"
 
+source drivers/net/Kconfig
 source drivers/uart/Kconfig
 
 endmenu

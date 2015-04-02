@@ -1,0 +1,3 @@
+menuconfig NET_DRIVERS
+	bool "Network drivers"
+	depends on NET

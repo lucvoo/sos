@@ -109,6 +109,7 @@ config	HZ
 	default 100
 
 source mm/Kconfig
+source net/Kconfig
 source kernel/time/Kconfig
 
 source drivers/Kconfig
