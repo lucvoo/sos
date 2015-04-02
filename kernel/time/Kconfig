@@ -1,0 +1,13 @@
+config LPUSEC_FIXED
+	bool "Fixed loops-per-usec"
+	default n
+
+config LPUSEC_MULT
+	int "loops-per-usec mult"
+	depends on LPUSEC_FIXED
+	default 1
+
+config LPUSEC_SHIFT
+	int "loops-per-usec shift"
+	depends on LPUSEC_FIXED
+	default 0
