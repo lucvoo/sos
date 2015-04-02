@@ -1,6 +1,6 @@
 #
 # Automatically generated make config: don't edit
-# Sat Mar 28 03:20:30 2015
+# Thu Apr 02 06:32:30 2015
 #
 # CONFIG_ARCH_ARM is not set
 CONFIG_ARCH_MIPS=y
@@ -56,5 +56,9 @@ CONFIG_MM_PAGE=y
 CONFIG_LPUSEC_FIXED=y
 CONFIG_LPUSEC_MULT=2455403
 CONFIG_LPUSEC_SHIFT=14
+
+#
+# Drivers
+#
 CONFIG_UART=y
 # CONFIG_UART_16550 is not set

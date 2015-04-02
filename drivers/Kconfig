@@ -1,1 +1,5 @@
+menu "Drivers"
+
 source drivers/uart/Kconfig
+
+endmenu
