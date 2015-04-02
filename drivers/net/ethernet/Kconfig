@@ -3,3 +3,7 @@ menuconfig ETHERNET_DRIVERS
 	depends on NET_DRIVERS
 	depends on ETHERNET
 	default y
+
+config	DM9000
+	depends on ETHERNET_DRIVERS
+	bool "DM9000 (Davicom)"
