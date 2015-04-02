@@ -6,6 +6,7 @@
 #include <printf.h>
 #include <compiler.h>
 #include <utils.h>
+#include <printk.h>
 #endif
 
 #endif
