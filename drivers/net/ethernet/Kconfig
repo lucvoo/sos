@@ -1,0 +1,5 @@
+menuconfig ETHERNET_DRIVERS
+	bool "Ethernet drivers"
+	depends on NET_DRIVERS
+	depends on ETHERNET
+	default y

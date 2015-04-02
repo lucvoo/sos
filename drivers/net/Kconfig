@@ -1,3 +1,5 @@
 menuconfig NET_DRIVERS
 	bool "Network drivers"
 	depends on NET
+
+source drivers/net/ethernet/Kconfig

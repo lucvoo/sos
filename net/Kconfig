@@ -1,2 +1,7 @@
 menuconfig NET
 	bool "Networking"
+
+config	ETHERNET
+	bool "Ethernet support"
+	depends on NET
+	default y
