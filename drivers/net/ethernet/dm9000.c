@@ -28,6 +28,48 @@ static inline void dm9000_iow(struct dm9000 *dev, int reg, int val)
 }
 
 /******************************************************************************/
+static int dm9000_eeprom_wait(struct dm9000 *dev)
+{
+	int n;
+
+	// poll the EPCR ERRE bit
+	// timeout of 8000us
+	for (n = 80; n; n--) {
+		unsigned int epc = dm9000_ior(dev, DM9000_EPCR);
+
+		if (!(epc & EPCR_ERRE))
+			break;
+
+		usleep(100);
+	}
+
+	return n;
+}
+
+/**
+ * Read a 16bit word from the eeprom
+ */
+static void dm9000_eeprom_read(struct dm9000 *dev, unsigned char *dst, unsigned int offset)
+{
+	dm9000_iow(dev, DM9000_EPAR, offset);
+	dm9000_iow(dev, DM9000_EPCR, EPCR_ERPRR);
+
+	dm9000_eeprom_wait(dev);
+
+	dm9000_iow(dev, DM9000_EPCR, 0);
+	dst[0] = dm9000_ior(dev, DM9000_EPDRL);
+	dst[1] = dm9000_ior(dev, DM9000_EPDRH);
+}
+
+static void dm9000_eeprom_get_macaddr(struct dm9000 *dev)
+{
+	unsigned char *addr = &dev->ndev.macaddr.byte[0];
+
+	dm9000_eeprom_read(dev, &addr[0], 0);
+	dm9000_eeprom_read(dev, &addr[2], 1);
+	dm9000_eeprom_read(dev, &addr[4], 2);
+}
+/******************************************************************************/
 static unsigned int dm9000_read_id(struct dm9000 *dev)
 {
 	unsigned int id;
@@ -120,7 +162,7 @@ static int dm9000_probe(struct dm9000 *dev, const struct dm9000_cfg *cfg)
 	// TODO: add "ethtool" ops
 	// TODO: add MII
 
-	// TODO: read MAC address from eeprom
+	dm9000_eeprom_get_macaddr(dev);
 
 	rc = netdev_register(&dev->ndev);
 	return rc;
