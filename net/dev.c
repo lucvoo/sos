@@ -37,3 +37,13 @@ struct netdev *netdev_get(const char *ifname)
 {
 	return lookup(ifname);
 }
+
+int netdev_poll(struct netdev *ndev)
+{
+	int rc = 0;
+
+	if (ndev->poll)
+		rc = ndev->poll(ndev);
+
+	return rc;
+}

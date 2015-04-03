@@ -17,6 +17,7 @@ struct netdev {
 	struct irqdesc*	irq;
 
 	int (*open)(struct netdev *ndev);
+	int (*poll)(struct netdev *ndev);
 	int (*down)(struct netdev *ndev);
 
 	struct netdev *next;
@@ -24,5 +25,6 @@ struct netdev {
 
 int netdev_register(struct netdev *ndev);
 struct netdev *netdev_get(const char *ifname);
+int netdev_poll(struct netdev *ndev);
 
 #endif
