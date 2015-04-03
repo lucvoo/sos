@@ -4,12 +4,13 @@
 #include <iomem.h>
 #include <net/macaddr.h>
 
+#define	IFNAMESIZ	10
+
 struct irqdesc;
 
 struct netdev {
-	const char* name;
-
 	struct macaddr macaddr;
+	char		ifname[IFNAMESIZ];
 
 	void __iomem*	iobase;
 	struct irqdesc*	irq;
