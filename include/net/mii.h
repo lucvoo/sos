@@ -145,4 +145,32 @@
 #define	MII_FLOW_CTRL_TX		0x0001
 #define	MII_FLOW_CTRL_RX		0x0002
 
+
+static inline unsigned int mii_nway_result(unsigned int nway)
+{
+	unsigned int result;
+
+	if (nway & MII_LPA_100FULL)
+		result = MII_LPA_100FULL;
+	else if (nway & MII_LPA_100HALF)
+		result = MII_LPA_100HALF;
+	else if (nway & MII_LPA_10FULL)
+		result = MII_LPA_10FULL;
+	else
+		result = MII_LPA_10HALF;
+
+	return result;
+}
+
+static inline int mii_full_duplex(unsigned int nway, int forced)
+{
+	unsigned int result;
+
+	if (forced)
+		return 1;
+
+	result = mii_nway_result(nway);
+	return (result & MII_LPA_FULL) != 0;
+}
+
 #endif
