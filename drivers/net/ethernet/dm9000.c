@@ -19,6 +19,7 @@ struct dm9000 {
 #define	DM9000_TYPE_B		2
 };
 
+#define	DM9000_PHYID	0x01	// Fixed and unique ID
 
 /******************************************************************************/
 static inline unsigned int dm9000_ior(struct dm9000 *dev, int reg)
@@ -75,6 +76,49 @@ static void dm9000_eeprom_get_macaddr(struct dm9000 *dev)
 	dm9000_eeprom_read(dev, &addr[2], 1);
 	dm9000_eeprom_read(dev, &addr[4], 2);
 }
+/******************************************************************************/
+static int dm9000_phy_read(struct netdev *ndev, unsigned int paddr, unsigned int reg)
+{
+	struct dm9000 *dev = container_of(ndev, struct dm9000, ndev);
+	unsigned int val;
+
+	// Set the PHY address and issue a PHY:READ command
+	dm9000_iow(dev, DM9000_EPAR, EPAR_PADR(paddr) | reg);
+	dm9000_iow(dev, DM9000_EPCR, EPCR_EPOS | EPCR_ERPRR);
+
+	// FIXME: if we sleep here we need to save restore the current IO Register
+	udelay(1000);
+
+	// Clear the command
+	dm9000_iow(dev, DM9000_EPCR, 0);
+
+	// read the data from the PHY
+	val = (dm9000_ior(dev, DM9000_EPDRH) << 8) | (dm9000_ior(dev, DM9000_EPDRL) << 0);
+
+	return val;
+}
+
+static int dm9000_phy_write(struct netdev *ndev, unsigned int paddr, unsigned int reg, unsigned int val)
+{
+	struct dm9000 *dev = container_of(ndev, struct dm9000, ndev);
+
+	// Write the data to the phy
+	dm9000_iow(dev, DM9000_EPDRH, val >> 8);
+	dm9000_iow(dev, DM9000_EPDRL, val >> 0);
+
+	// Set the PHY address and issue a PHY:Write command
+	dm9000_iow(dev, DM9000_EPAR, EPAR_PADR(paddr) | reg);
+	dm9000_iow(dev, DM9000_EPCR, EPCR_EPOS | EPCR_ERPRW);
+
+	// FIXME: if we sleep here we need to save restore the current IO Register
+	udelay(1000);
+
+	// Clear the command
+	dm9000_iow(dev, DM9000_EPCR, 0);
+
+	return 0;
+}
+
 /******************************************************************************/
 static unsigned int dm9000_read_id(struct dm9000 *dev)
 {
