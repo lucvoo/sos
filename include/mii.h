@@ -22,5 +22,6 @@ struct mii {
 int mii_link_ok(struct mii *mii);
 int mii_nway_restart(struct mii *mii);
 int mii_init_media(struct mii *mii);
+int mii_check_media(struct mii *mii);
 
 #endif

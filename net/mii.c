@@ -43,21 +43,35 @@ static int mii_speed(unsigned int nway)
 
 int mii_init_media(struct mii *mii)
 {
+
+	mii->advertising = 0;
+	mii->dev->link = 0;
+
+	return mii_check_media(mii);
+}
+
+int mii_check_media(struct mii *mii)
+{
 	unsigned int adv, lpa;
 	unsigned int nway;
 	int duplex;
 	int link;
 
-	mii->advertising = 0;
 	link = mii_link_ok(mii);
-	if (!link)
-		return -ENODEV;
+	if (link == mii->dev->link)
+		return 0;
 
 	mii->dev->link = link;
+	if (!link) {
+		pr_info("%s link down\n", mii->dev->ifname);
+		return 0;
+	}
 
-	adv = mii->read(mii, mii->paddr, MII_ADVERTISE);
-	mii->advertising = adv;
-
+	// get MII advertise and LPA values
+	if (mii->advertising == 0) {
+		mii->advertising = mii->read(mii, mii->paddr, MII_ADVERTISE);
+	}
+	adv = mii->advertising;
 	lpa = mii->read(mii, mii->paddr, MII_LPA);
 
 	// TODO: GMII
@@ -73,5 +87,5 @@ int mii_init_media(struct mii *mii)
 			duplex ? "full" : "half",
 			lpa);
 
-	return 0;
+	return 1;
 }
