@@ -22,5 +22,6 @@ struct netdev {
 };
 
 int netdev_register(struct netdev *ndev);
+struct netdev *netdev_get(const char *ifname);
 
 #endif
