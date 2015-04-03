@@ -12,6 +12,11 @@ struct dm9000 {
 	struct netdev		ndev;
 
 	void __iomem*		iodata;
+
+	unsigned int		type;
+#define	DM9000_TYPE_E		0
+#define	DM9000_TYPE_A		1
+#define	DM9000_TYPE_B		2
 };
 
 
@@ -153,10 +158,13 @@ static int dm9000_probe(struct dm9000 *dev, const struct dm9000_cfg *cfg)
 	switch (id) {
 	// FIXME: some model can do hardware checksum
 	case CHIPR_A:
+		dev->type = DM9000_TYPE_A;
 		break;
 	case CHIPR_B:
+		dev->type = DM9000_TYPE_B;
 		break;
 	default:
+		dev->type = DM9000_TYPE_E;
 		break;
 	}
 
