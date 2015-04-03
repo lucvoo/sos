@@ -8,6 +8,7 @@
 #include <string.h>
 #include <net/mii.h>
 #include <interrupt.h>
+#include <mii.h>
 
 
 struct dm9000 {
@@ -22,6 +23,7 @@ struct dm9000 {
 
 	unsigned char		imr;
 	struct irqaction	irq_action;
+	struct mii		mii;
 };
 
 #define	DM9000_PHYID	0x01	// Fixed and unique ID
@@ -82,9 +84,9 @@ static void dm9000_eeprom_get_macaddr(struct dm9000 *dev)
 	dm9000_eeprom_read(dev, &addr[4], 2);
 }
 /******************************************************************************/
-static int dm9000_phy_read(struct netdev *ndev, unsigned int paddr, unsigned int reg)
+static int dm9000_phy_read(struct mii *mii, unsigned int paddr, unsigned int reg)
 {
-	struct dm9000 *dev = container_of(ndev, struct dm9000, ndev);
+	struct dm9000 *dev = container_of(mii->dev, struct dm9000, ndev);
 	unsigned int val;
 
 	// Set the PHY address and issue a PHY:READ command
@@ -103,9 +105,9 @@ static int dm9000_phy_read(struct netdev *ndev, unsigned int paddr, unsigned int
 	return val;
 }
 
-static int dm9000_phy_write(struct netdev *ndev, unsigned int paddr, unsigned int reg, unsigned int val)
+static int dm9000_phy_write(struct mii *mii, unsigned int paddr, unsigned int reg, unsigned int val)
 {
-	struct dm9000 *dev = container_of(ndev, struct dm9000, ndev);
+	struct dm9000 *dev = container_of(mii->dev, struct dm9000, ndev);
 
 	// Write the data to the phy
 	dm9000_iow(dev, DM9000_EPDRH, val >> 8);
@@ -122,6 +124,17 @@ static int dm9000_phy_write(struct netdev *ndev, unsigned int paddr, unsigned in
 	dm9000_iow(dev, DM9000_EPCR, 0);
 
 	return 0;
+}
+
+/******************************************************************************/
+static int dm9000_get_link(struct netdev *ndev)
+{
+	struct dm9000 *dev = container_of(ndev, struct dm9000, ndev);
+	unsigned int status;
+
+	// internal PHY
+	status = dm9000_ior(dev, DM9000_NSR);
+	return (status & NSR_LINKST) != 0;
 }
 
 /******************************************************************************/
@@ -187,8 +200,8 @@ static void dm9000_reinit(struct dm9000 *dev)
 	// Powerup & init the internal PHY
 	dm9000_iow(dev, DM9000_GPR, GPR_PHYUP);
 	if (dev->type == DM9000_TYPE_B) {
-		dm9000_phy_write(&dev->ndev, 0, MII_BMCR, MII_BMCR_RESET);
-		dm9000_phy_write(&dev->ndev, 0, MII_DM_DSPCR, MII_DSPCR_INIT_PARAM);
+		dm9000_phy_write(&dev->mii, 0, MII_BMCR, MII_BMCR_RESET);
+		dm9000_phy_write(&dev->mii, 0, MII_DM_DSPCR, MII_DSPCR_INIT_PARAM);
 	}
 
 	ncr = 0;
@@ -246,6 +259,8 @@ static int dm9000_open(struct netdev *ndev)
 
 	// interrupt unmask
 	dm9000_iow(dev, DM9000_IMR, dev->imr);
+
+	mii_init_media(&dev->mii);
 
 	return rc;
 }
@@ -310,7 +325,11 @@ static int dm9000_probe(struct dm9000 *dev, const struct dm9000_cfg *cfg)
 	dev->ndev.open = dm9000_open;
 
 	// TODO: add "ethtool" ops
-	// TODO: add MII
+
+	dev->mii.paddr = DM9000_PHYID;
+	dev->mii.read = dm9000_phy_read;
+	dev->mii.write = dm9000_phy_write;
+	dev->mii.dev = &dev->ndev;
 
 	dm9000_eeprom_get_macaddr(dev);
 	if (!macaddr_is_valid(&dev->ndev.macaddr)) {
