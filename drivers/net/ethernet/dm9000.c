@@ -264,6 +264,17 @@ static int dm9000_open(struct netdev *ndev)
 
 	return rc;
 }
+
+static int dm9000_poll(struct netdev *ndev)
+{
+	struct dm9000 *dev = container_of(ndev, struct dm9000, ndev);
+
+	// For debug only
+
+	mii_check_media(&dev->mii);
+
+	return 0;
+}
 /******************************************************************************/
 // FIXME: use something like platform_device or device tree ?
 struct dm9000_cfg {
@@ -323,6 +334,7 @@ static int dm9000_probe(struct dm9000 *dev, const struct dm9000_cfg *cfg)
 
 	// TODO: add netdev ops
 	dev->ndev.open = dm9000_open;
+	dev->ndev.poll = dm9000_poll;
 
 	// TODO: add "ethtool" ops
 
