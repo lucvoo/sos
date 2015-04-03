@@ -53,6 +53,8 @@ int mii_init_media(struct mii *mii)
 	if (!link)
 		return -ENODEV;
 
+	mii->dev->link = link;
+
 	adv = mii->read(mii, mii->paddr, MII_ADVERTISE);
 	mii->advertising = adv;
 

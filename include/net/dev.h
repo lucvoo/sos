@@ -11,6 +11,7 @@ struct irqdesc;
 struct netdev {
 	struct macaddr macaddr;
 	char		ifname[IFNAMESIZ];
+	unsigned long	link:1;
 
 	void __iomem*	iobase;
 	struct irqdesc*	irq;
