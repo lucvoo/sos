@@ -6,6 +6,7 @@
 #include <irqdesc.h>
 #include <init.h>
 #include <string.h>
+#include <net/mii.h>
 
 
 struct dm9000 {
@@ -17,6 +18,8 @@ struct dm9000 {
 #define	DM9000_TYPE_E		0
 #define	DM9000_TYPE_A		1
 #define	DM9000_TYPE_B		2
+
+	unsigned char		imr;
 };
 
 #define	DM9000_PHYID	0x01	// Fixed and unique ID
@@ -153,6 +156,53 @@ static void dm9000_reset(struct dm9000 *dev)
 	dm9000_iow(dev, DM9000_NCR, 0);
 	if (dm9000_reset_once(dev))
 		pr_warn("did not reset (try 2)\n");
+}
+
+/******************************************************************************/
+static void dm9000_reinit(struct dm9000 *dev)
+{
+	unsigned int ncr;
+	unsigned int imr;
+
+	dm9000_reset(dev);
+
+	// Mask the interrupts
+	dm9000_iow(dev, DM9000_IMR, IMR_PAR);
+
+	// TODO: set hw checksum if capable
+
+	// TODO: GPCR set all to output ?
+
+	// Powerup & init the internal PHY
+	dm9000_iow(dev, DM9000_GPR, GPR_PHYUP);
+	if (dev->type == DM9000_TYPE_B) {
+		dm9000_phy_write(&dev->ndev, 0, MII_BMCR, MII_BMCR_RESET);
+		dm9000_phy_write(&dev->ndev, 0, MII_DM_DSPCR, MII_DSPCR_INIT_PARAM);
+	}
+
+	ncr = 0;
+	// TODO: external PHY?
+	// TODO: enable wake?
+	dm9000_iow(dev, DM9000_NCR, ncr);
+
+	// operating registers
+	dm9000_iow(dev, DM9000_TCR, 0);	        // TX Polling clear
+	dm9000_iow(dev, DM9000_BPTR, BPTR_BPHW(3)|BPTR_JPT_600US);
+	dm9000_iow(dev, DM9000_FCR, 0xff);	// Flow Control
+	dm9000_iow(dev, DM9000_SMCR, 0);        // Special Mode
+
+	// clear TX status
+	dm9000_iow(dev, DM9000_NSR, NSR_WAKEST | NSR_TX2END | NSR_TX1END);
+	// Clear interrupt status
+	dm9000_iow(dev, DM9000_ISR, ISR_CLR_STATUS);
+
+	// TODO: Set address filter table
+
+	// Save the interrupt mask
+	imr = IMR_PAR | IMR_PTM | IMR_PRM;
+	if (dev->type != DM9000_TYPE_E)
+		imr |= IMR_LNKCHNG;
+	dev->imr = imr;
 }
 
 /******************************************************************************/
