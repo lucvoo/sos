@@ -205,6 +205,24 @@ static void dm9000_reinit(struct dm9000 *dev)
 	dev->imr = imr;
 }
 
+static int dm9000_open(struct netdev *ndev)
+{
+	struct dm9000 *dev = container_of(ndev, struct dm9000, ndev);
+	int rc = 0;
+
+	pr_info("enabling %s\n", ndev->ifname);
+
+	// FIXME: why ???
+	dm9000_iow(dev, DM9000_GPR, GPR_PHYUP);
+	udelay(1000);
+
+	dm9000_reinit(dev);
+
+	// interrupt unmask
+	dm9000_iow(dev, DM9000_IMR, dev->imr);
+
+	return rc;
+}
 /******************************************************************************/
 // FIXME: use something like platform_device or device tree ?
 struct dm9000_cfg {
@@ -263,6 +281,8 @@ static int dm9000_probe(struct dm9000 *dev, const struct dm9000_cfg *cfg)
 	}
 
 	// TODO: add netdev ops
+	dev->ndev.open = dm9000_open;
+
 	// TODO: add "ethtool" ops
 	// TODO: add MII
 
