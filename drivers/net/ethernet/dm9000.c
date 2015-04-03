@@ -161,6 +161,15 @@ static void dm9000_reset(struct dm9000 *dev)
 }
 
 /******************************************************************************/
+static void dm9000_set_physical_address(struct dm9000 *dev)
+{
+	const unsigned char *macaddr = dev->ndev.macaddr.byte;
+	int i;
+
+	for (i = 0; i < 6; i++)
+		dm9000_iow(dev, DM9000_PAR+i, macaddr[i]);
+}
+
 static void dm9000_reinit(struct dm9000 *dev)
 {
 	unsigned int ncr;
@@ -197,6 +206,9 @@ static void dm9000_reinit(struct dm9000 *dev)
 	dm9000_iow(dev, DM9000_NSR, NSR_WAKEST | NSR_TX2END | NSR_TX1END);
 	// Clear interrupt status
 	dm9000_iow(dev, DM9000_ISR, ISR_CLR_STATUS);
+
+	// write the MAc adress to ... the MAC
+	dm9000_set_physical_address(dev);
 
 	// TODO: Set address filter table
 
