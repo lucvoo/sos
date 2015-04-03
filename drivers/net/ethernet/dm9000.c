@@ -7,6 +7,7 @@
 #include <init.h>
 #include <string.h>
 #include <net/mii.h>
+#include <interrupt.h>
 
 
 struct dm9000 {
@@ -20,6 +21,7 @@ struct dm9000 {
 #define	DM9000_TYPE_B		2
 
 	unsigned char		imr;
+	struct irqaction	irq_action;
 };
 
 #define	DM9000_PHYID	0x01	// Fixed and unique ID
@@ -205,6 +207,15 @@ static void dm9000_reinit(struct dm9000 *dev)
 	dev->imr = imr;
 }
 
+static int dm9000_irq(struct irqdesc *desc, void *data)
+{
+	struct dm9000 *dev = data;
+
+	pr_dbg(" ...\n", dev);
+
+	return 0;
+}
+
 static int dm9000_open(struct netdev *ndev)
 {
 	struct dm9000 *dev = container_of(ndev, struct dm9000, ndev);
@@ -217,6 +228,9 @@ static int dm9000_open(struct netdev *ndev)
 	udelay(1000);
 
 	dm9000_reinit(dev);
+
+	irq_create(&dev->irq_action, dm9000_irq, NULL, dev, 0);
+	rc = irq_attach(ndev->irq, &dev->irq_action);
 
 	// interrupt unmask
 	dm9000_iow(dev, DM9000_IMR, dev->imr);
