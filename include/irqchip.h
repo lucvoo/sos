@@ -15,6 +15,7 @@ struct irqchip {
 
 	void			(*default_handler)(struct irqdesc *desc);
 
+	struct irqdesc		*parent;
 	struct irqchip		*next;
 
 	unsigned short		irq_nbr;
