@@ -273,6 +273,9 @@ static int dm9000_irq(struct irqdesc *desc, void *data)
 		dm9000_irq_tx(dev);
 		rc |= IRQ_HANDLED;
 	}
+	if (status & ISR_LNKCHNG) {
+		rc |= IRQ_CALL_DSR;
+	}
 
 	// unmask the MAC interrupts
 	// and restore the ioaddr
@@ -280,6 +283,17 @@ static int dm9000_irq(struct irqdesc *desc, void *data)
 	iowrite8(dev->ndev.iobase, saved_ioaddr);
 
 	return rc;
+}
+
+static int dm9000_dsr(struct irqdesc *desc, unsigned int count, void *data)
+{
+	struct dm9000 *dev = data;
+
+	// FIXME: only save if this never sleep
+	//	  which is true for now but ...
+	mii_check_media(&dev->mii);
+
+	return 0;
 }
 
 /******************************************************************************/
@@ -297,7 +311,7 @@ static int dm9000_open(struct netdev *ndev)
 
 	dm9000_reinit(dev);
 
-	irq_create(&dev->irq_action, dm9000_irq, NULL, dev, 0);
+	irq_create(&dev->irq_action, dm9000_irq, dm9000_dsr, dev, 0);
 	rc = irq_attach(ndev->irq, &dev->irq_action);
 	irq_unmask(ndev->irq);
 
