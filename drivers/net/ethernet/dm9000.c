@@ -10,6 +10,7 @@
 #include <net/mii.h>
 #include <interrupt.h>
 #include <mii.h>
+#include <byteorder.h>
 
 
 struct dm9000 {
@@ -40,6 +41,29 @@ static inline void dm9000_iow(struct dm9000 *dev, int reg, int val)
 {
 	iowrite8(dev->ndev.iobase, reg);
 	iowrite8(dev->iodata, val);
+}
+
+
+static void dm9000_write_pkt(struct dm9000 *dev, const void *__src, unsigned int count)
+{
+	const unsigned char *src = __src;
+
+	while (count--)
+		iowrite8(dev->iodata, *src++);
+}
+
+static void dm9000_read_pkt(struct dm9000 *dev, void *__dst, unsigned int count)
+{
+	unsigned char *dst = __dst;
+
+	while (count--)
+		*dst++ = ioread8(dev->iodata);
+}
+
+static void dm9000_drop_pkt(struct dm9000 *dev, unsigned int count)
+{
+	while (count--)
+		ioread8(dev->iodata);
 }
 
 /******************************************************************************/
@@ -224,6 +248,9 @@ static void dm9000_reinit(struct dm9000 *dev)
 	// write the MAc adress to ... the MAC
 	dm9000_set_physical_address(dev);
 
+	// RX enable
+	dm9000_iow(dev, DM9000_RCR, RCR_RXEN);	// FIXME: |RCR_DIS_LONG|RCR_DIS_CRC);
+
 	// TODO: Set address filter table
 
 	// Save the interrupt mask
@@ -243,6 +270,72 @@ static void dm9000_irq_tx(struct dm9000 *dev)
 
 static void dm9000_irq_rx(struct dm9000 *dev)
 {
+	unsigned int ready;
+	unsigned int len;
+	struct rxhdr {
+		u8	ready;	// 0: not ready, 1: ready, > 1: error?
+		u8	status;
+		__le16	length;
+	} hdr;
+	int err;
+
+loop:
+	// peek the ready byte from the header
+	dm9000_ior(dev, DM9000_MRCMDX);
+	ready = ioread8(dev->iodata);
+	if (ready & DM9000_PKT_ERR) {
+		pr_warn("RX ready error: %d\n", ready);
+		dm9000_iow(dev, DM9000_RCR, 0x00);	// Stop Rx
+
+		// FIXME: will need a reset in order to recover from
+		//	  unstable states between system bus & DM9000 chip
+		// FIXME: notify upper layer?
+		return;
+	}
+
+	if (!ready)
+		return;
+
+	// now get the full header: with status & length
+	iowrite8(dev->ndev.iobase, DM9000_MRCMD);
+	dm9000_read_pkt(dev, &hdr, sizeof(hdr));
+	len = le16_to_cpu(hdr.length);
+
+	pr_dbg("RX: status = %02x, len = 0x%04x (%d)\n", hdr.status, len, len);
+
+	// check length & status
+	err = 0;
+	if (len < 0x40) {
+		err = 1;
+		pr_err("RX: bad packet (len < 0x40)\n");
+	}
+
+	if (len > DM9000_PKT_MAX) {
+		pr_dbg("RX: packet too long?\n");
+	}
+
+	// hdr.status is identical to RSR register.
+	if (hdr.status & RSR_ERROR) {
+		err = 1;
+		if (hdr.status & RSR_FOE) {
+			pr_dbg("RX: FIFO error\n");
+		}
+		if (hdr.status & RSR_CE) {
+			pr_dbg("RX: CRC error\n");
+		}
+		if (hdr.status & RSR_RF) {
+			pr_dbg("RX: length error\n");
+		}
+	}
+
+	if (!err) {
+		unsigned char dst[2048];
+
+		// Read received packet from RX SRAM
+		dm9000_read_pkt(dev, dst, len);
+	}
+
+	goto loop;
 }
 
 /******************************************************************************/
