@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <io.h>
 #include <irqdesc.h>
+#include <irq.h>
 #include <init.h>
 #include <string.h>
 #include <net/mii.h>
@@ -232,14 +233,56 @@ static void dm9000_reinit(struct dm9000 *dev)
 	dev->imr = imr;
 }
 
+/******************************************************************************/
+
+static void dm9000_irq_tx(struct dm9000 *dev)
+{
+}
+
+/******************************************************************************/
+
+static void dm9000_irq_rx(struct dm9000 *dev)
+{
+}
+
+/******************************************************************************/
+
 static int dm9000_irq(struct irqdesc *desc, void *data)
 {
 	struct dm9000 *dev = data;
+	unsigned int saved_ioaddr;
+	unsigned int status;
+	int rc = IRQ_NONE;
 
-	pr_dbg(" ...\n", dev);
+	// save the ioaddr preset at interrupt time
+	// and mask the MAC interrupts
+	saved_ioaddr = ioread8(dev->ndev.iobase);
+	dm9000_iow(dev, DM9000_IMR, IMR_PAR);
 
-	return 0;
+	// get the irq status and ack/clear it
+	status = dm9000_ior(dev, DM9000_ISR);
+	dm9000_iow(dev, DM9000_ISR, status);
+
+	pr_dbg("status = %02x (%02x)\n", status, dm9000_ior(dev, DM9000_ISR));
+
+	if (status & ISR_PRS) {
+		dm9000_irq_rx(dev);
+		rc |= IRQ_HANDLED;
+	}
+	if (status & ISR_PTS) {
+		dm9000_irq_tx(dev);
+		rc |= IRQ_HANDLED;
+	}
+
+	// unmask the MAC interrupts
+	// and restore the ioaddr
+	dm9000_iow(dev, DM9000_IMR, dev->imr);
+	iowrite8(dev->ndev.iobase, saved_ioaddr);
+
+	return rc;
 }
+
+/******************************************************************************/
 
 static int dm9000_open(struct netdev *ndev)
 {
@@ -256,6 +299,7 @@ static int dm9000_open(struct netdev *ndev)
 
 	irq_create(&dev->irq_action, dm9000_irq, NULL, dev, 0);
 	rc = irq_attach(ndev->irq, &dev->irq_action);
+	irq_unmask(ndev->irq);
 
 	// interrupt unmask
 	dm9000_iow(dev, DM9000_IMR, dev->imr);
