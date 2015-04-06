@@ -7,6 +7,7 @@
 #include <compiler.h>
 #include <utils.h>
 #include <printk.h>
+#include <kconfig.h>
 #endif
 
 #endif
