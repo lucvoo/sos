@@ -10,7 +10,6 @@
 * add support for DT?
 * port to raspberry-pi (ARMV6 - ARM11)
 * watchdog drivers
-* add gpio/pinctrl driver
 * add led driver
 * add clock subsystem
 * add real timer subsystem
