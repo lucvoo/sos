@@ -115,6 +115,52 @@ static void pad(put_fn_t put, char *dest, unsigned size, unsigned int n, unsigne
 	}
 }
 
+/*****************************************************************************/
+static int print_macaddr(char *buff, unsigned int size, const unsigned char *p)
+{
+	snprintf(buff, size, "%02x:%02x:%02x:%02x:%02x:%02x", p[0], p[1], p[2], p[3], p[4], p[5]);
+
+	return strlen(buff);
+}
+
+static int print_ipv4(char *buff, unsigned int size, const unsigned char *p)
+{
+	snprintf(buff, size, "%d.%d.%d.%d", p[0], p[1], p[2], p[3]);
+
+	return strlen(buff);
+}
+
+static char *print_typed_pointer(const char **format, unsigned long uval)
+{
+	const void *ptr = (const void *) uval;
+	const char *fmt = *format;
+	static char buff[256];
+
+	switch (*++fmt) {
+#ifdef CONFIG_NET
+	case 'M':
+		print_macaddr(buff, sizeof(buff), ptr);
+		break;
+
+	case 'I':
+		fmt++;
+		if (*fmt == '4') {	// IPv4
+			print_ipv4(buff, sizeof(buff), ptr);
+			break;
+		}
+		return NULL;
+#endif
+
+	default:
+		return NULL;
+	}
+
+	*format = fmt;
+
+	return buff;
+}
+
+/*****************************************************************************/
 unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, va_list ap)
 {
 	char *begin = dest;
@@ -290,6 +336,14 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 			//case q_ll:	uval = va_arg(ap, unsigned long long);	break;
 			}
 			neg = 0;
+
+			if (c == 'p') {
+				s = print_typed_pointer(&fmt, uval);
+				if (s) {
+					n = strlen(s);
+					break;
+				}
+			}
 
 		case_number:
 			sign = 0;
