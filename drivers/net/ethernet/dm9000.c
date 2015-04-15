@@ -11,6 +11,7 @@
 #include <interrupt.h>
 #include <mii.h>
 #include <byteorder.h>
+#include <net/ether.h>
 
 
 struct dm9000 {
@@ -333,6 +334,8 @@ loop:
 
 		// Read received packet from RX SRAM
 		dm9000_read_pkt(dev, dst, len);
+
+		ether_dump_frame(dst, len);
 	}
 
 	goto loop;
