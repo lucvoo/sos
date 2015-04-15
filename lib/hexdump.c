@@ -18,12 +18,12 @@ static void hexdump_line(const unsigned char *buff, unsigned int len, int ascii)
 		// Hex part
 		for (i = 0; i < len; i++)
 			printf("%02x ", buff[i]);
-		for (; i < 16; i++)
-			printf("   ");
 	}
 
 	if (ascii) {
 		// Ascii part
+		for (; i < 16; i++)	// pad to full line
+			printf("   ");
 		for (i = 0; i < len; i++)
 			printf("%c", mapchar(buff[i]));
 		for (; i < 16; i++)
