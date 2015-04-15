@@ -498,6 +498,7 @@ static int dm9000_probe(struct dm9000 *dev, const struct dm9000_cfg *cfg)
 	if (!macaddr_is_valid(&dev->ndev.macaddr)) {
 		memcpy(&dev->ndev.macaddr, cfg->macaddr, 6);
 	}
+	pr_info("MAC address: %pM\n", &dev->ndev.macaddr);
 
 	rc = netdev_register(&dev->ndev);
 	return rc;
