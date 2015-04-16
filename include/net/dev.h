@@ -6,6 +6,7 @@
 
 #define	IFNAMESIZ	10
 
+struct skb;
 struct irqdesc;
 
 struct netdev {
@@ -26,5 +27,8 @@ struct netdev {
 int netdev_register(struct netdev *ndev);
 struct netdev *netdev_get(const char *ifname);
 int netdev_poll(struct netdev *ndev);
+
+
+void netif_rx(struct skb *skb);
 
 #endif
