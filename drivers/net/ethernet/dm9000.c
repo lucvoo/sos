@@ -12,6 +12,7 @@
 #include <mii.h>
 #include <byteorder.h>
 #include <net/ether.h>
+#include <net/skb.h>
 
 
 struct dm9000 {
@@ -273,6 +274,7 @@ static void dm9000_irq_rx(struct dm9000 *dev)
 {
 	unsigned int ready;
 	unsigned int len;
+	struct skb *skb;
 	struct rxhdr {
 		u8	ready;	// 0: not ready, 1: ready, > 1: error?
 		u8	status;
@@ -330,12 +332,23 @@ loop:
 	}
 
 	if (!err) {
-		unsigned char dst[2048];
+		skb = skb_alloc(len, 2);
+		if (!skb)
+			err = 1;
+	}
+
+	if (!err) {
+		unsigned char *dst;
 
 		// Read received packet from RX SRAM
+		dst = skb_add_tail(skb, len);
 		dm9000_read_pkt(dev, dst, len);
 
-		ether_dump_frame(dst, len);
+		netif_rx(skb);
+	} else {
+		// need to discard the packet's data
+
+		dm9000_drop_pkt(dev, len);
 	}
 
 	goto loop;
