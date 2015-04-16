@@ -28,6 +28,7 @@
   * look for ethernet driver?
   * have a very simple stack 
   * have support for something very simple, like TFTP or ping
+  * make a decent skb_alloc()
 
 * Block layer
   * infrastructure

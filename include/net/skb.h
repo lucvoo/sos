@@ -24,6 +24,11 @@ struct skb {
 
 /******************************************************************************/
 
+struct skb *skb_alloc(unsigned int len, unsigned int reserve);
+void skb_free(struct skb *skb);
+
+/******************************************************************************/
+
 /**
  * @returns a pointer after the valid data
  */
