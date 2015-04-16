@@ -344,6 +344,9 @@ loop:
 		dst = skb_add_tail(skb, len);
 		dm9000_read_pkt(dev, dst, len);
 
+		// set to upper layer
+		skb->proto = eth_type(skb);
+
 		netif_rx(skb);
 	} else {
 		// need to discard the packet's data
