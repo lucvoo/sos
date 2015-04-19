@@ -9,6 +9,15 @@
 struct skb;
 struct irqdesc;
 
+struct netdev_stats {
+	unsigned long	rx_errors_fifo;
+	unsigned long	rx_errors_crc;
+	unsigned long	rx_errors_length;
+
+	unsigned long	rx_packets;
+	unsigned long	rx_bytes;
+};
+
 struct netdev {
 	struct macaddr macaddr;
 	char		ifname[IFNAMESIZ];
@@ -21,6 +30,10 @@ struct netdev {
 	int (*poll)(struct netdev *ndev);
 	int (*down)(struct netdev *ndev);
 
+#ifdef	CONFIG_NET_STATS
+	struct netdev_stats	stats;
+#endif
+
 	struct netdev *next;
 };
 
@@ -30,5 +43,13 @@ int netdev_poll(struct netdev *ndev);
 
 
 void netif_rx(struct skb *skb);
+
+
+#ifdef	CONFIG_NET_STATS
+#define	netdev_stats_add(dev, item, val)	(dev)->stats.item += val
+#else
+#define	netdev_stats_add(dev, item, val)	do ; while (0)
+#endif
+#define	netdev_stats_inc(dev, item)		netdev_stats_add(dev, item, 1)
 
 #endif
