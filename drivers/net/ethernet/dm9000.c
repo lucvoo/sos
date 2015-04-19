@@ -322,12 +322,15 @@ loop:
 		err = 1;
 		if (hdr.status & RSR_FOE) {
 			pr_dbg("RX: FIFO error\n");
+			netdev_stats_inc(&dev->ndev, rx_errors_fifo);
 		}
 		if (hdr.status & RSR_CE) {
 			pr_dbg("RX: CRC error\n");
+			netdev_stats_inc(&dev->ndev, rx_errors_crc);
 		}
 		if (hdr.status & RSR_RF) {
 			pr_dbg("RX: length error\n");
+			netdev_stats_inc(&dev->ndev, rx_errors_length);
 		}
 	}
 
@@ -345,6 +348,8 @@ loop:
 		// Read received packet from RX SRAM
 		dst = skb_add_tail(skb, len);
 		dm9000_read_pkt(dev, dst, len);
+		netdev_stats_add(&dev->ndev, rx_bytes, len);
+		netdev_stats_inc(&dev->ndev, rx_packets);
 
 		// set to upper layer
 		skb->proto = eth_type(skb);
