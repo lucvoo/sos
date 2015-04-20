@@ -1,7 +1,20 @@
 #ifndef	_NET_SKB_H_
 #define	_NET_SKB_H_
 
+#include <dlist.h>
+#include <lock.h>
+
+
+struct skb_queue {
+	struct dlist_head	head;
+
+	unsigned int		len;
+	struct lock		lock;
+};
+
+
 struct skb {
+	struct dlist		node;
 	struct netdev		*dev;
 
 	unsigned short		proto;
@@ -76,6 +89,24 @@ static inline void *skb_add_tail(struct skb *skb, unsigned int len)
 
 	skb->len  += len;
 	return data;
+}
+
+/**
+ * Add a skb at the tail of the queue
+ * @skq: the queue
+ * @skb: the buffer
+ */
+static inline void skb_enqueue_tail(struct skb_queue *q, struct skb *skb)
+{
+	dlist_add_tail(&q->head, &skb->node);
+}
+
+/**
+ * Remove a skb from a queue
+ */
+static struct skb *skb_dequeue_head(struct skb_queue *q)
+{
+	return dlist_pop_entry(&q->head, struct skb, node);
 }
 
 #endif
