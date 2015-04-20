@@ -1,6 +1,6 @@
 #
 # Automatically generated make config: don't edit
-# Sun Mar 15 16:46:34 2015
+# Tue Mar 24 22:39:39 2015
 #
 # CONFIG_ARCH_ARM is not set
 CONFIG_ARCH_MIPS=y
@@ -52,3 +52,4 @@ CONFIG_HZ=100
 # Memory Management
 #
 CONFIG_MM_PAGE=y
+CONFIG_UART=y
