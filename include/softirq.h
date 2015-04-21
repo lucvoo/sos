@@ -3,6 +3,7 @@
 
 enum {
 	SOFTIRQ_DSR,
+	SOFTIRQ_NETRX,
 
 	SOFTIRQ_MAX,
 };
