@@ -1,0 +1,28 @@
+menu "Kernel debugging"
+
+choice
+	prompt "Log level"
+	default	LOG_NOTE
+
+config	LOG_ERR
+	bool "Error"
+config	LOG_WARN
+	bool "Warn"
+config	LOG_NOTE
+	bool "Note"
+config	LOG_INFO
+	bool "Info"
+config	LOG_DEBUG
+	bool "Debug"
+
+endchoice
+
+config	LOG_LEVEL
+	symbol
+	default LOG_LEVEL_ERR   if LOG_ERR
+	default LOG_LEVEL_WARN  if LOG_WARN
+	default LOG_LEVEL_NOTE  if LOG_NOTE
+	default LOG_LEVEL_INFO  if LOG_INFO
+	default LOG_LEVEL_DEBUG if LOG_DEBUG
+	
+endmenu

@@ -113,3 +113,5 @@ source net/Kconfig
 source kernel/time/Kconfig
 
 source drivers/Kconfig
+
+source kernel/debug/Kconfig
