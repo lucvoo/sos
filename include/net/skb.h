@@ -5,6 +5,12 @@
 #include <lock.h>
 
 
+#define	PACKET_CASTING_HOST	0
+#define	PACKET_CASTING_OTHER	1
+#define	PACKET_CASTING_BROAD	2
+#define	PACKET_CASTING_MULTI	3
+
+
 struct skb_queue {
 	struct dlist_head	head;
 
@@ -18,6 +24,7 @@ struct skb {
 	struct netdev		*dev;
 
 	unsigned short		proto;
+	unsigned int		casting:2;
 
 	void *			buff;
 	void *			data;

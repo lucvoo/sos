@@ -1,6 +1,8 @@
 #include <net/if_ether.h>
 #include <net/ether.h>
 #include <net/skb.h>
+#include <net/macaddr.h>
+#include <net/dev.h>
 #include <byteorder.h>
 
 
@@ -23,8 +25,16 @@ unsigned int eth_type(struct skb *skb)
 
 	hdr = (const void *) skb->data;
 
-	// TODO: packet type
+	// first set the packet type
+	if (unlikely(macaddr_is_multicast(&hdr->dst))) {
+		if (macaddr_is_broadcast(&hdr->dst))
+			skb->casting = PACKET_CASTING_BROAD;
+		else
+			skb->casting = PACKET_CASTING_MULTI;
+	} else if (unlikely(!macaddr_is_equal(&hdr->dst, &skb->dev->macaddr)))
+			skb->casting = PACKET_CASTING_OTHER;
 
+	// Now we can look at the protocol
 	proto = be16_to_cpu(hdr->proto);
 	if (likely(proto >= ETH_P_802_3_MIN))
 		return proto;
