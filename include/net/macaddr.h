@@ -48,4 +48,15 @@ static inline int macaddr_is_equal(const struct macaddr *a1, const struct macadd
 	return ((h1[0] ^ h2[0]) | (h1[1] ^ h2[1]) | (h1[2] ^ h2[2])) == 0;
 }
 
+
+static inline void macaddr_copy(struct macaddr *daddr, const struct macaddr *saddr)
+{
+	const u16 *s = &saddr->half[0];
+	u16 *d = &daddr->half[0];
+
+	d[0] = s[0];
+	d[1] = s[1];
+	d[2] = s[2];
+}
+
 #endif
