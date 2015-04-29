@@ -223,6 +223,12 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 			flags &= ~F_SPAC;
 
 		// 2) minimum field width
+		if (*fmt == '*') {
+			fmt++;
+			minw = va_arg(ap, int);
+			goto prec;
+		}
+
 		for ( ; (c = *fmt); fmt++) {
 			unsigned int d = c - '0';
 
@@ -232,9 +238,15 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 			minw = minw * 10 + d;
 		}
 
+prec:
 		// 3) precision
 		if (c == '.') {
 			fmt++;
+			if (*fmt == '*') {
+				fmt++;
+				prec = va_arg(ap, int);
+				goto len_mods;
+			}
 			prec = 0;
 			for ( ; (c = *fmt); fmt++) {
 				unsigned int d = c - '0';
@@ -248,6 +260,7 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 				prec = sizeof(buff);
 		}
 
+len_mods:
 		// 4) length modifiers
 		switch (c) {
 		case 'h':			// promoted to int
