@@ -130,7 +130,7 @@ static int print_ipv4(char *buff, unsigned int size, const unsigned char *p)
 	return strlen(buff);
 }
 
-static char *print_typed_pointer(const char **format, unsigned long uval)
+static char *print_typed_pointer(const char **format, unsigned long uval, unsigned int  width)
 {
 	const void *ptr = (const void *) uval;
 	const char *fmt = *format;
@@ -351,7 +351,7 @@ len_mods:
 			neg = 0;
 
 			if (c == 'p') {
-				s = print_typed_pointer(&fmt, uval);
+				s = print_typed_pointer(&fmt, uval, minw);
 				if (s) {
 					n = strlen(s);
 					break;
