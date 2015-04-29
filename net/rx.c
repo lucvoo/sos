@@ -1,3 +1,4 @@
+#include <net/proto.h>
 #include <net/dev.h>
 #include <net/skb.h>
 #include <softirq.h>
@@ -7,7 +8,15 @@
 
 static void netif_rx_process(struct skb *skb)
 {
-	// TODO
+
+	switch (skb->proto) {
+	case ETH_P_ARP:
+		return net_arp_rx(skb);
+	default:
+		// TODO
+		break;
+	}
+
 	pr_info("skb: len = %4u, proto = %04x\n", skb->len, skb->proto);
 
 	skb_free(skb);
