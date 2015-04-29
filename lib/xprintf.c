@@ -130,6 +130,23 @@ static int print_ipv4(char *buff, unsigned int size, const unsigned char *p)
 	return strlen(buff);
 }
 
+static unsigned int print_binhex(char *buff, unsigned int size, const unsigned char *p, unsigned int len)
+{
+	char *start = buff;
+
+	while (len && (size >= 3)) {
+		snprintf(buff, size, "%02x ", *p++);
+		buff += 3;
+		size -= 3;
+	}
+
+	if (buff != start)
+		buff--;
+
+	*buff = 0;
+	return buff - start;
+}
+
 static char *print_typed_pointer(const char **format, unsigned long uval, unsigned int  width)
 {
 	const void *ptr = (const void *) uval;
@@ -150,6 +167,9 @@ static char *print_typed_pointer(const char **format, unsigned long uval, unsign
 		}
 		return NULL;
 #endif
+	case 'h':
+		print_binhex(buff, sizeof(buff), ptr, width);
+		break;
 
 	default:
 		return NULL;
