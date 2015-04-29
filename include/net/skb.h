@@ -133,4 +133,28 @@ static struct skb *skb_dequeue_head(struct skb_queue *q)
 	return dlist_pop_entry(&q->head, struct skb, node);
 }
 
+
+/**
+ * Set the MAC/link header of an ingress packet
+ * @skb: the ingress packet
+ * @hdr: pointer to the packet's header
+ */
+static inline void __skb_set_mac_header(struct skb *skb, void *hdr)
+{
+	skb->mac_hdr = hdr - skb->buff;
+}
+
+/**
+ * Update the pointer when parsing an ingress packet
+ * @skb: the ingress packet
+ */
+static inline void* skb_parse_mac_header(struct skb *skb, unsigned int len)
+{
+	void *hdr = skb_next_header(skb, len);
+
+	__skb_set_mac_header(skb, hdr);
+
+	return hdr;
+}
+
 #endif
