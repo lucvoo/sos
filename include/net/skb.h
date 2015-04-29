@@ -101,6 +101,19 @@ static inline void *skb_add_tail(struct skb *skb, unsigned int len)
 }
 
 /**
+ * Update the header to the upper layer
+ * @returns a pointer to old header
+ */
+static inline void *skb_next_header(struct skb *skb, unsigned int len)
+{
+	void *prev = skb->data;
+
+	skb->data += len;
+	skb->len  -= len;
+	return prev;
+}
+
+/**
  * Add a skb at the tail of the queue
  * @skq: the queue
  * @skb: the buffer
