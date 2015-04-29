@@ -25,6 +25,7 @@ struct dm9000 {
 #define	DM9000_TYPE_A		1
 #define	DM9000_TYPE_B		2
 
+	unsigned int		txq_cnt;
 	unsigned char		imr;
 	struct irqaction	irq_action;
 	struct mii		mii;
@@ -264,8 +265,51 @@ static void dm9000_reinit(struct dm9000 *dev)
 
 /******************************************************************************/
 
+static void dm9000_send_frame(struct netdev *ndev, unsigned int len)
+{
+}
+
+static int dm9000_send(struct netdev *ndev, struct skb *skb)
+{
+	struct dm9000 *dev = container_of(ndev, struct dm9000, ndev);
+
+	if (dev->txq_cnt > 0)
+		return NETDEV_TX_BUSY;
+
+	// FIXME: lock?
+
+	// Write the frame to the internal RAM
+	iowrite8(dev->ndev.iobase, DM9000_MWCMD);
+	dm9000_write_pkt(dev, skb->data, skb->len);
+	netdev_stats_add(&dev->ndev, tx_bytes, skb->len);
+	dev->txq_cnt++;
+
+	// HW checksum
+	// FIXME: only for IPv4, UDPv4 & TCPv4
+	dm9000_iow(dev, DM9000_TCCR, TCCR_IP|TCCR_UDP|TCCR_TCP);
+
+	// TX request
+	dm9000_iow(dev, DM9000_TXPLH, skb->len >> 8);
+	dm9000_iow(dev, DM9000_TXPLL, skb->len >> 0);
+	dm9000_iow(dev, DM9000_TCR, TCR_TXREQ);
+
+	// FIXME: lock?
+
+	skb_free(skb);
+
+	return NETDEV_TX_OK;
+}
+
 static void dm9000_irq_tx(struct dm9000 *dev)
 {
+	unsigned int status = dm9000_ior(dev, DM9000_NSR);
+
+	if (!(status & (NSR_TX1END|NSR_TX2END)) == 0)
+		return;
+
+	netdev_stats_inc(&dev->ndev, tx_packets);
+
+	dev->txq_cnt--;
 }
 
 /******************************************************************************/

@@ -16,6 +16,9 @@ struct netdev_stats {
 
 	unsigned long	rx_packets;
 	unsigned long	rx_bytes;
+
+	unsigned long	tx_packets;
+	unsigned long	tx_bytes;
 };
 
 struct netdev {
@@ -26,9 +29,14 @@ struct netdev {
 	void __iomem*	iobase;
 	struct irqdesc*	irq;
 
+	unsigned int	tx_state;
+
 	int (*open)(struct netdev *ndev);
 	int (*poll)(struct netdev *ndev);
 	int (*down)(struct netdev *ndev);
+#define	NETDEV_TX_OK	0
+#define	NETDEV_TX_BUSY	1
+	int (*send)(struct netdev *ndev, struct skb *skb);
 
 #ifdef	CONFIG_NET_STATS
 	struct netdev_stats	stats;
