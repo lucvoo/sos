@@ -44,3 +44,13 @@ void skb_free(struct skb *skb)
 
 	page_free(p, 0);
 }
+
+
+struct skb *skb_alloc_tx(struct netdev *dev, unsigned int len)
+{
+	unsigned int hlen = 16;		// FIXME
+	struct skb *skb;
+
+	skb = skb_alloc(len, hlen);
+	return skb;
+}

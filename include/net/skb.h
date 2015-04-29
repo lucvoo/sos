@@ -47,6 +47,8 @@ struct skb {
 struct skb *skb_alloc(unsigned int len, unsigned int reserve);
 void skb_free(struct skb *skb);
 
+struct skb *skb_alloc_tx(struct netdev *dev, unsigned int len);
+
 /******************************************************************************/
 
 /**
