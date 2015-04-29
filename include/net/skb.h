@@ -26,6 +26,8 @@ struct skb {
 	unsigned short		proto;
 	unsigned int		casting:2;
 
+	unsigned short		mac_hdr;
+
 	void *			buff;
 	void *			data;
 	unsigned int		len;
