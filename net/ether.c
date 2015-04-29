@@ -23,7 +23,7 @@ unsigned int eth_type(struct skb *skb)
 	const struct ethhdr *hdr;
 	unsigned int proto;
 
-	hdr = (const void *) skb->data;
+	hdr = skb_parse_mac_header(skb, ETH_HLEN);
 
 	// first set the packet type
 	if (unlikely(macaddr_is_multicast(&hdr->dst))) {
