@@ -26,4 +26,15 @@ struct arphdr {
 	u8		addresses[0];
 };
 
+
+#include <net/dev.h>
+static inline unsigned int arp_packet_len(struct netdev *dev)
+{
+	switch (ARPHRD_ETHER) {		// Only one supported for now
+	default:
+						// 2 HW & 2 IP addresses
+		return sizeof(struct arphdr) + 2 * (netdev_addr_len(dev) + 4);
+	}
+}
+
 #endif
