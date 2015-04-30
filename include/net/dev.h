@@ -60,4 +60,10 @@ void netif_rx(struct skb *skb);
 #endif
 #define	netdev_stats_inc(dev, item)		netdev_stats_add(dev, item, 1)
 
+
+static inline unsigned int netdev_addr_len(struct netdev *dev)
+{
+	return sizeof(struct macaddr);	// FIXME: only supported for now
+}
+
 #endif
