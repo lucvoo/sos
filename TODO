@@ -28,7 +28,10 @@
   * look for ethernet driver?
   * have a very simple stack 
   * have support for something very simple, like TFTP or ping
-  * make a decent skb_alloc()
+  ✓ make a decent skb_alloc()
+  * ARP/neighbour tables
+  * how to associate L3 addresses to interfaces
+  * sending queue
 
 * Block layer
   * infrastructure
