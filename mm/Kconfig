@@ -4,4 +4,8 @@ config MM_PAGE
 	bool "Manage memory into pages"
 	default y
 
+config SLAB
+	bool "Slab-like allocator"
+	default y
+
 endmenu

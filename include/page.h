@@ -15,6 +15,7 @@
 enum page_flags {
 	PG_reserved	= 0x00000001,	// reserved for the kernel or ...
 	PG_free		= 0x00000002,	// free in the binary buddy
+	PG_slab		= 0x00000004,	// used for slab allocation
 };
 
 
