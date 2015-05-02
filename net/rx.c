@@ -6,12 +6,15 @@
 #include <init.h>
 
 
+#define	HASH_PROTO(P)	((P ^ (P >> 8)) % 8)
+
 static void netif_rx_process(struct skb *skb)
 {
 
-	switch (skb->proto) {
-	case ETH_P_ARP:
-		return net_arp_rx(skb);
+	switch (HASH_PROTO(skb->proto)) {
+	case HASH_PROTO(ETH_P_ARP):
+		if (skb->proto == ETH_P_ARP)
+			return net_arp_rx(skb);
 	default:
 		// TODO
 		break;
