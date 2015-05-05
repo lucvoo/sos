@@ -340,6 +340,8 @@ loop:
 	if (!err) {
 		unsigned char *dst;
 
+		skb->dev = &dev->ndev;
+
 		// Read received packet from RX SRAM
 		dst = skb_add_tail(skb, len);
 		dm9000_read_pkt(dev, dst, len);
