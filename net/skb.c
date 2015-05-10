@@ -25,11 +25,31 @@ static void skb_cache_init(void)
 core_initcall(skb_cache_init);
 
 
+static void *skb_buff_alloc(unsigned int len)
+{
+	struct page *p;
+	void *buff;
+
+	p = page_alloc(0, GFP_KERN);
+	if (!p)
+		return NULL;
+
+	// we allocate a fill page for each packet: FIXME
+	buff = page_to_virt(p);
+	return buff;
+}
+
+static void skb_buff_free(void *buff)
+{
+	struct page *p = virt_to_page(buff);
+
+	page_free(p, 0);
+}
+
 struct skb *skb_alloc(unsigned int len, unsigned int reserve)
 {
 	unsigned int totlen = len + reserve;
 	struct skb *skb;
-	struct page *p;
 	void *buff;
 
 	if (totlen > PAGE_SIZE)
@@ -39,12 +59,11 @@ struct skb *skb_alloc(unsigned int len, unsigned int reserve)
 	if (!skb)
 		return NULL;
 
-	p = page_alloc(0, GFP_KERN);
-	if (!p) {
+	buff = skb_buff_alloc(len);
+	if (!buff) {
 		kmem_free(skb_cache, skb);
 		return NULL;
 	}
-	buff = page_to_virt(p);
 
 	skb->buff = buff;
 	skb->size = len + reserve;
@@ -56,9 +75,7 @@ struct skb *skb_alloc(unsigned int len, unsigned int reserve)
 
 void skb_free(struct skb *skb)
 {
-	struct page *p = virt_to_page(skb->buff);
-
-	page_free(p, 0);
+	skb_buff_free(skb->buff);
 	kmem_free(skb_cache, skb);
 }
 
