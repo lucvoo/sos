@@ -1,5 +1,9 @@
 menu "Memory Management"
 
+config NOMMU
+	bool
+	default n
+
 config MM_PAGE
 	bool "Manage memory into pages"
 	default y
