@@ -34,11 +34,17 @@ config GC_SECTIONS_SHOW
 	bool "Show sections GCed"
 	depends on GC_SECTIONS
 
+config	REMOVE_INIT_SECTIONS
+	bool "Remove init sections when not needed anymore"
+	default y
+
 config	CROSS_COMPILE
 	symbol "Cross compile prefix"
 
 endmenu
 
+
+menu "OS options"
 
 config	NEED_INTERRUPT_STACK
 	bool "is an interrupt stack needed?"
@@ -100,13 +106,11 @@ config	SMP
 	depends on HAS_SMP
 	default y
 
-config	REMOVE_INIT_SECTIONS
-	bool "Remove init sections when not needed anymore"
-	default y
-
 config	HZ
 	int "tick frequency"
 	default 100
+
+endmenu
 
 source mm/Kconfig
 source net/Kconfig

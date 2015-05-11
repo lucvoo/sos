@@ -60,6 +60,9 @@ config	BITS
 source arch/arm/Kconfig.mach
 source arch/arm/socs/Kconfig
 
+
+menu "ARM options"
+
 comment "Memory"
 config	VIRT_ADDR
 	hex "Main RAM virtual address"
@@ -77,3 +80,5 @@ config	HIGH_VECTORS
 	bool "Use high vectors"
 	depends on !HAS_VBAR
 	default y
+
+endmenu

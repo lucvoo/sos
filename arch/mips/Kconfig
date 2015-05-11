@@ -20,16 +20,18 @@ config	CPU_MIPS32R2
 	select MIPS32
 	select CPU_HAS_SYNC
 
-config	ABI_EABI
-	bool "Use EABI"
-	default y
-
 config	BITS
 	int
 	default 32 if MIPS32
 
-source arch/mips/socs/Kconfig
 source arch/mips/Kconfig.mach
+source arch/mips/socs/Kconfig
+
+menu "MIPS options"
+
+config	ABI_EABI
+	bool "Use EABI"
+	default y
 
 comment "Memory"
 config	PHYS_ADDR
@@ -43,3 +45,5 @@ config	VIRT_ADDR
 config	TEXT_OFFSET
 	hex "Start of kernel image relatively to the start of the RAM"
 	default 0x00008000
+
+endmenu

@@ -1,3 +1,5 @@
+menu "JZ4780"
+
 config	SOC
 	symbol
 	default	jz4780
@@ -11,3 +13,5 @@ config	SOC_PARAMS
 config	JTAG_ENABLE
 	bool "Enable JTAG"
 	default y
+
+endmenu
