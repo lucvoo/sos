@@ -1,3 +1,5 @@
+	.syntax unified
+
 	.text
 	.global	memcpy
 	.type	memcpy, %function
@@ -18,8 +20,8 @@ memcpy_aligned:
 	@	registers (2 for 16 bytes, 6 for 32 or 64)
 .Lloop:
 	subs	r2, r2, #8
-	ldmgeia	r1!, {r3, ip}
-	stmgeia	r0!, {r3, ip}
+	ldmiage	r1!, {r3, ip}
+	stmiage	r0!, {r3, ip}
 	bgt	.Lloop
 	bxeq	lr
 
@@ -33,13 +35,13 @@ memcpy_aligned:
 	@ n < 4
 	@ src or dst may be unligned
 	tst	r2, #2
-	ldrneb	r3, [r1], #1
-	strneb	r3, [r0], #1
-	ldrneb	r3, [r1], #1
-	strneb	r3, [r0], #1
+	ldrbne	r3, [r1], #1
+	strbne	r3, [r0], #1
+	ldrbne	r3, [r1], #1
+	strbne	r3, [r0], #1
 	tst	r2, #1
-	ldrneb	r3, [r1], #1
-	strneb	r3, [r0], #1
+	ldrbne	r3, [r1], #1
+	strbne	r3, [r0], #1
 
 	bx	lr
 
@@ -50,10 +52,10 @@ memcpy_aligned:
 
 	cmp	r3, #2
 	add	r2, r2, r3	@ r2 = (n - 4) + mis
-	ldrltb	r3, [r1], #1	@ mis: 1
-	strltb	r3, [r0], #1
-	ldrleb	r3, [r1], #1	@ mis: 1,2
-	strleb	r3, [r0], #1
+	ldrblt	r3, [r1], #1	@ mis: 1
+	strblt	r3, [r0], #1
+	ldrble	r3, [r1], #1	@ mis: 1,2
+	strble	r3, [r0], #1
 	ldrb	r3, [r1], #1	@ mis: 1,2,3
 	strb	r3, [r0], #1
 				@ n' = n - (4 - mis)
@@ -73,8 +75,8 @@ memcpy_aligned:
 
 .Lcopy_by_2:
 	subs	r2, r2, #2
-	ldrgeh	r3, [r1], #2	@ mis: 1
-	strgeh	r3, [r0], #2
+	ldrhge	r3, [r1], #2	@ mis: 1
+	strhge	r3, [r0], #2
 	bgt	.Lcopy_by_2
 	bxeq	lr
 
@@ -82,8 +84,8 @@ memcpy_aligned:
 
 .Lcopy_by_1:
 	subs	r2, r2, #1
-	ldrgeb	r3, [r1], #1	@ mis: 1
-	strgeb	r3, [r0], #1
+	ldrbge	r3, [r1], #1	@ mis: 1
+	strbge	r3, [r0], #1
 	bgt	.Lcopy_by_1
 
 	bx	lr
