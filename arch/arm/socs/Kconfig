@@ -1,2 +1,11 @@
 config SOC_AM335X
 	bool
+config SOC_STM32
+	bool
+config SOC_STM32F4
+	bool
+	select SOC_STM32
+
+if SOC_STM32
+source arch/arm/socs/stm32/Kconfig
+endif

@@ -24,3 +24,4 @@ subdirs-y			+= mm/
 subdirs-y			+= debug/
 subdirs-y			+= socs/
 subdirs-$(CONFIG_MACH_BEAGLEBONE)	+= mach-beaglebone/
+subdirs-$(CONFIG_MACH_STM32)	+= mach-stm32/

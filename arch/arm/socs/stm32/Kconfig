@@ -1,0 +1,8 @@
+config	SOC_PARAMS
+	bool
+	default y
+	select CORTEX_M4
+
+config PHYS_ADDR
+	hex
+	default 0x20000000
