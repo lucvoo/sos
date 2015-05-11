@@ -27,6 +27,9 @@ config	CORTEX_A9
 	bool
 	select ARMV7
 
+config	CORTEX_M4
+	bool
+	select ARMV7M
 
 config	ARMV4T
 	bool
@@ -45,6 +48,12 @@ config	ARMV6K
 	select ARMV6
 config	ARMV7
 	bool
+config	ARMV7M
+	select NOMMU
+	bool
+config	ARMVA
+	bool
+	default !ARMV7M
 
 config	ARM_ARCH
 	int
@@ -52,6 +61,7 @@ config	ARM_ARCH
 	default 5 if ARMV5
 	default 6 if ARMV6
 	default 7 if ARMV7
+	default 7 if ARMV7M
 
 config	BITS
 	int
@@ -78,7 +88,7 @@ config	HAS_VBAR
 	depends on ARMV6K || ARMV7
 config	HIGH_VECTORS
 	bool "Use high vectors"
-	depends on !HAS_VBAR
+	depends on !HAS_VBAR && !ARMV7M
 	default y
 
 endmenu

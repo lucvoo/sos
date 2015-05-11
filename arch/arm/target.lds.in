@@ -24,6 +24,11 @@ MEMORY {
 SECTIONS
 {
 
+	.entry :  {
+		KEEP(*(.entry))
+			*(.entry.text)
+	} > rom
+
 	.init : {
 			*(.startup.text)
 			*(.init.text)
