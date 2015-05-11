@@ -1,5 +1,6 @@
 #include <debug.h>
 #include <arch/cp15.h>
+#include <arch/irqflags.h>
 #include <stringify.h>
 
 
@@ -25,7 +26,7 @@ void dump_system_regs(void)
 	dump_cp15(CLIDR);
 
 	printf("\n");
-	dump_reg("CPSR",  "mrs %0, cpsr");
+	dump_reg("CPSR",  __irqflags_save("%0"));
 	dump_cp15(SCTLR);
 	dump_cp15(VBAR);
 
