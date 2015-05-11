@@ -2,7 +2,6 @@ config ARCH
 	symbol
 	default arm
 
-source arch/arm/Kconfig.mach
 
 config	ARM720T
 	bool
@@ -58,6 +57,7 @@ config	BITS
 	int
 	default 32
 
+source arch/arm/Kconfig.mach
 source arch/arm/socs/Kconfig
 
 comment "Memory"
