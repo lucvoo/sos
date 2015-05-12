@@ -15,6 +15,10 @@
 #error	CONFIG_NR_THREAD_PRIORITY must not be greater than BITS_PER_LONG
 #endif
 
+#ifdef	NEED___CURRENT_THREAD
+struct thread *__current_thread;
+#endif
+
 
 struct run_queue {
 	struct lock		lock;

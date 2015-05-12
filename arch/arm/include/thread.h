@@ -27,7 +27,7 @@ static inline void set_current_thread(struct thread *curr)
 {
 }
 
-#else
+#elif defined(CONFIG_ARMV7)
 
 #include <stringify.h>
 #include <arch/cp15.h>
@@ -43,6 +43,24 @@ static inline void set_current_thread(struct thread *curr)
 {
         asm volatile("mcr " STRINGIFY(TPIDRPRW(%0)) :: "r" (curr));
 }
+
+#else
+
+#define	NEED___CURRENT_THREAD
+
+static inline struct thread* get_current_thread(void)
+{
+	extern struct thread *__current_thread;
+	return __current_thread;
+}
+
+static inline void set_current_thread(struct thread *curr)
+{
+	extern struct thread *__current_thread;
+
+	__current_thread = curr;
+}
+
 #endif
 
 #endif
