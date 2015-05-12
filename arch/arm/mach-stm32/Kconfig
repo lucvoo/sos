@@ -10,3 +10,7 @@ config	MACH_PARAMS
 config PHYS_SIZE
 	hex
 	default 0x00020000
+
+config LOWPOWER_DEBUG
+	bool "Allow debugging while in low-power mode"
+	default y
