@@ -110,6 +110,10 @@ config	HZ
 	int "tick frequency"
 	default 100
 
+config	BOOT
+	bool "Direct boot, without a bootloader"
+	default y
+
 endmenu
 
 source mm/Kconfig

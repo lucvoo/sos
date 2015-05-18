@@ -30,5 +30,8 @@ vec_hardfault:
 	.type   __startup, %function
 	.thumb_func
 __startup:
+#ifdef CONFIG_BOOT
+	BOOT_SETUP
+#endif
 	b	_os_start
 	.size   __startup, .-__startup
