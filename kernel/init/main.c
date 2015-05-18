@@ -17,6 +17,22 @@ static void __init clear_bss(void)
 	}
 }
 
+static void __init init_data(void)
+{
+	extern const unsigned long __data_load;
+	extern const unsigned long __data_end;
+	extern unsigned long __data_start;
+
+	if (kconfig(XIP)) {
+		const unsigned long *src = &__data_load;
+		const unsigned long *end = &__data_end;
+		unsigned long *dst = &__data_start;
+
+		while (dst < end)
+			*dst++ = *src++;
+	}
+}
+
 
 static void __init initcalls(void)
 {
@@ -34,6 +50,7 @@ void _os_start(void) __noreturn;
 void _os_start(void)
 {
 	clear_bss();
+	init_data();
 	initcalls();
 	kapi_start();
 	_thread_scheduler_start();

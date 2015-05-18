@@ -15,7 +15,12 @@ GROUP(libtarget.a libgcc.a)
 
 MEMORY {
 	ram		: ORIGIN = VIRT_ADDR + TEXT_OFFSET, LENGTH = 0xFFFFFFFF
+#ifdef CONFIG_XIP
+	rom		: ORIGIN = CONFIG_XIP_VADDR, LENGTH = CONFIG_XIP_SIZE
+#else
 #define	rom ram
+#endif
+
 #ifdef	HIGH_VECTORS
 	highvectors	: ORIGIN = 0xFFFF0000, LENGTH = 0x00010000
 #else
@@ -62,7 +67,11 @@ SECTIONS
 	} > rom
 
 	.data : WORD_ALIGN {
+		PROVIDE(__data_load = LOADADDR(.data));
+		PROVIDE(__data_start = .);
 			*(.data*)
+		. = WORD_ALIGN;
+		PROVIDE(__data_end = .);
 	} > ram AT> rom
 
 	.bss : WORD_ALIGN {

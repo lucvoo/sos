@@ -26,11 +26,15 @@ _os_startup:
 	// mrc	MIDR(r3)
 	// ...
 
+#ifdef	CONFIG_XIP
+	ldr	r3, =LOAD_ADDR
+#else
 	// Calculate the physical (load) address
 	adr	ip, _os_startup		@ load/phys address of X
 	ldr	r3, =_os_startup	@ corresponding virtual address
 	sub	r3, r3, ip		@ virt(x) - phys(x)
 	rsb	r3, r3, #VIRT_ADDR	@ virt(0) - (virt(x) - phys(x)) = phys(0)
+#endif
 
 	@ r1: mach ID,
 	@ r2: ATAGs/DT, 

@@ -82,6 +82,22 @@ config	TEXT_OFFSET
 	hex "Start of kernel image relatively to the start of the RAM"
 	default 0x00008000
 
+config	XIP
+	bool "XIP (kernel run from ROM or flash)"
+config	XIP_PADDR
+	hex "XIP physical address"
+	depends on XIP
+	default 0x80000000
+config	XIP_VADDR
+	hex "XIP virtual address" if !NOMMU
+	depends on XIP
+	default XIP_PADDR         if  NOMMU
+	default VIRT_ADDR	  if !NOMMU
+config	XIP_SIZE
+	hex "XIP size"
+	depends on XIP
+	default 0x00100000
+
 comment "Misc"
 config	HAS_VBAR
 	bool "Has VBAR"
