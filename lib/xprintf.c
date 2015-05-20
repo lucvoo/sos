@@ -158,15 +158,20 @@ static unsigned int print_binhex(char *buff, unsigned int size, const unsigned c
 {
 	char *start = buff;
 
-	while (len && (size >= 3)) {
-		snprintf(buff, size, "%02x ", *p++);
+	if (!len)
+		goto end;
+
+	snprintf(buff, size, "%02x", *p++);
+	buff += 2;
+	size -= 2;
+
+	while (--len && (size >= 3)) {
+		snprintf(buff, size, " %02x", *p++);
 		buff += 3;
 		size -= 3;
 	}
 
-	if (buff != start)
-		buff--;
-
+end:
 	*buff = 0;
 	return buff - start;
 }
