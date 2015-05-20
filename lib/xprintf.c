@@ -140,40 +140,39 @@ static unsigned int xprintf(struct xput *xput, const char *fmt, ...)
 	return n;
 }
 
-static int print_macaddr(char *buff, unsigned int size, const unsigned char *p)
+static int print_macaddr(struct xput *xput, const unsigned char *p)
 {
-	snprintf(buff, size, "%02x:%02x:%02x:%02x:%02x:%02x", p[0], p[1], p[2], p[3], p[4], p[5]);
+	unsigned int n;
 
-	return strlen(buff);
+	n = xprintf(xput, "%02x:%02x:%02x:%02x:%02x:%02x", p[0], p[1], p[2], p[3], p[4], p[5]);
+
+	return n;
 }
 
-static int print_ipv4(char *buff, unsigned int size, const unsigned char *p)
+static int print_ipv4(struct xput *xput, const unsigned char *p)
 {
-	snprintf(buff, size, "%d.%d.%d.%d", p[0], p[1], p[2], p[3]);
+	unsigned int n;
 
-	return strlen(buff);
+	n = xprintf(xput, "%d.%d.%d.%d", p[0], p[1], p[2], p[3]);
+
+	return n;
 }
 
-static unsigned int print_binhex(char *buff, unsigned int size, const unsigned char *p, unsigned int len)
+static unsigned int print_binhex(struct xput *xput, const unsigned char *p, unsigned int len)
 {
-	char *start = buff;
+	unsigned int n = 0;
 
 	if (!len)
 		goto end;
 
-	snprintf(buff, size, "%02x", *p++);
-	buff += 2;
-	size -= 2;
+	n += xprintf(xput, "%02x", *p++);
 
-	while (--len && (size >= 3)) {
-		snprintf(buff, size, " %02x", *p++);
-		buff += 3;
-		size -= 3;
+	while (--len) {
+		n += xprintf(xput, " %02x", *p++);
 	}
 
 end:
-	*buff = 0;
-	return buff - start;
+	return n;
 }
 
 /*****************************************************************************/
@@ -368,28 +367,28 @@ len_mods:
 				switch (fmt[0]) {
 #ifdef CONFIG_NET
 				case 'M':
-					print_macaddr(buff, sizeof(buff), ptr);
+					n = print_macaddr(xput, ptr);
 					break;
 
 				case 'I':
 					if (fmt[1] == '4') {	// IPv4
-						fmt ++;
-						print_ipv4(buff, sizeof(buff), ptr);
+						fmt++;
+						n = print_ipv4(xput, ptr);
 						break;
 					}
 					goto case_number;
 #endif
 				case 'h':
-					print_binhex(buff, sizeof(buff), ptr, minw);
+					n = print_binhex(xput, ptr, minw);
 					break;
 
 				default:
 					goto case_number;
 				}
 				fmt++;
-				s = buff;
-				n = strlen(s);
-				break;
+				// FIXME: no front padding
+				// FIXME: no back  padding
+				continue;
 			}
 
 		case_number:
