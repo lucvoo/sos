@@ -96,7 +96,7 @@ static unsigned int utostr_dec(char *buf, unsigned prec, unsigned long val)
 }
 
 
-static void pad(put_fn_t put, char *dest, unsigned size, unsigned int n, unsigned int flags)
+static void pad(struct xput *xput, unsigned int n, unsigned int flags)
 {
 	static const char spaces[] = "               ";
 	static const char zeroes[] = "000000000000000";
@@ -110,7 +110,7 @@ static void pad(put_fn_t put, char *dest, unsigned size, unsigned int n, unsigne
 		s = sizeof(spaces) -1;
 		if (s > n)
 			s = n;
-		put(pads, s, dest, size);
+		xput->func(pads, s, xput);
 		n -= s;
 	}
 }
@@ -181,9 +181,9 @@ static char *print_typed_pointer(const char **format, unsigned long uval, unsign
 }
 
 /*****************************************************************************/
-unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, va_list ap)
+unsigned int xprintf(struct xput *xput, const char *fmt, va_list ap)
 {
-	char *begin = dest;
+	char *begin = xput->dest;
 
 	while (1) {
 		char buff[sizeof(unsigned long)*8 +8];		// enough for output in base 2 & seps
@@ -201,9 +201,7 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 			idx++;
 
 		if (idx) {
-			n = put(fmt, idx, dest, size);
-			dest += n;
-			size -= n;
+			xput->func(fmt, idx, xput);
 			fmt += idx;
 		}
 
@@ -213,10 +211,8 @@ unsigned int xprintf(put_fn_t put, char *dest, unsigned size, const char *fmt, v
 		fmt++;			// skip the '%'
 
 		if (fmt[0] == '%') {
-			put(fmt, 1, dest, size);
+			xput->func(fmt, 1, xput);
 			fmt++;
-			dest++;
-			size--;
 			continue;
 		}
 
@@ -412,9 +408,7 @@ len_mods:
 				shift = 3;
 				goto base_bin;
 			case 'p':
-				put("0x", 2, dest, size);
-				dest += 2;
-				size -= 2;
+				xput->func("0x", 2, xput);
 				prec = sizeof(long) * 2;
 				shift = 4;
 				goto base_bin;
@@ -458,22 +452,16 @@ len_mods:
 		if (n < minw && (flags & F_LEFT) == 0) {
 			unsigned int p = minw - n;
 
-			pad(put, dest, size, p, 0);
-			dest += p;
-			size -= p;
+			pad(xput, p, 0);
 		}
-		n = put(s, n, dest, size);
-		dest += n;
-		size -= n;
+		xput->func(s, n, xput);
 		if (n < minw && (flags & F_LEFT) != 0) {
 			unsigned int p = minw - n;
 
-			pad(put, dest, size, p, 0);
-			dest += p;
-			size -= p;
+			pad(xput, p, 0);
 		}
 		fmt++;
 	}
 
-	return dest - begin;
+	return xput->dest - begin;
 }

@@ -5,19 +5,18 @@
 
 struct lock printf_lock;
 
-int putx(const char *buf, unsigned n);
-static int _putx(const char *buf, unsigned n, char *dest, unsigned size)
-{
-	(void)dest;
-	(void)size;
-	putx(buf, n);
+int putx(const char *buf, unsigned n);	// FIXME
 
-	return n;
-}
+
+static struct xput printf_xput = {
+	.func = (void *) putx,		// hack for fast path
+	.dest = NULL,
+	.size = 0,
+};
 
 void vprintf(const char *fmt, va_list ap)
 {
-	xprintf(_putx, NULL, -1, fmt, ap);
+	xprintf(&printf_xput, fmt, ap);
 }
 
 void printf(const char *fmt, ...)
@@ -27,7 +26,7 @@ void printf(const char *fmt, ...)
 
 	va_start(ap, fmt);
 	flags = lock_acq_save(&printf_lock);
-	xprintf(_putx, NULL, -1, fmt, ap);
+	xprintf(&printf_xput, fmt, ap);
 	lock_rel_rest(&printf_lock, flags);
 	va_end(ap);
 }

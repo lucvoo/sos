@@ -3,21 +3,30 @@
 #include <string.h>
 
 
-static int put_buf(const char *str, unsigned n, char *dest, unsigned size)
+static void snprintf_put(const char *str, unsigned int n, struct xput *xput)
 {
+	unsigned int size = xput->size;
+
 	if (n > size)
 		n = size;
 
-	memcpy(dest, str, n);
-	return n;
+	memcpy(xput->dest, str, n);
+
+	xput->dest += n;
+	xput->size -= n;
 }
+
 
 void vsnprintf(char *dest, unsigned size, const char *fmt, va_list ap)
 {
+	struct xput xput = {
+		.func = snprintf_put,
+		.dest = dest,
+		.size = size-1,
+	};
 	unsigned n;
 
-	n = xprintf(put_buf, dest, size - 1, fmt, ap);
-
+	n = xprintf(&xput, fmt, ap);
 	if (n < size)
 		dest[n] = 0;
 }
