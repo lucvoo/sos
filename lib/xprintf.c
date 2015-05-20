@@ -62,7 +62,7 @@ static unsigned int utostr_dec(char *buf, unsigned prec, unsigned long val)
 		unsigned int tmp;
 
 #define METH 2
-#if	METH == 0
+#if	(METH == 0) || defined(CONFIG_HAS_DIV32)
 		(void) tmp;
 
 		digit = val % 10U;
