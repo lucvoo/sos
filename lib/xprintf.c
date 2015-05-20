@@ -160,7 +160,7 @@ static unsigned int print_binhex(char *buff, unsigned int size, const unsigned c
 }
 
 /*****************************************************************************/
-unsigned int xprintf(struct xput *xput, const char *fmt, va_list ap)
+unsigned int xvprintf(struct xput *xput, const char *fmt, va_list ap)
 {
 	char *begin = xput->dest;
 

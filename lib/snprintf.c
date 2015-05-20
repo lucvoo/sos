@@ -26,7 +26,7 @@ void vsnprintf(char *dest, unsigned size, const char *fmt, va_list ap)
 	};
 	unsigned n;
 
-	n = xprintf(&xput, fmt, ap);
+	n = xvprintf(&xput, fmt, ap);
 	if (n < size)
 		dest[n] = 0;
 }

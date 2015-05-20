@@ -9,6 +9,6 @@ struct xput {
 	unsigned int size;
 };
 
-unsigned int xprintf(struct xput *xput, const char *fmt, va_list ap);
+unsigned int xvprintf(struct xput *xput, const char *fmt, va_list ap);
 
 #endif

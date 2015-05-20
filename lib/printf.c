@@ -16,7 +16,7 @@ static struct xput printf_xput = {
 
 void vprintf(const char *fmt, va_list ap)
 {
-	xprintf(&printf_xput, fmt, ap);
+	xvprintf(&printf_xput, fmt, ap);
 }
 
 void printf(const char *fmt, ...)
@@ -26,7 +26,7 @@ void printf(const char *fmt, ...)
 
 	va_start(ap, fmt);
 	flags = lock_acq_save(&printf_lock);
-	xprintf(&printf_xput, fmt, ap);
+	xvprintf(&printf_xput, fmt, ap);
 	lock_rel_rest(&printf_lock, flags);
 	va_end(ap);
 }
