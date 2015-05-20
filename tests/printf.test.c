@@ -3,6 +3,9 @@
 #include <string.h>
 
 
+static unsigned char binbuf[] = "\x01\x02\x03\x04\x05\x06\x07\x08";
+
+
 static const struct printf_num_vector {
 	const char *fmt;
 	long val;
@@ -5597,6 +5600,11 @@ static const struct printf_num_vector {
 	{ "%- 12.12i", 	  -123456789, 	"-000123456789" },
 	{ "%0 12.12i", 	  -123456789, 	"-000123456789" },
 	{ "%#b", 	  0xffffffff, 	"11111111.11111111.11111111.11111111" },
+
+	// Type abuse!
+	{ "%0ph",	(long)binbuf,	"" },
+	{ "%1ph",	(long)binbuf,	"01" },
+	{ "%2ph",	(long)binbuf,	"01 02" },
 };
 
 static int dotest(void)
