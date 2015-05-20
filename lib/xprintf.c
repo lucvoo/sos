@@ -115,6 +115,18 @@ static void pad(struct xput *xput, unsigned int n, unsigned int flags)
 	}
 }
 
+static void pad_front(unsigned int n, unsigned int minw, unsigned int flags, struct xput *xput)
+{
+	if ((n < minw) && (flags & F_LEFT) == 0)
+		pad(xput, minw - n, 0);
+}
+
+static void pad_back(unsigned int n, unsigned int minw, unsigned int flags, struct xput *xput)
+{
+	if ((n < minw) && (flags & F_LEFT) != 0)
+		pad(xput, minw - n, 0);
+}
+
 /*****************************************************************************/
 static int print_macaddr(char *buff, unsigned int size, const unsigned char *p)
 {
@@ -449,17 +461,9 @@ len_mods:
 			continue;
 		}
 
-		if (n < minw && (flags & F_LEFT) == 0) {
-			unsigned int p = minw - n;
-
-			pad(xput, p, 0);
-		}
+		pad_front(n, minw, flags, xput);
 		xput->func(s, n, xput);
-		if (n < minw && (flags & F_LEFT) != 0) {
-			unsigned int p = minw - n;
-
-			pad(xput, p, 0);
-		}
+		pad_back(n, minw, flags, xput);
 		fmt++;
 	}
 
