@@ -128,6 +128,18 @@ static void pad_back(unsigned int n, unsigned int minw, unsigned int flags, stru
 }
 
 /*****************************************************************************/
+static unsigned int xprintf(struct xput *xput, const char *fmt, ...)
+{
+	unsigned int n;
+	va_list ap;
+
+	va_start(ap, fmt);
+	n = xvprintf(xput, fmt, ap);
+	va_end(ap);
+
+	return n;
+}
+
 static int print_macaddr(char *buff, unsigned int size, const unsigned char *p)
 {
 	snprintf(buff, size, "%02x:%02x:%02x:%02x:%02x:%02x", p[0], p[1], p[2], p[3], p[4], p[5]);
