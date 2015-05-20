@@ -159,38 +159,6 @@ static unsigned int print_binhex(char *buff, unsigned int size, const unsigned c
 	return buff - start;
 }
 
-static char *print_typed_pointer(const char **format, unsigned long uval, unsigned int  width)
-{
-	const void *ptr = (const void *) uval;
-	const char *fmt = *format;
-	static char buff[256];
-
-	switch (*fmt) {
-#ifdef CONFIG_NET
-	case 'M':
-		print_macaddr(buff, sizeof(buff), ptr);
-		break;
-
-	case 'I':
-		if (*++fmt == '4') {	// IPv4
-			print_ipv4(buff, sizeof(buff), ptr);
-			break;
-		}
-		return NULL;
-#endif
-	case 'h':
-		print_binhex(buff, sizeof(buff), ptr, width);
-		break;
-
-	default:
-		return NULL;
-	}
-
-	*format = fmt + 1;
-
-	return buff;
-}
-
 /*****************************************************************************/
 unsigned int xprintf(struct xput *xput, const char *fmt, va_list ap)
 {
@@ -378,11 +346,33 @@ len_mods:
 			neg = 0;
 
 			if (c == 'p') {
-				s = print_typed_pointer(&fmt, uval, minw);
-				if (s) {
-					n = strlen(s);
+				const void *ptr = (const void *) uval;
+
+				switch (fmt[0]) {
+#ifdef CONFIG_NET
+				case 'M':
+					print_macaddr(buff, sizeof(buff), ptr);
 					break;
+
+				case 'I':
+					if (fmt[1] == '4') {	// IPv4
+						fmt ++;
+						print_ipv4(buff, sizeof(buff), ptr);
+						break;
+					}
+					goto case_number;
+#endif
+				case 'h':
+					print_binhex(buff, sizeof(buff), ptr, minw);
+					break;
+
+				default:
+					goto case_number;
 				}
+				fmt++;
+				s = buff;
+				n = strlen(s);
+				break;
 			}
 
 		case_number:
