@@ -345,8 +345,42 @@ len_mods:
 
 			goto case_number;
 
-		case 'p':
-			lmod = lm_l;
+		case 'p': {
+			const void *ptr = va_arg(ap, const void *);
+
+			switch (fmt[0]) {
+			case 'h':
+				n = print_binhex(xput, ptr, minw);
+				break;
+
+#ifdef CONFIG_NET
+			case 'M':
+				n = print_macaddr(xput, ptr);
+				break;
+
+			case 'I':
+				if (fmt[1] == '4') {	// IPv4
+					fmt++;
+					n = print_ipv4(xput, ptr);
+					break;
+				}
+				/* fall-through */
+#endif
+			default:
+				// FIXME: mess with pagging
+				xput->func("0x", 2, xput);
+				uval = (unsigned long) ptr;
+				prec = sizeof(long) * 2;
+				shift = 4;
+				sign = 0;
+				goto base_bin;
+			}
+			fmt++;
+			// FIXME: no front padding
+			// FIXME: no back  padding
+			continue;
+
+		}
 
 		case 'u':
 		case 'o':
@@ -360,36 +394,6 @@ len_mods:
 			//case q_ll:	uval = va_arg(ap, unsigned long long);	break;
 			}
 			neg = 0;
-
-			if (c == 'p') {
-				const void *ptr = (const void *) uval;
-
-				switch (fmt[0]) {
-#ifdef CONFIG_NET
-				case 'M':
-					n = print_macaddr(xput, ptr);
-					break;
-
-				case 'I':
-					if (fmt[1] == '4') {	// IPv4
-						fmt++;
-						n = print_ipv4(xput, ptr);
-						break;
-					}
-					goto case_number;
-#endif
-				case 'h':
-					n = print_binhex(xput, ptr, minw);
-					break;
-
-				default:
-					goto case_number;
-				}
-				fmt++;
-				// FIXME: no front padding
-				// FIXME: no back  padding
-				continue;
-			}
 
 		case_number:
 			sign = 0;
@@ -422,11 +426,6 @@ len_mods:
 				goto base_bin;
 			case 'o':
 				shift = 3;
-				goto base_bin;
-			case 'p':
-				xput->func("0x", 2, xput);
-				prec = sizeof(long) * 2;
-				shift = 4;
 				goto base_bin;
 			case 'X':
 				flags |= F_UPPER;
