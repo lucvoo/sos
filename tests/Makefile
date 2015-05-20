@@ -8,6 +8,7 @@ progs-y	+= fault-undef.test
 progs-y	+= findbit.test
 progs-y	+= hello.test
 progs-y	+= loops-per-second.test
+progs-y	+= memcpy.test
 progs-$(CONFIG_NET)	+= net.test
 progs-$(CONFIG_MM_PAGE)	+= page-alloc.test
 progs-y	+= printf.test
