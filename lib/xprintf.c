@@ -398,7 +398,6 @@ len_mods:
 			} else
 				flags &= ~F_ZERO;
 
-			buf = &buff[sizeof(buff)];
 
 			switch (c) {
 
@@ -448,6 +447,7 @@ len_mods:
 					prec = 1;
 			}
 
+			buf = &buff[sizeof(buff)];
 			if (!shift)
 				n = utostr_dec(buf, prec, uval);
 			else
