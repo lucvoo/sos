@@ -140,39 +140,37 @@ static unsigned int xprintf(struct xput *xput, const char *fmt, ...)
 	return n;
 }
 
-static int print_macaddr(struct xput *xput, const unsigned char *p)
+static int print_buf(struct xput *xput, const char *fmt, char sep, const unsigned char *p, unsigned int len)
 {
-	unsigned int n;
+	unsigned int n = 0;
 
-	n = xprintf(xput, "%02x:%02x:%02x:%02x:%02x:%02x", p[0], p[1], p[2], p[3], p[4], p[5]);
+	n += xprintf(xput, fmt, *p++);
+
+	while (--len) {
+		xput->func(&sep, 1, xput);
+		n++;
+		n += xprintf(xput, fmt, *p++);
+	}
 
 	return n;
+}
+
+static int print_macaddr(struct xput *xput, const unsigned char *p)
+{
+	return print_buf(xput, "%02x", ':', p, 6);
 }
 
 static int print_ipv4(struct xput *xput, const unsigned char *p)
 {
-	unsigned int n;
-
-	n = xprintf(xput, "%d.%d.%d.%d", p[0], p[1], p[2], p[3]);
-
-	return n;
+	return print_buf(xput, "%d", '.', p, 4);
 }
 
 static unsigned int print_binhex(struct xput *xput, const unsigned char *p, unsigned int len)
 {
-	unsigned int n = 0;
-
 	if (!len)
-		goto end;
+		return 0;
 
-	n += xprintf(xput, "%02x", *p++);
-
-	while (--len) {
-		n += xprintf(xput, " %02x", *p++);
-	}
-
-end:
-	return n;
+	return print_buf(xput, "%02x", ' ', p, len);
 }
 
 /*****************************************************************************/
