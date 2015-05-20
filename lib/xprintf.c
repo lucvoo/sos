@@ -165,15 +165,14 @@ static char *print_typed_pointer(const char **format, unsigned long uval, unsign
 	const char *fmt = *format;
 	static char buff[256];
 
-	switch (*++fmt) {
+	switch (*fmt) {
 #ifdef CONFIG_NET
 	case 'M':
 		print_macaddr(buff, sizeof(buff), ptr);
 		break;
 
 	case 'I':
-		fmt++;
-		if (*fmt == '4') {	// IPv4
+		if (*++fmt == '4') {	// IPv4
 			print_ipv4(buff, sizeof(buff), ptr);
 			break;
 		}
@@ -187,7 +186,7 @@ static char *print_typed_pointer(const char **format, unsigned long uval, unsign
 		return NULL;
 	}
 
-	*format = fmt;
+	*format = fmt + 1;
 
 	return buff;
 }
@@ -316,7 +315,7 @@ len_mods:
 		}
 
 		// 5) type specifier
-		switch (c = *fmt) {
+		switch (c = *fmt++) {
 			char *buf;
 			unsigned int shift;
 			unsigned long uval;
@@ -464,7 +463,6 @@ len_mods:
 		pad_front(n, minw, flags, xput);
 		xput->func(s, n, xput);
 		pad_back(n, minw, flags, xput);
-		fmt++;
 	}
 
 	return xput->dest - begin;
