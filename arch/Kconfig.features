@@ -1,0 +1,4 @@
+config	HAS_DIV32
+	bool
+config	HAS_DIV64
+	bool

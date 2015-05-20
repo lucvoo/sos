@@ -13,6 +13,8 @@ config ARCH_MIPS
 endchoice
 
 
+source arch/Kconfig.features
+
 if ARCH_ARM
 source arch/arm/Kconfig
 endif

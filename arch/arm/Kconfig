@@ -50,6 +50,7 @@ config	ARMV7
 	bool
 config	ARMV7M
 	select NOMMU
+	select HAS_DIV32
 	bool
 config	ARMVA
 	bool
