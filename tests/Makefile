@@ -25,3 +25,6 @@ progs-$(CONFIG_UART)		+= uart-rxbuf.test
 progs-$(CONFIG_SMP)	+= lock.test
 progs-$(CONFIG_SMP)	+= sema-smp.test
 progs-$(CONFIG_SMP)	+= smp.test
+
+
+subdirs-$(CONFIG_ARMV7M)	+= armv7m/
