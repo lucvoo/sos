@@ -74,6 +74,10 @@ config	STACK_ALIGNMENT
 	int "Stacks alignment"
 	default 16
 
+config	INITCALL
+	bool "initcalls support" if XSMALL
+	default y
+
 config	NR_THREAD_PRIORITY
 	int "Number of threads priority levels"
 	range 2 32

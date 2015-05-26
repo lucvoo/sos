@@ -20,9 +20,11 @@ SECTIONS
 			*(.startup.text)
 			*(.init.text)
 
+#ifdef	CONFIG_INITCALL
 		PROVIDE(__INITCALL_LIST__ = .);
 			KEEP(*(SORT(.initcall*)))
 			LONG(0);
+#endif
 	} > ram
 
 	.text TEXT_ALIGN : {
