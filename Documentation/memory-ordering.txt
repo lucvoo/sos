@@ -1,0 +1,241 @@
+== Sequential execution & false assumptions ==
+* single core
+* CPU execute instructions in program order
+	- in-order vs out-of-order
+* CPU execute one instruction at a time
+	- single issue -> multi-issue
+* CPU do execute instructions the specified number of time
+	- interrupted then restarted instruction
+	- speculative execution
+* CPU do load & store directly with the memory
+	- but we have now, sometimes a complex, cache hierachy
+
+== types of reordering ==
+* compiler optimization
+* out-of-order execution
+* multiple-issue execution
+* speculation (the instruction may begin to be executed before it is
+  known if it will be needed or not, there for, if needed, it's result
+  will be available sooner. The effect  is not
+  much different than having the result *before* the instruction executed!).
+  It also means that an non-executed load instruction can evict a cache line. 
+* load & store optimization (the CPU can, for exemple, merge several
+  adjacent stores into a single larger store, like 4 byte-width stores
+  executed as a word-sized store).
+* (cache coherent) multi-core/multi-processing
+* DMA & multiple memory masters
+
+Which give the follwing level of ordering:
+* program order
+* excution order
+* observation order
+
+On a single core (without DMA), these memory reordering can generaly be
+ignored since the processor as well as the compiler ensure that the
+effect of all instructions appears 'as-if' all operations are executed
+in program order.
+
+When several masters are present, for exemple on a multi-processor system,
+these effects can't be ignored anymore, especially when there is some
+kind of explicit interaction between them:
+* competition for some shared resources
+* signaling of state/information
+* device and the CPU
+
+== ==
+In general, loads & stores can be reordered by the hardware, limited only by:
+* memory model of the CPU/architecture
+  Some architectures, like Sparc or X86, allow few reordering, while others,
+  like ARM & PPC allow much more reordering to be observable.
+* dependencies between instructions (but for Alpha CPUs)
+  (FIXME: need a good explanation)
+* explicit memory barrier instructions
+
+== Garantees ==
+* a CPU always sees its own as occurring in program order
+? an operation is reordered with a store only if the operation accesses a
+  different location than does the store ??? (P. McKenney)
+* simple (aligned) loads & stores are atomic
+
+== Why reordering ==
+Performance!
+(FIXME: add some explanation/exemple)
+
+== Normal & device memory ==
+FIXME
+
+== Interaction with cache ==
+* (FIXME: general + exemple)
+* (FIXME: WB vs. WT)
+
+== Programmer view ==
+* sequentiality
+* causality
+* transitivity
+FIXME
+
+== Memory barriers ==
+Memory barrires are instructions enforcing some stricter memory ordering
+between operations before them and operation after them (program order).
+(It can be seen as a constraint between program order and
+execution/observation order).
+
+FIXME: compiler barrier
+
+=== When we need memory barriers ===
+They are only needed when we need to enfore some meory ordering,
+which itself only matter when there can be some kind of interaction between
+2 CPUs or a CPU and a device (in general between 2 memory masters).
+If there can't be any such interaction, then memory ordering is not relevant
+and thus memory barriers are not needed.
+
+=== Kind of (abstract) memory barriers ===
+(Warning: the following is ambiguous: we should specify what is a load
+or a store from the execution and observation point of view).
+
+In the following, we'll use 'L' to denote a load operation and 'S'
+for a store operation.
+These operation can be done on a specific memory location or not (if needed
+we will use the following notation: L(x), L(any), S(y), S(any).
+In some case, it doesn't matter if the operation is a load or a store,
+we will then use the notation 'X'.
+
+=== Two-ways barriers ===
+Memory barriers act on some memory operations: a load, a store.
+We will thus have the following cases:
+
+	L|L	L|S
+	S|L	S|S
+
+* L|L: such a memory barrier ensure that loads present before  the
+  barrier in program order are effectively loaded (observation order?)
+  before any loads present after the barrier.
+  Another way to see this is that the barrier prevents loads present
+  before the barrier to be reordered with loads present after the barrier.
+
+* S|S: idem but ensuring that stores present before the barrier are 
+  visible (to other processors, memory obervers, as if flushed to memory)
+  before any store present after the barrier.
+
+* L|S: idem but ensuring that loads present before the barrier are done
+  before any store present after the barrier.
+
+* S|L: idem but ensuring that stores present before the barrier are made
+  visible before any load present after the barrier.
+  A S|L barrier allow to ensure that the subsequent load see tha data
+  from the most recent store, as such it make only sense when the load
+  is from the same location as the store(s) (and should thus be noted as
+  S(any)|L(x) or S(x)|L(x)).
+  These sort of barriers are the most expensive ones (because ... FIXME).
+
+=== Load-Acquire and Store-Release ===
+* An 'acquire' barrier ensure that all memory access present after the barrier
+  (program order) will effectively happen after the operation.
+  Memory access present before the barrier may happen before or after it.
+  It can thus be noted as: -|X
+
+* A 'release' barrier ensure that all memory access present before the barrier
+  (program order) will effectively happen before the operation.
+  Memory access present after the barrier may happen before or after it.
+  It can thus be noted as: X|-
+
+Very often there is no such existing barrier but an operation is said to have
+acquire release semantic if they imply the same ordering garantees.
+
+* A 'load-acquire' operation is a load operation coupled to a memory barrier
+  ensuring that the load is done before 'any' load or store present after
+  operation.
+  It can thus be noted as: L(x)|X(any) keeping in mind that it is
+  not only a barrier instruction but a real load 'coupled' with a barrier.
+
+* A 'store-release' operation is a store operation coupled to a memory
+  barrier ensuring that 'any' load or store present before the operation
+  is done, visible before the store operation.
+  It can thus be noted as: X(any)|S(x) keeping in mind that it is
+  not only a barrier instruction but a real store 'coupled' with a barrier.
+
+Those operations can be used as building bricks for the most (all?) common
+synchronisation operations, the ones for which memory ordering matter.
+They also have the advantage of not needing the expensive S|L kind
+of barriers.
+
+It must be noted that:
+* release + acquire != full barrier (FIXME)
+  * what about acquire + release ? (FIXME)
+* load-acquire(x) + code + store-release(x)
+  provide a critical section for this variable x:
+  any store or load of _this_ variable made
+  (by the instructions) _inside_ the critical section
+  are contained with it, can't "leak", be reordered
+  before the load-acquire or after the store-release.
+
+== special case of data dependencies ==
+
+== interaction with atomic instructions ==
+On all CPUs, the atomic read-modify-update operations ... FIXME
+thus have an implicit properties of a S(x)|L(x) barrier, the 'x' being
+the location concerned by the atomic operation.
+
+On some CPU, the atomic operations may give stonger garantees than
+the S(x)|L(x).
+(... FIXME)
+
+On some CPU, some instructions may behave as implicit memory barrier
+making unneccessary an explicit barrier (... FIXME).
+
+== Linux's memory barrier ==
+* wmb		=> S|S
+* rmb		=> L|L
+*  mb		=> X|X
+* load_acquire	=> L(x)|X
+* store_release	=> X|S(x)
+
+== Concrete minimal memory barrier instruction  ==
+
+=== ARM ===
+* dmb st	=> S|S
+* dmb -		=> X|X
+
+=== ARM64 ===
+* dmb ld	=> L|X
+* dmb st	=> S|S
+* dmb -		=> X|X
+* ldar(x)	=> L(x)|X
+* stlr(x)	=> X|S(x)
+
+=== MIPS ===
+* sync		=> X|X
+* sync 4	=> S|S	(MIPSr6, optional)
+* sync 17	=> L|X	(MIPSr6, optional)
+* sync 18	=> X|S	(MIPSr6, optional)
+* sync 19	=> L|L	(MIPSr6, optional)
+
+=== PPC ===
+* lwsync	=> L|X
+* lwsync	=> S|S
+* sync		=> X|X
+* eioio		=> X|X	(only to be used for I/O)
+
+=== X86 ===
+* lfence	=> L|L	(only needed for SSE?)
+* sfence	=> S|S	(only needed for SSE?)
+* mfence	=> X|X
+* lock+		=> X|X
+* -		=> L|L	(nothing needed for "normal"/non-SSE)
+* -		=> S|S	(nothing needed for "normal"/non-SSE)
+* -		=> L|S	(nothing needed for "normal"/non-SSE)
+* cmpxchg	=> X|X
+
+== Pairing of memory barriers ==
+Since a store to a memory location will generaly be readed afterward and 
+any data loaded must first have been written, memory barriers come in pair.
+
+(... FIXME: explain and fill the table)
+
+
+== References ==
+* Leif Lindholm's "Memory access ordering"
+* Doug Lea's "JSR-133 Cookbook" (http://g.oswego.edu/dl/jmm/cookbook.html)
+* Jeff Preshing's "Acquire and Release Semantics" (http://preshing.com/20120913/acquire-and-release-semantics/) 
+* Linux's memory-barrier.txt (https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/memory-barriers.txt)
+* Paul McKenney's "perfbook" (https://git.kernel.org/cgit/linux/kernel/git/paulmck/perfbook.git/)
