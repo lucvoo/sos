@@ -22,7 +22,9 @@ do_makefile()
 		cat
 	echo
 	echo "ifneq (\$(progs-y),)"
-	echo "progs += \$(progs-y:%=$dir/%)"
+	echo "$dir/progs := \$(progs-y:%=$dir/%)"
+	echo "$dir/: \$($dir/progs)"
+	echo "progs += \$($dir/progs)"
 	echo "-include \$(progs-y:%=$dir/.%.o.cmd)"
 	echo "-include \$(progs-y:%=$dir/.%.s.cmd)"
 	echo "endif"
