@@ -182,9 +182,10 @@ endif
 
 LDFLAGS+=$(LDFLAGS-y)
 
+progs :=
 -include tests/.make
 pgms-deps := libtarget.a arch/$(CONFIG_ARCH)/target.lds
-tests=$(progs-y:%=tests/%)
+tests := $(progs)
 tests/: $(tests:%=%.bin)
 $(tests): %: %.o $(pgms-deps) $(libs) kernel/version.o
 	@echo "LINK	$@"

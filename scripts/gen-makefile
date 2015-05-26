@@ -7,6 +7,7 @@ do_makefile()
 	out="$2"
 
 	echo "objs-y	:="
+	echo "progs-y	:="
 	echo "subdirs-y :="
 	echo "deps-y :="
 	echo
@@ -21,6 +22,7 @@ do_makefile()
 		cat
 	echo
 	echo "ifneq (\$(progs-y),)"
+	echo "progs += \$(progs-y:%=$dir/%)"
 	echo "-include \$(progs-y:%=$dir/.%.o.cmd)"
 	echo "-include \$(progs-y:%=$dir/.%.s.cmd)"
 	echo "endif"
