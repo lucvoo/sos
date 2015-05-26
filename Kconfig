@@ -123,6 +123,14 @@ config	HZ
 config	BOOT
 	bool "Direct boot, without a bootloader"
 	default y
+config	BOOTER
+	bool "Small bootloader"
+	depends on BOOT
+	select XSMALL
+config	BOOTADDR
+	hex "Address to jump to after boot setup"
+	depends on BOOTER
+	default PHYS_ADDR
 
 endmenu
 
