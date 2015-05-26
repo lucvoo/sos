@@ -3,6 +3,7 @@
 #include <kapi/kapi.h>
 #include <init.h>
 #include <compiler.h>
+#include <symbols.h>
 
 
 static void __init clear_bss(void)
@@ -45,7 +46,7 @@ static void __init initcalls(void)
 }
 
 
-void _os_start(void) __noreturn;
+void _os_start(void) __noreturn __weak;
 
 void _os_start(void)
 {
