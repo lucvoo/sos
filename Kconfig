@@ -48,6 +48,10 @@ endmenu
 
 menu "OS options"
 
+config	XSMALL
+	bool "Xsmall kernel" if n
+	default n
+
 config	NEED_INTERRUPT_STACK
 	bool "is an interrupt stack needed?"
 	default n
