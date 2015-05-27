@@ -69,7 +69,7 @@ config	BITS
 	default 32
 
 source arch/arm/Kconfig.mach
-source arch/arm/socs/Kconfig
+source arch/arm/Kconfig.socs
 
 
 menu "ARM options"

@@ -25,7 +25,7 @@ config	BITS
 	default 32 if MIPS32
 
 source arch/mips/Kconfig.mach
-source arch/mips/socs/Kconfig
+source arch/mips/Kconfig.socs
 
 menu "MIPS options"
 

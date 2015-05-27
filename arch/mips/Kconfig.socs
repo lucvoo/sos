@@ -3,5 +3,5 @@ config SOC_JZ4780
 
 
 if SOC_JZ4780
-source arch/mips/socs/jz4780/Kconfig
+source arch/mips/soc-jz4780/Kconfig
 endif

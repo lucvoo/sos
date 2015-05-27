@@ -13,6 +13,5 @@ deps-y	:= \
 
 subdirs-y			+= debug/
 
-subdirs-y			+= socs/
-
+subdirs-$(CONFIG_SOC_JZ4780)	+= soc-jz4780/
 subdirs-$(CONFIG_MACH_CI20)	+= mach-ci20/

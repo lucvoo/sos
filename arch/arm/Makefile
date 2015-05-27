@@ -22,6 +22,7 @@ deps-y	:= \
 subdirs-y			+= lib/
 subdirs-y			+= mm/
 subdirs-y			+= debug/
-subdirs-y			+= socs/
+subdirs-$(CONFIG_SOC_AM335X)	+= soc-am335x/
+
 subdirs-$(CONFIG_MACH_BEAGLEBONE)	+= mach-beaglebone/
 subdirs-$(CONFIG_MACH_STM32)	+= mach-stm32/

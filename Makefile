@@ -162,7 +162,7 @@ include/mach: SRC=arch/$(CONFIG_ARCH)/mach-$(CONFIG_MACH)/include
 include/mach: .config
 	@echo "SYMLINK	$@"
 	$(Q) if [ -d "${SRC}" ]; then ln -sfn "../${SRC}" $@; touch $@/$$; rm $@/$$; fi
-include/soc: SRC=arch/$(CONFIG_ARCH)/socs/$(CONFIG_SOC)/include
+include/soc: SRC=arch/$(CONFIG_ARCH)/soc-$(CONFIG_SOC)/include
 include/soc: .config
 	@echo "SYMLINK	$@"
 	$(Q) if [ -d "${SRC}" ]; then ln -sfn "../${SRC}" $@; touch $@/$$; rm $@/$$; fi
