@@ -108,4 +108,9 @@ config	HIGH_VECTORS
 	depends on !HAS_VBAR && !ARMV7M
 	default y
 
+config	NVIC_NBR_IRQ
+	int "NVIC's IRQ number"
+	depends on ARMV7M
+	default 96
+
 endmenu
