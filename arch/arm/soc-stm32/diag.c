@@ -5,6 +5,7 @@
 #include <soc/usart.h>
 #include <soc/gpio.h>
 #include <soc/rcc.h>
+#include <soc/clock-config.h>
 
 
 #define	USART_BASE	USART3_BASE
@@ -55,7 +56,7 @@ static void __init stm32_diag_init(void)
 {
 	void __iomem *ubase = (void __iomem *) USART_BASE;
 	void __iomem *rbase = (void __iomem *) RCC_BASE;
-	unsigned int uartclk = 42000000;	// FIXME
+	unsigned int uartclk = HCLK/4 * 1000000;
 	unsigned int baud = 115200;
 	unsigned int div = (uartclk + baud/2) / baud;
 	unsigned int oversampling = 16;
