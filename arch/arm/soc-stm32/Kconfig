@@ -18,3 +18,14 @@ config PHYS_SIZE
 config LOWPOWER_DEBUG
 	bool "Allow debugging while in low-power mode"
 	default y
+
+choice
+	prompt "Clocks configuration"
+
+config	STM32_CLK_12_168
+	bool "12MHz -> 168MHz"
+
+config	STM32_CLK_8_180
+	bool "8MHz -> 180MHz"
+
+endchoice
