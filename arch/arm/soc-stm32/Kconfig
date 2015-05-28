@@ -1,3 +1,7 @@
+config  SOC
+        symbol
+        default stm32
+
 config	SOC_PARAMS
 	bool
 	default y
@@ -6,3 +10,11 @@ config	SOC_PARAMS
 config PHYS_ADDR
 	hex
 	default 0x20000000
+
+config PHYS_SIZE
+	hex
+	default 0x00020000
+
+config LOWPOWER_DEBUG
+	bool "Allow debugging while in low-power mode"
+	default y

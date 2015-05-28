@@ -6,11 +6,3 @@ config	MACH_PARAMS
 	bool
 	default y
 	select SOC_STM32F4
-
-config PHYS_SIZE
-	hex
-	default 0x00020000
-
-config LOWPOWER_DEBUG
-	bool "Allow debugging while in low-power mode"
-	default y

@@ -1,7 +1,7 @@
-#include <mach/boot.h>
-#include <mach/baseaddr.h>
-#include <mach/rcc.h>
-#include <mach/flash.h>
+#include <soc/boot.h>
+#include <soc/baseaddr.h>
+#include <soc/rcc.h>
+#include <soc/flash.h>
 #include <errno.h>
 #include <init.h>
 #include <io.h>

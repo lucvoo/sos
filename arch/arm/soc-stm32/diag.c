@@ -1,10 +1,10 @@
 #include <diag.h>
 #include <init.h>
 #include <arch/io.h>
-#include <mach/baseaddr.h>
-#include <mach/usart.h>
-#include <mach/gpio.h>
-#include <mach/rcc.h>
+#include <soc/baseaddr.h>
+#include <soc/usart.h>
+#include <soc/gpio.h>
+#include <soc/rcc.h>
 
 
 #define	USART_BASE	USART3_BASE
