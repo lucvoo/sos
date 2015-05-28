@@ -9,6 +9,7 @@ __entry_vector:
 	.long	__startup
 	.long	vec_nmi
 	.long	vec_hardfault
+#ifndef	CONFIG_BOOTER
 	.long	vec_mmfault
 	.long	vec_busfault
 	.long	vec_usagefault
@@ -24,6 +25,7 @@ __entry_vector:
 	.rept	CONFIG_NVIC_NBR_IRQ
 	.long	vec_irq
 	.endr
+#endif
 	.size __entry_vector, . - __entry_vector
 	.weak _os_startup
 	.thumb_set _os_startup, __entry_vector
@@ -40,6 +42,7 @@ vec_hardfault:
 	b	vec_hardfault
 	.size   vec_hardfault, .-vec_hardfault
 
+	.section .text.vec,"ax"
 	.thumb_func
 vec_mmfault:
 	b	vec_mmfault
