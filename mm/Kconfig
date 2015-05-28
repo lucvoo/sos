@@ -3,6 +3,8 @@ menu "Memory Management"
 config NOMMU
 	bool
 	default n
+config MMU
+	def_bool !NOMMU
 
 config MM_PAGE
 	bool "Manage memory into pages"

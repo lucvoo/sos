@@ -1,1 +1,1 @@
-objs-y	+= iomap.o
+objs-$(CONFIG_MMU)	+= iomap.o
