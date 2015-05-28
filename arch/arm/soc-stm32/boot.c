@@ -2,6 +2,7 @@
 #include <soc/baseaddr.h>
 #include <soc/rcc.h>
 #include <soc/flash.h>
+#include <soc/clock-config.h>
 #include <errno.h>
 #include <init.h>
 #include <io.h>
@@ -9,18 +10,6 @@
 
 #define	CLOCK_WARMING_TIMEOUT	0x8000		// FIXME
 
-#if 1	// FIXME: this is part of the board config
-	// To be used with a 12MHz ext. clock
-	// and give us a nice 168MHz for the system clock
-#define	HPRE	RCC_CFGR_HPRE_1
-#define PPRE1	RCC_CFGR_PPRE1_4
-#define	PPRE2	RCC_CFGR_PPRE2_2
-#define	PLLM	6
-#define	PLLN	336
-#define	PLLP	4
-#define	PLLQ	14
-#define	WS	5
-#endif
 
 static void iosl(void __iomem *addr, unsigned int val)
 {
