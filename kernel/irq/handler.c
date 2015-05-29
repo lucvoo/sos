@@ -55,6 +55,32 @@ out_unlock:
 	lock_rel(&desc->lock);
 }
 
+/*
+ * IRQ flow handler for simple & SW decoded IRQ:
+ *	handle_IRQ_event()
+ *
+ * Used when everything is handled in HW.
+ * FIXME: also for nested controller?
+ */
+void irq_handle_simple(struct irqdesc *desc)
+{
+	struct irqaction *action;
+	int ret __unused;
+
+	lock_acq(&desc->lock);
+
+	action = desc->action;
+	if (unlikely(!action)) {
+		goto out_unlock;
+	}
+
+	ret = handle_IRQ_event(desc, action);
+
+out_unlock:
+	lock_rel(&desc->lock);
+}
+
+
 void irq_handle_desc(struct irqdesc *desc)
 {
 	void (*handler)(struct irqdesc *) = desc->handler;
