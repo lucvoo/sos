@@ -1,5 +1,3 @@
-	.syntax unified
-
 	.text
 	.global	memcpy
 	.type	memcpy, %function

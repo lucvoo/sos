@@ -1,4 +1,3 @@
-	.syntax unified
 	.section .init.text,"ax"
 	.global	_os_start
 	.type   _os_start, %function

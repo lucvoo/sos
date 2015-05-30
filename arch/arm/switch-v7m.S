@@ -9,8 +9,6 @@
  * previous and next are guaranteed not to be the same.
  */
 
-.syntax unified
-
 	.text
 	.align	2
 	.global	__switch_to
