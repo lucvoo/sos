@@ -76,7 +76,12 @@ vec_systick:
 
 	.thumb_func
 vec_irq:
-	b	vec_irq
+	// get the exception number
+	mrs	r0, ipsr
+	ubfx	r0, r0, #0, #9
+	sub	r0, #16
+	mov	r1, #0			// FIXME?
+	b	nvic_irq_handler
 	.size   vec_irq, .-vec_irq
 
 	.thumb_func
