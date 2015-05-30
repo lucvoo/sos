@@ -1,5 +1,7 @@
 CROSS_COMPILE	?= mips-none-elf-
 
+AFLAGS-y	+= -include arch/assembly.h
+
 ld-emul-$(CONFIG_ENDIAN_BIG)		+= eb
 ld-emul-$(CONFIG_ENDIAN_LITTLE)		+= el
 
