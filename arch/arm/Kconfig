@@ -100,6 +100,11 @@ config	XIP_SIZE
 	default 0x00100000
 
 comment "Misc"
+config	THUMB2
+	bool "compile to thumb2" if !ARMV7M
+	depends on ARMV7 || ARMV7M
+	default ARMV7M
+
 config	HAS_VBAR
 	bool "Has VBAR"
 	depends on ARMV6K || ARMV7
