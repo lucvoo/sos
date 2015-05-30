@@ -1,5 +1,6 @@
 #include <arch/assembly.h>
 #include <mach/platform_setup.S>
+#include <arch/armv7m-scs.h>
 
 
 	.section .entry,"a"
@@ -88,6 +89,10 @@ vec_reserved:
 	.type   __startup, %function
 	.thumb_func
 __startup:
+	ldr	r0, =VTOR
+	ldr	r1, =__entry_vector
+	str	r1, [r0]
+
 #ifdef CONFIG_BOOT
 	BOOT_SETUP
 #endif
