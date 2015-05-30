@@ -88,8 +88,9 @@ endif	# mixed-targets
 ####
 
 ifdef CONFIG_ARCH
-CPPFLAGS-y	:= -Iinclude -include include/autoconf.h -include include/kernel.h
-CFLAGS-y	:= -Wall -Wundef -Wno-trigraphs
+CPPFLAGS-y	:= -Iinclude -include include/autoconf.h
+CFLAGS-y	:= -include include/kernel.h
+CFLAGS-y	+= -Wall -Wundef -Wno-trigraphs
 CFLAGS-y	+= -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wimplicit
 #CFLAGS-y	+= -Werror=missing-prototypes -Werror=missing-declarations
 CFLAGS-y	+= -Wwrite-strings -Wunknown-pragmas -Wcast-qual -Wcast-align -Wsign-compare
