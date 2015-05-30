@@ -93,6 +93,14 @@ __startup:
 	ldr	r1, =__entry_vector
 	str	r1, [r0]
 
+#ifndef	CONFIG_BOOTER
+	// enable more detailed exceptions
+	ldr	r0, =SHCSR
+	ldr	r1, [r0]
+	orr	r1, r1, #USGFAULTENA|BUSFAULTENA|MEMFAULTENA
+	str	r1, [r0]
+#endif
+
 #ifdef CONFIG_BOOT
 	BOOT_SETUP
 #endif
