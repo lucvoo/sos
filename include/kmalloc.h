@@ -5,5 +5,6 @@
 
 
 void *kmalloc(unsigned int size, unsigned int flags);
+void *kzalloc(unsigned int size, unsigned int flags);
 
 #endif

@@ -5,6 +5,7 @@
 #include <page.h>
 #include <memory.h>
 #include <lock.h>
+#include <string.h>
 
 
 static struct kmalloc_perm_state {
@@ -52,7 +53,7 @@ void *kmalloc(unsigned int size, unsigned int aflags)
 {
 	void *ptr;
 
-	size = ALIGN(size, sizeof(ulong));
+	size = ALIGN(size, sizeof(unsigned long));
 
 	if (aflags & GFP_PERM)
 		ptr = kmalloc_perm(size, aflags);
@@ -63,4 +64,9 @@ void *kmalloc(unsigned int size, unsigned int aflags)
 		memset(ptr, 0, size);
 
 	return ptr;
+}
+
+void *kzalloc(unsigned int size, unsigned int aflags)
+{
+	return kmalloc(size, aflags | GFP_ZERO);
 }
