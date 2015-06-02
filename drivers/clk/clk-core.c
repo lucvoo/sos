@@ -42,6 +42,28 @@ int clk_register(struct clk *clk, const struct clk_ops *ops)
 /******************************************************************************/
 
 
+struct clk *clk_get(const char *name)
+{
+	struct clk *clk;
+
+	lock_acq(&clks.lock);
+	if ((clk = clk_lookup(name))) {
+		// FIXME: do we need refcounting?
+		// FIXME: what about the parent?
+	}
+	lock_rel(&clks.lock);
+
+	return clk;
+}
+
+void clk_put(struct clk *clk)
+{
+	// FIXME: do we need refcounting?
+	// FIXME: insure we're disabled if refcount reach 0?
+	// FIXME: what about the parent?
+}
+
+
 int clk_enable(struct clk *clk)
 {
 	int rc = 0;

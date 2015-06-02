@@ -3,6 +3,9 @@
 
 struct clk;
 
+struct clk *clk_get(const char *name);
+void clk_put(struct clk *clk);
+
 int clk_enable(struct clk *clk);
 void clk_disable(struct clk *clk);
 
