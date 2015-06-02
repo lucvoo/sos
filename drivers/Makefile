@@ -1,3 +1,4 @@
+subdirs-y += clk/
 subdirs-y += irq/
 subdirs-y += timer/
 subdirs-$(CONFIG_GPIO)	+= gpio/
