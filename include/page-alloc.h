@@ -1,7 +1,8 @@
 #ifndef	_PAGE_ALLOC_H_
 #define	_PAGE_ALLOC_H_
 
-#define	GFP_KERN	0		// FIXME
+#include <alloc-flags.h>
+
 
 struct page;
 
