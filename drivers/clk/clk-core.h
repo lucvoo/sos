@@ -12,8 +12,14 @@ struct clk_ops {
 
 struct clk {
 	struct lock	lock;
-	struct clk_ops	*ops;
+  const struct clk_ops	*ops;
+	const char	*name;
 	int		ena_cnt;
+
+	struct clk	*next;
 };
+
+
+int clk_register(struct clk *clk, const struct clk_ops *ops);
 
 #endif
