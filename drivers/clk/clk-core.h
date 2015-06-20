@@ -8,6 +8,8 @@
 struct clk_ops {
 	int		(*enable)(struct clk *clk);
 	void		(*disable)(struct clk *clk);
+
+	unsigned long	(*get_rate)(struct clk *clk);
 };
 
 struct clk {
