@@ -66,9 +66,10 @@ void clk_put(struct clk *clk)
 
 static int __clk_enable_locked(struct clk *clk)
 {
-	int rc = 0;
 
 	if (clk->ena_cnt == 0) {
+		int rc = 0;
+
 		if (clk->ops->enable) {
 			rc = clk->ops->enable(clk);
 			if (rc) {
@@ -78,7 +79,7 @@ static int __clk_enable_locked(struct clk *clk)
 	}
 
 	clk->ena_cnt++;
-	return rc;
+	return 0;
 }
 
 int clk_enable(struct clk *clk)
