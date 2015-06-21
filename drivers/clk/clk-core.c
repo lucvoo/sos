@@ -69,8 +69,12 @@ static int __clk_enable_locked(struct clk *clk)
 	int rc = 0;
 
 	if (clk->ena_cnt == 0) {
-		if (clk->ops->enable)
+		if (clk->ops->enable) {
 			rc = clk->ops->enable(clk);
+			if (rc) {
+				return rc;
+			}
+		}
 	}
 
 	clk->ena_cnt++;
