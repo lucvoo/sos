@@ -15,6 +15,7 @@ struct clk_ops {
 struct clk {
 	struct lock	lock;
   const struct clk_ops	*ops;
+	struct clk	*parent;
 	const char	*name;
 	int		ena_cnt;
 

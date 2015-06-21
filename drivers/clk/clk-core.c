@@ -70,9 +70,14 @@ static int __clk_enable_locked(struct clk *clk)
 	if (clk->ena_cnt == 0) {
 		int rc = 0;
 
+		rc = clk_enable(clk->parent);
+		if (rc)
+			return rc;
+
 		if (clk->ops->enable) {
 			rc = clk->ops->enable(clk);
 			if (rc) {
+				clk_disable(clk->parent);
 				return rc;
 			}
 		}
@@ -103,6 +108,8 @@ static void __clk_disable_locked(struct clk *clk)
 
 	if (clk->ops->disable)
 		clk->ops->disable(clk);
+
+	clk_disable(clk->parent);
 }
 
 void clk_disable(struct clk *clk)
