@@ -92,10 +92,11 @@ int clk_enable(struct clk *clk)
 
 static void __clk_disable_locked(struct clk *clk)
 {
-	if (--clk->ena_cnt == 0) {
-		if (clk->ops->disable)
-			clk->ops->disable(clk);
-	}
+	if (--clk->ena_cnt > 0)
+		return;
+
+	if (clk->ops->disable)
+		clk->ops->disable(clk);
 }
 
 void clk_disable(struct clk *clk)
