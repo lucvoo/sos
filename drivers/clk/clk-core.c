@@ -68,6 +68,9 @@ int clk_enable(struct clk *clk)
 {
 	int rc = 0;
 
+	if (!clk)
+		return 0;
+
 	lock_acq(&clk->lock);
 	if (clk->ena_cnt++ == 0) {
 		if (clk->ops->enable)
@@ -80,6 +83,9 @@ int clk_enable(struct clk *clk)
 
 void clk_disable(struct clk *clk)
 {
+	if (!clk)
+		return;
+
 	lock_acq(&clk->lock);
 	if (--clk->ena_cnt == 0) {
 		if (clk->ops->disable)
