@@ -72,6 +72,8 @@
 #define	RCC_AHB1EN_GPIOEN(PORT)	(1 << (PORT))
 
 #define	RCC_APB1ENR	0x40
+#define	RCC_APB1EN_TIMER2_BIT	0
+#define	RCC_APB1EN_TIMER2	(1 <<  RCC_APB1EN_TIMER2_BIT)
 #define	RCC_APB1EN_USART3EN	(1 << 18)
 
 #endif
