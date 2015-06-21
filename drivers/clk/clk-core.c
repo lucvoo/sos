@@ -64,6 +64,18 @@ void clk_put(struct clk *clk)
 }
 
 
+static int __clk_enable_locked(struct clk *clk)
+{
+	int rc = 0;
+
+	if (clk->ena_cnt++ == 0) {
+		if (clk->ops->enable)
+			rc = clk->ops->enable(clk);
+	}
+
+	return rc;
+}
+
 int clk_enable(struct clk *clk)
 {
 	int rc = 0;
@@ -72,13 +84,18 @@ int clk_enable(struct clk *clk)
 		return 0;
 
 	lock_acq(&clk->lock);
-	if (clk->ena_cnt++ == 0) {
-		if (clk->ops->enable)
-			rc = clk->ops->enable(clk);
-	}
+	rc = __clk_enable_locked(clk);
 	lock_rel(&clk->lock);
 
 	return rc;
+}
+
+static void __clk_disable_locked(struct clk *clk)
+{
+	if (--clk->ena_cnt == 0) {
+		if (clk->ops->disable)
+			clk->ops->disable(clk);
+	}
 }
 
 void clk_disable(struct clk *clk)
@@ -87,10 +104,7 @@ void clk_disable(struct clk *clk)
 		return;
 
 	lock_acq(&clk->lock);
-	if (--clk->ena_cnt == 0) {
-		if (clk->ops->disable)
-			clk->ops->disable(clk);
-	}
+	__clk_disable_locked(clk);
 	lock_rel(&clk->lock);
 }
 
