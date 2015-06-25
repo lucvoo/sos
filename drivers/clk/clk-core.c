@@ -125,8 +125,11 @@ void clk_disable(struct clk *clk)
 
 unsigned long clk_get_rate(struct clk *clk)
 {
-	if (clk->ops->get_rate)			// FIXME: needed?
+	if (!clk)
+		return 0;
+
+	if (clk->ops->get_rate)
 		return clk->ops->get_rate(clk);
 
-	return 0;
+	return clk_get_rate(clk->parent);
 }
