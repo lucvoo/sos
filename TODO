@@ -60,6 +60,9 @@
   * add support for ARMv4/ARMv5 ?
   * add support for LPAE ?
 
+* ARM-v7M:
+  ~ add basic supoort for interrupts & exceptions
+
 * MIPS:
   ✓ add support for interrupts & other exceptions
 
