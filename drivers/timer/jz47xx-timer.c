@@ -52,7 +52,7 @@ static unsigned long ostimer_now(struct timerdev *td)
 	return now;
 }
 
-static int ostimer_program(struct timerdev *td, unsigned long val)
+static int ostimer_next_abs(struct timerdev *td, unsigned long val)
 {
 	unsigned int chan = TCU_CH_OST;
 
@@ -65,7 +65,7 @@ static int ostimer_program(struct timerdev *td, unsigned long val)
 static struct timerdev ostimer = {
 	.name = "ostimer",
 	.now = ostimer_now,
-	.program = ostimer_program,
+	.next_abs = ostimer_next_abs,
 };
 static struct irqaction ostimer_irq;
 
@@ -117,7 +117,7 @@ static int timer_dsr(struct irqdesc *desc, unsigned int count, void* data)
 	return 0;
 }
 
-static int timer_program(struct timerdev *td, unsigned long val)
+static int timer_next_abs(struct timerdev *td, unsigned long val)
 {
 	struct jztimer *jzt = container_of(td, struct jztimer, td);
 	unsigned int channel = jzt->channel;
@@ -135,7 +135,7 @@ static struct jztimer timer0 = {
 	.td = {
 		.name = "timer0",
 		.freq = 32*1024,
-		.program = timer_program,
+		.next_abs = timer_next_abs,
 	},
 };
 static struct irqaction timer0_irq;

@@ -50,7 +50,7 @@ loop:
 	}
 
 	t = dlist_peek_entry(&timers.head, struct timer, node);
-	rc = td->program(td, t->exp);
+	rc = td->next_abs(td, t->exp);
 	timer_dbg(t, 0, "prg");
 	if (rc) {
 		dlist_del(&t->node);

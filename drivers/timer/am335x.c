@@ -86,7 +86,7 @@ static unsigned long timer_am335x_now(struct timerdev *td)
 	return now;
 }
 
-static int timer_am335x_program(struct timerdev *td, unsigned long val)
+static int timer_am335x_next_abs(struct timerdev *td, unsigned long val)
 {
 	long delta = timer_am335x_now(td) - val;
 
@@ -101,7 +101,7 @@ static struct timerdev timerdev_am335x = {
 	.name = "am335x",
 	.freq = 32*1024,
 	.now = timer_am335x_now,
-	.program = timer_am335x_program,
+	.next_abs = timer_am335x_next_abs,
 };
 
 

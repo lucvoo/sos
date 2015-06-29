@@ -6,7 +6,7 @@
 
 struct timerdev {
 	const char *name;
-	int (*program)(struct timerdev *td, unsigned long val);
+	int (*next_abs)(struct timerdev *td, unsigned long val);
 	unsigned long (*now)(struct timerdev *td);
 	unsigned long freq;
 
