@@ -50,7 +50,16 @@ loop:
 	}
 
 	t = dlist_peek_entry(&timers.head, struct timer, node);
-	rc = td->next_abs(td, t->exp);
+	if (td->next_abs)
+		rc = td->next_abs(td, t->exp);
+	else {
+		unsigned long now;
+
+		// FIXME: need to decouple the timer clock from the 'now' clock
+		now = td->now(td);
+		rc = td->next_rel(td, t->exp - now);
+	}
+
 	timer_dbg(t, 0, "prg");
 	if (rc) {
 		dlist_del(&t->node);
