@@ -1,0 +1,58 @@
+#ifndef	_MMC_H_
+#define	_MMC_H_
+
+
+struct mmc_data {
+	uint			blk_nbr;
+	uint			blk_size;
+	union {
+		void		*rbuff;
+		const void	*wbuff;
+	};
+};
+
+struct mmc_cmd {
+	u32		cmd;
+	u32		arg;
+	u32		resp[4];
+
+	struct mmc_data	*data;
+};
+
+struct mmc_host {
+	u32	mode;
+#define	MMC_MODE_SD	0x200
+#define	MMC_MODE_SD2		(MMC_MODE_SD | 0x20)
+#define	MMC_MODE_MMC	0x100
+
+	u32	vdds;
+#define	MMC_VDD_36_35		(1 << 23)
+#define	MMC_VDD_35_34		(1 << 22)
+#define	MMC_VDD_34_33		(1 << 21)
+#define	MMC_VDD_33_32		(1 << 20)
+#define	MMC_VDD_32_31		(1 << 19)
+#define	MMC_VDD_31_30		(1 << 18)
+#define	MMC_VDD_30_29		(1 << 17)
+#define	MMC_VDD_29_28		(1 << 16)
+#define	MMC_VDD_28_27		(1 << 15)
+#define	MMC_VDD(MAX, MIN)	(2 * MMC_VDD_ ## MAX - MMC_VDD_ ## MIN)
+
+	u32	caps;
+#define	MMC_CAP_4BIT		(1 << 0)	// can do 4 bit transfers
+#define	MMC_CAP_8BIT		(1 << 1)	// can do 8 bit transfers
+#define	MMC_CAP_SDHC		(1 << 2)	// support SDHC
+#define	MMC_CAP_SDXC		(1 << 3)	// support SDXC
+#define	MMC_CAP_18V		(1 << 4)	// support DDR mode at 1.8V
+#define	MMC_CAP_HS_MMC		(1 << 5)	// support MMC high-speed
+#define	MMC_CAP_HS_SD		(1 << 6)	// SUPPORT SD high-speed
+
+	u8	bus_width;
+
+	uint	f_min;
+	uint	f_max;
+	uint	freq;
+
+	const char *name;
+};
+
+#endif
