@@ -53,6 +53,11 @@ struct mmc_host {
 	uint	freq;
 
 	const char *name;
+
+	int (*reset)(struct mmc_host *host);
+	int (*get_cd)(struct mmc_host *host);
+	int (*set_bus_width)(struct mmc_host *host, uint width);
+	int (*set_freq)(struct mmc_host *host, uint freq);
 };
 
 #endif
