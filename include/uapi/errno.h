@@ -7,5 +7,11 @@
 #define	ENOMEM		3
 #define	ENODEV		4
 #define	EEXIST		5
+#define	ENOMEDIUM	6
+#define	ETIMEDOUT	7
+#define	EPERM		8
+#define	ENOTSUP		9
+#define	ENOSPC		10
+#define	EBUSY		11
 
 #endif
