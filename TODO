@@ -53,6 +53,9 @@
     ✓ wakeup: may need to wakeup others CPUs (IPI)
   * add per-cpu infrastructure ?
 
+* RTC:
+  * add basic support
+
 * MM
   * add support for highmem
 
@@ -70,3 +73,7 @@
   * generic serial-out
   ✓ add serial input
     * add support for a small monitor (dump info, read system registers, launch tests, ...)
+
+* STM32:
+  ✓ add support for timers
+  * add support for RTC
