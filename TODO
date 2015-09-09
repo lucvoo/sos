@@ -10,7 +10,7 @@
 * port to raspberry-pi (ARMV6 - ARM11)
 * watchdog drivers
 * add led driver
-* add clock subsystem
+~ add clock subsystem
 * add real timer subsystem
 * cleanup this kapi thing
 * cleanup scheduler
