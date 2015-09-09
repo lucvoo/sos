@@ -133,3 +133,14 @@ unsigned long clk_get_rate(struct clk *clk)
 
 	return clk_get_rate(clk->parent);
 }
+
+int clk_set_rate(struct clk *clk, ulong rate)
+{
+	if (!clk)
+		return -EINVAL;
+
+	if (!clk->ops->set_rate)
+		return -EPERM;
+
+	return clk->ops->set_rate(clk, rate);
+}

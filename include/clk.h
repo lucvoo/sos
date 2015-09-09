@@ -10,5 +10,6 @@ int clk_enable(struct clk *clk);
 void clk_disable(struct clk *clk);
 
 unsigned long clk_get_rate(struct clk *clk);
+int clk_set_rate(struct clk *clk, ulong rate);
 
 #endif
