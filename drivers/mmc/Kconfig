@@ -1,0 +1,3 @@
+menuconfig MMC
+	bool "MMC / SD"
+	default y

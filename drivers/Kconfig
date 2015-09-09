@@ -3,5 +3,6 @@ menu "Drivers"
 source drivers/gpio/Kconfig
 source drivers/net/Kconfig
 source drivers/uart/Kconfig
+source drivers/mmc/Kconfig
 
 endmenu
