@@ -6,4 +6,5 @@ objs-y	+= clk-mmio-ratio.o
 objs-y	+= clk-ratio.o
 objs-y	+= clk-divider.o
 
+objs-$(CONFIG_SOC_JZ4780)	+= jz4780.o
 objs-$(CONFIG_SOC_STM32)	+= stm32.o
