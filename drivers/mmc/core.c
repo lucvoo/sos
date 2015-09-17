@@ -94,6 +94,21 @@ static int mmc_send_cid(struct mmc_host *host, u32 ocr, u32 cid[4])
 	return rc;
 }
 
+static int mmc_send_rca(struct mmc_host *host, u16 *rca)
+{
+	u32 res;
+	int rc;
+
+	rc = mmc_simple_cmd(host, MMC_CMD_SEND_RCA, 0, &res);
+	if (rc)
+		return rc;
+
+	if (rca)
+		*rca = res >> 16;
+
+	return rc;
+}
+
 
 #include "core-sdc.c"
 

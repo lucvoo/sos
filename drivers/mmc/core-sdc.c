@@ -64,6 +64,7 @@ static int sdc_voltage_switch(struct mmc_host *host)
 static int sdc_init(struct mmc_host *host)
 {
 	u32 ocr;
+	u16 rca;
 	int rc;
 
 	ocr = host->vdds;
@@ -83,6 +84,10 @@ static int sdc_init(struct mmc_host *host)
 		sdc_voltage_switch(host);
 
 	rc = mmc_send_cid(host, ocr, NULL);
+	if (rc)
+		return rc;
+
+	rc = mmc_send_rca(host, &rca);
 	if (rc)
 		return rc;
 
