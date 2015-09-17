@@ -46,8 +46,10 @@ static int sdc_send_op_cond(struct mmc_host *host, u32 ocr)
 		udelay(10000);		// FIXME
 	}
 
-	if (tries == 0)
+	if (tries == 0) {
+		pr_warn("card stay in busy state! (OCR = %08x)\n", cmd.resp[0]);
 		return -ETIMEDOUT;
+	}
 
 	host->ocr = cmd.resp[0];
 	return 0;
@@ -55,8 +57,21 @@ static int sdc_send_op_cond(struct mmc_host *host, u32 ocr)
 
 static int sdc_init(struct mmc_host *host)
 {
-	if (sdc_send_op_cond(host, 0))
+	u32 ocr;
+	int rc;
+
+	ocr = host->vdds;
+	if (host->mode == MMC_MODE_SD2)
+		ocr |= OCR_CCS;
+	if (host->caps & MMC_CAP_18V)
+		ocr |= OCR_S18;
+
+	rc = sdc_send_op_cond(host, ocr);
+	if (rc)
 		return -EIO;
 
-	return 0;
+	// mask out Vdds not supported by the host
+	ocr = host->ocr & (host->vdds | ~MMC_VDD_MASK);
+
+	return rc;
 }
