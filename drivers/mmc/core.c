@@ -2,6 +2,7 @@
 #include <mmc/cmds.h>
 #include <mmc/drivers.h>
 #include <errno.h>
+#include <string.h>
 
 
 static int mmc_set_bus_width(struct mmc_host *host, uint width)
@@ -47,19 +48,34 @@ static int mmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 	return host->send_cmd(host, cmd);
 }
 
-static int mmc_go_idle(struct mmc_host *host)
+static int mmc_simple_cmd(struct mmc_host *host, uint cmd, uint arg, u32 *res)
 {
-	struct mmc_cmd cmd;
+	struct mmc_cmd c;
 	int rc;
 
-	cmd.cmd = MMC_CMD_GO_IDLE;
-	cmd.arg = 0;
-	cmd.data = NULL;
+	c.cmd = cmd;
+	c.arg = arg;
+	c.data = NULL;
 
-	rc = mmc_send_cmd(host, &cmd);
+	rc = mmc_send_cmd(host, &c);
 	if (rc)
 		return rc;
 
+	if (res) {
+		if (cmd & MMC_RSP_136)
+			memcpy(res, c.resp, sizeof(c.resp));
+		else
+			*res = c.resp[0];
+	}
+
+	return rc;
+}
+
+static int mmc_go_idle(struct mmc_host *host)
+{
+	int rc;
+
+	rc = mmc_simple_cmd(host, MMC_CMD_GO_IDLE, 0, NULL);
 	return rc;
 }
 

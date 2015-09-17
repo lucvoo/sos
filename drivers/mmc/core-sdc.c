@@ -5,18 +5,18 @@
 static int sdc_send_if_cond(struct mmc_host *host, struct mmc_cmd *cmd)
 {
 	int rc;
+	u32 arg;
+	u32 res;
 
-	cmd->cmd = SDC_CMD_SEND_IF_COND;
-	cmd->arg = 0xAA;
+	arg = 0xAA;
 	if (host->vdds & MMC_VDD_MASK)
-		cmd->arg |= (1 << 8);
-	cmd->data = NULL;
+		arg |= (1 << 8);
 
-	rc = mmc_send_cmd(host, cmd);
+	rc = mmc_simple_cmd(host, SDC_CMD_SEND_IF_COND, arg, &res);
 	if (rc)
 		return rc;
 
-	if ((cmd->resp[0] & 0xff) != 0xAA)
+	if ((res & 0xff) != 0xAA)
 		return -EIO;
 
 	return 0;
