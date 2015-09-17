@@ -29,6 +29,21 @@ static int mmc_set_freq(struct mmc_host *host, uint freq)
 
 static int mmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 {
+	if (cmd->cmd & MMC_CMD_ACMD) {
+		struct mmc_cmd acmd;
+		int rc;
+
+		acmd.cmd = MMC_CMD_APP_CMD;
+		acmd.arg = 0;
+		acmd.data = NULL;
+
+		rc = host->send_cmd(host, &acmd);
+		if (rc)
+			return rc;
+
+		// FIXME: check response
+	}
+
 	return host->send_cmd(host, cmd);
 }
 

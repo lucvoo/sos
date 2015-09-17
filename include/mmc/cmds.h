@@ -3,6 +3,7 @@
 
 
 #define	MMC_CMD_IDX_SHIFT 0
+#define	MMC_CMD_ACMD		(1 << 8)
 
 #define	MMC_RSP_TYPE_SHIFT 24
 #define	MMC_RSP_TYPE(X)		((X) << MMC_RSP_TYPE_SHIFT)
@@ -25,12 +26,14 @@
 
 
 #define	MMC_CMD(IDX, RTYPE)	(IDX | RTYPE)
+#define	MMC_ACMD(IDX, RTYPE)	(IDX | RTYPE | MMC_CMD_ACMD)
 #define	MMC_CMD_IDX(CMD)	((CMD) & 0x3f)
 #define	MMC_CMD_RTYPE(CMD)	(((CMD) >> MMC_RSP_TYPE_SHIFT) & 0x7)
 
 
 
 #define	MMC_CMD_GO_IDLE		MMC_CMD( 0, MMC_RSP_R0)
+#define	MMC_CMD_APP_CMD		MMC_CMD(55, MMC_RSP_R1)
 
 #define	SDC_CMD_SEND_IF_COND	MMC_CMD( 8, MMC_RSP_R7)
 
