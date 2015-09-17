@@ -26,6 +26,11 @@ static int mmc_set_freq(struct mmc_host *host, uint freq)
 }
 
 
+static int mmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
+{
+	return host->send_cmd(host, cmd);
+}
+
 static int mmc_go_idle(struct mmc_host *host)
 {
 	return -EIO;

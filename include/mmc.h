@@ -58,6 +58,7 @@ struct mmc_host {
 	int (*get_cd)(struct mmc_host *host);
 	int (*set_bus_width)(struct mmc_host *host, uint width);
 	int (*set_freq)(struct mmc_host *host, uint freq);
+	int (*send_cmd)(struct mmc_host *host, struct mmc_cmd *);
 };
 
 #endif
