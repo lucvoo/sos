@@ -82,5 +82,9 @@ static int sdc_init(struct mmc_host *host)
 	if (host->ocr & OCR_S18)
 		sdc_voltage_switch(host);
 
+	rc = mmc_send_cid(host, ocr, NULL);
+	if (rc)
+		return rc;
+
 	return rc;
 }

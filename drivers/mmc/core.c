@@ -80,6 +80,21 @@ static int mmc_go_idle(struct mmc_host *host)
 }
 
 
+static int mmc_send_cid(struct mmc_host *host, u32 ocr, u32 cid[4])
+{
+	int rc;
+
+	rc = mmc_simple_cmd(host, MMC_CMD_ALL_SEND_CID, ocr, cid);
+	if (rc)
+		return rc;
+
+	if (cid)
+		pr_note("CID: product name: %c%c%c%c%c\n",cid[0]>>0,cid[1]>>24,cid[1]>>16,cid[1]>>8,cid[1]);
+
+	return rc;
+}
+
+
 #include "core-sdc.c"
 
 
