@@ -111,6 +111,22 @@ static int mmc_send_rca(struct mmc_host *host, u16 *rca)
 	return rc;
 }
 
+static int mmc_read_csd(struct mmc_host *host, uint rca, u32 *csd)
+{
+	int rc;
+
+	rc = mmc_simple_cmd(host, MMC_CMD_SEND_CSD, rca << 16, csd);
+	return rc;
+}
+
+static int mmc_select_card(struct mmc_host *host, uint rca)
+{
+	int rc;
+
+	rc = mmc_simple_cmd(host, MMC_CMD_SELECT_CARD, rca << 16, NULL);
+	return rc;
+}
+
 
 #include "core-sdc.c"
 
