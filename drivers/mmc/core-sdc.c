@@ -55,6 +55,12 @@ static int sdc_send_op_cond(struct mmc_host *host, u32 ocr)
 	return 0;
 }
 
+static int sdc_voltage_switch(struct mmc_host *host)
+{
+	pr_warn("not yet supported!\n");
+	return -EINVAL;
+}
+
 static int sdc_init(struct mmc_host *host)
 {
 	u32 ocr;
@@ -72,6 +78,9 @@ static int sdc_init(struct mmc_host *host)
 
 	// mask out Vdds not supported by the host
 	ocr = host->ocr & (host->vdds | ~MMC_VDD_MASK);
+
+	if (host->ocr & OCR_S18)
+		sdc_voltage_switch(host);
 
 	return rc;
 }
