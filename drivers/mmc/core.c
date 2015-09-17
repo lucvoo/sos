@@ -107,7 +107,11 @@ static int mmc_init_host(struct mmc_host *host)
 	if (rc)
 		return rc;
 
-	rc = mmc_detect_mode(host);
+	mmc_detect_mode(host);
+	if (host->mode & MMC_MODE_SD)
+		rc = sdc_init(host);
+	else
+		return -EIO;
 
 	return rc;
 }
