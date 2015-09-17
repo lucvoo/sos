@@ -36,6 +36,7 @@ struct mmc_host {
 #define	MMC_VDD_29_28		(1 << 16)
 #define	MMC_VDD_28_27		(1 << 15)
 #define	MMC_VDD(MAX, MIN)	(2 * MMC_VDD_ ## MAX - MMC_VDD_ ## MIN)
+#define	MMC_VDD_MASK		MMC_VDD(36_35, 28_27)
 
 	u32	caps;
 #define	MMC_CAP_4BIT		(1 << 0)	// can do 4 bit transfers

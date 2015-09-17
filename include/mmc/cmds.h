@@ -32,5 +32,7 @@
 
 #define	MMC_CMD_GO_IDLE		MMC_CMD( 0, MMC_RSP_R0)
 
+#define	SDC_CMD_SEND_IF_COND	MMC_CMD( 8, MMC_RSP_R7)
+
 
 #endif
