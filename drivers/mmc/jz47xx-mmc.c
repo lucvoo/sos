@@ -332,10 +332,17 @@ static int jzmmc_set_freq(struct mmc_host *host, uint freq)
 {
 	struct jzmmc *jz = container_of(host, struct jzmmc, host);
 	uint div = 0;
+	uint target;
 	uint rate;
 
 	rate = clk_get_rate(jz->clk);
-	for (div = 0; (rate > host->freq) && (div < 7); div++) {
+	target = host->freq;
+	/*
+	 * FIXME: something goes wrong once the freq is over 6MHz
+	 */
+	if (target > 6000000)
+		target = 6000000;
+	for (div = 0; (rate > target) && (div < 7); div++) {
 		rate >>= 1;
 	}
 	iowrite32(jz->iobase + MSC_CLKRT, div);

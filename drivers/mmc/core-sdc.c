@@ -62,6 +62,19 @@ static int sdc_voltage_switch(struct mmc_host *host)
 	return -EINVAL;
 }
 
+static uint sdc_get_rate(struct mmc_host *host, const u32 csd[4])
+{
+	uint tran_speed = csd[0] & 0x3f;
+
+	switch (tran_speed) {
+	default:
+	case 0x32:	return  25000000;
+	case 0x5A:	return  50000000;
+	case 0x0B:	return 100000000;
+	case 0x2B:	return 200000000;
+	}
+}
+
 static int sdc_get_scr(struct mmc_host *host)
 {
 	u32 scr[2];
@@ -136,6 +149,8 @@ static int sdc_init(struct mmc_host *host)
 		return rc;
 
 	sdc_set_bus_width(host);
+
+	mmc_set_freq(host, sdc_get_rate(host, csd));
 
 	return rc;
 }
