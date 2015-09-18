@@ -238,6 +238,8 @@ static int jzmmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 		jz->flags |= JZ_MMC_SENT_INIT;
 	}
 
+	cmdat |= (jz->flags & JZ_MMC_BUS_WIDTH_MASK) << 9;
+
 	// write the data setup
 	pr_dbg("cmdat = %08x\n", cmdat);
 	iowrite32(jz->iobase + MSC_CMDAT, cmdat);
