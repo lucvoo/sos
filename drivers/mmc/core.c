@@ -71,6 +71,27 @@ static int mmc_simple_cmd(struct mmc_host *host, uint cmd, uint arg, u32 *res)
 	return rc;
 }
 
+static int mmc_read_cmd(struct mmc_host *host, uint cmd, uint arg, void *buf, uint cnt)
+{
+	struct mmc_data d;
+	struct mmc_cmd c;
+	int rc;
+
+	d.blk_nbr = 1;
+	d.blk_size = cnt;
+	d.rbuff = buf;
+
+	c.cmd = cmd;
+	c.arg = arg;
+	c.data = &d;
+
+	rc = mmc_send_cmd(host, &c);
+	if (rc)
+		return rc;
+
+	return rc;
+}
+
 static int mmc_go_idle(struct mmc_host *host)
 {
 	int rc;
