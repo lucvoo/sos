@@ -4,6 +4,9 @@
 
 #define	MMC_CMD_IDX_SHIFT 0
 #define	MMC_CMD_ACMD		(1 << 8)
+#define	MMC_CMD_RDATA		(1 << 9)
+#define	MMC_CMD_WDATA		(2 << 9)
+#define	MMC_CMD_DATA		(MMC_CMD_RDATA|MMC_CMD_WDATA)
 
 #define	MMC_RSP_TYPE_SHIFT 24
 #define	MMC_RSP_TYPE(X)		((X) << MMC_RSP_TYPE_SHIFT)

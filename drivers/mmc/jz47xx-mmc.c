@@ -83,6 +83,23 @@ static uint jzmmc_poll_status(struct jzmmc *jz, unsigned int mask)
 	return stat;
 }
 
+static int jzmmc_poll_irq(struct jzmmc *jz, unsigned int mask)
+{
+	uint tries = 0x1000;
+
+	while (--tries) {
+		u32 iflgs;
+
+		iflgs = ioread32(jz->iobase + MSC_IFLG);
+		if (iflgs & mask)
+			return 0;
+
+		udelay(1000);		// FIXME
+	}
+
+	return -ETIMEDOUT;
+}
+
 static int jzmmc_reset(struct mmc_host *host)
 {
 	struct jzmmc *jz = container_of(host, struct jzmmc, host);
@@ -106,6 +123,40 @@ static int jzmmc_reset(struct mmc_host *host)
 	return 0;
 }
 
+static int jzmmc_read_data(struct jzmmc *jz, struct mmc_data *data)
+{
+	uint nbr = DIV_ROUND_UP(data->blk_nbr * data->blk_size, 4);
+	u32 *buf = data->rbuff;
+
+	while (nbr > 0) {
+		uint cnt;
+
+		if (jzmmc_poll_irq(jz, INT_RXFIFO_RD_REQ))
+			goto timeout;
+
+		// How many words is in the FIFO?
+		cnt = ioread32(jz->iobase + MSC_RTCNT);
+		if (cnt == 0) {
+			pr_dbg("RTCNT is zero while requested data present\n");
+			return -EIO;
+		}
+		if (cnt > nbr)		// that would be a HW bug
+			cnt = nbr;
+		nbr -= cnt;
+		while (cnt--) {		// read as many words as there is in the FIFO
+			u32 val;
+
+			val = ioread32(jz->iobase + MSC_RXFIFO);
+			*buf++ = val;
+		}
+	}
+	return 0;
+
+timeout:
+	pr_dbg("nbr = %d\n", nbr);
+	return -ETIMEDOUT;
+}
+
 static void jzmmc_clock_disable(struct jzmmc *jz)
 {
 	int timeout = 1000;
@@ -120,6 +171,7 @@ static void jzmmc_clock_disable(struct jzmmc *jz)
 static int jzmmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 {
 	struct jzmmc *jz = container_of(host, struct jzmmc, host);
+	struct mmc_data *data = cmd->data;
 	u32 stat, mask, cmdat = 0;
 	int rc;
 
@@ -131,6 +183,23 @@ static int jzmmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 	// setup command
 	iowrite32(jz->iobase + MSC_CMD, MMC_CMD_IDX(cmd->cmd));
 	iowrite32(jz->iobase + MSC_ARG, cmd->arg);
+
+	if (cmd->cmd & MMC_CMD_DATA) {
+		if (!data) {
+			pr_err("data cmd with null buffer!\n");
+			return -EINVAL;
+		}
+
+		// setup data
+		mask &= ~INT_DATA_TRAN_DONE;
+		cmdat |= CMDAT_DATA_EN;
+		if (cmd->cmd & MMC_CMD_RDATA) {
+			mask &= ~(INT_RXFIFO_RD_REQ | INT_TIME_OUT_READ);
+		}
+
+		iowrite32(jz->iobase + MSC_NOB, data->blk_nbr);
+		iowrite32(jz->iobase + MSC_BLKLEN, data->blk_size);
+	}
 
 	// setup response
 	pr_dbg("RTYPE = %d\n", MMC_CMD_RTYPE(cmd->cmd));
@@ -184,6 +253,7 @@ static int jzmmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 
 	// wait for completion
 	stat = jzmmc_poll_status(jz, STAT_END_CMD_RES);
+	stat &= ~(STAT_CRC_READ_ERROR|STAT_CRC_WRITE_ERROR_MASK);
 
 	iowrite32(jz->iobase + MSC_IFLG, 0xffffffff);
 	rc = -ETIMEDOUT;
@@ -225,6 +295,8 @@ static int jzmmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 	}
 
 	rc = 0;
+	if (cmd->cmd & MMC_CMD_RDATA)
+		rc = jzmmc_read_data(jz, cmd->data);
 
 end:
 	pr_dbg("%s() => %d\n", __func__, rc);
