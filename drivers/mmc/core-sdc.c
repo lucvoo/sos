@@ -75,6 +75,23 @@ static int sdc_get_scr(struct mmc_host *host)
 	return rc;
 }
 
+static int sdc_set_bus_width(struct mmc_host *host)
+{
+	int rc;
+
+	if ((host->scr & SCR_4BIT) == 0)
+		return 0;
+	if ((host->caps & MMC_CAP_4BIT) == 0)
+		return 0;
+
+	rc = mmc_simple_cmd(host, SDC_CMD_SET_BUS_WIDTH, 0x2, NULL);
+	if (rc)
+		return rc;
+
+	rc = mmc_set_bus_width(host, 4);
+	return rc;
+}
+
 static int sdc_init(struct mmc_host *host)
 {
 	u32 csd[4];
@@ -117,6 +134,8 @@ static int sdc_init(struct mmc_host *host)
 	rc = sdc_get_scr(host);
 	if (rc)
 		return rc;
+
+	sdc_set_bus_width(host);
 
 	return rc;
 }
