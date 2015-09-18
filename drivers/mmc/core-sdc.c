@@ -1,4 +1,5 @@
 #include <mmc/defs.h>
+#include <byteorder.h>
 #include <delay.h>
 
 
@@ -61,6 +62,19 @@ static int sdc_voltage_switch(struct mmc_host *host)
 	return -EINVAL;
 }
 
+static int sdc_get_scr(struct mmc_host *host)
+{
+	u32 scr[2];
+	int rc;
+
+	rc = mmc_read_cmd(host, SDC_CMD_SEND_SCR, 0, scr, sizeof(scr));
+	if (rc)
+		return rc;
+
+	host->scr = be32_to_cpu(scr[0]);
+	return rc;
+}
+
 static int sdc_init(struct mmc_host *host)
 {
 	u32 csd[4];
@@ -97,6 +111,10 @@ static int sdc_init(struct mmc_host *host)
 		return rc;
 
 	rc = mmc_select_card(host, rca);
+	if (rc)
+		return rc;
+
+	rc = sdc_get_scr(host);
 	if (rc)
 		return rc;
 
