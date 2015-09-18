@@ -53,6 +53,7 @@ struct mmc_host {
 	uint	f_max;
 	uint	freq;
 	u32	ocr;
+	u32	rca;	// RCA << 16
 
 	const char *name;
 

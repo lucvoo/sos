@@ -35,7 +35,7 @@ static int mmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 		int rc;
 
 		acmd.cmd = MMC_CMD_APP_CMD;
-		acmd.arg = 0;
+		acmd.arg = host->rca;
 		acmd.data = NULL;
 
 		rc = host->send_cmd(host, &acmd);
@@ -102,6 +102,8 @@ static int mmc_send_rca(struct mmc_host *host, u16 *rca)
 	rc = mmc_simple_cmd(host, MMC_CMD_SEND_RCA, 0, &res);
 	if (rc)
 		return rc;
+
+	host->rca = res & 0xffff0000;
 
 	if (rca)
 		*rca = res >> 16;
