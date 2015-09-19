@@ -1,4 +1,5 @@
 #include <mmc.h>
+#include <mmc/cmds.h>
 #include <mmc/drivers.h>
 #include <errno.h>
 
@@ -33,7 +34,18 @@ static int mmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 
 static int mmc_go_idle(struct mmc_host *host)
 {
-	return -EIO;
+	struct mmc_cmd cmd;
+	int rc;
+
+	cmd.cmd = MMC_CMD_GO_IDLE;
+	cmd.arg = 0;
+	cmd.data = NULL;
+
+	rc = mmc_send_cmd(host, &cmd);
+	if (rc)
+		return rc;
+
+	return rc;
 }
 
 
