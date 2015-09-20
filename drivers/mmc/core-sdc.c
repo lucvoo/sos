@@ -105,6 +105,25 @@ static int sdc_set_bus_width(struct mmc_host *host)
 	return rc;
 }
 
+static int sdc_set_capacity(struct mmc_host *host, const u32 csd[4])
+{
+	uint version = csd[0] >> 30;
+	u32 n;
+
+	switch (version) {
+	case 1:	n = (((csd[1] & 0x3f) << 16 | csd[2] >> 16) + 1) << 10;
+		host->capacity = n;
+		break;
+
+	default:
+		pr_err("CSD structure %d not (yet) supported!\n", version);
+		return -EINVAL;
+	}
+
+	pr_dbg("capacity = 0x%x sectors, %d KB, %d MB\n", n, n/2, n/2048);
+	return 0;
+}
+
 static int sdc_init(struct mmc_host *host)
 {
 	u32 csd[4];
@@ -151,6 +170,9 @@ static int sdc_init(struct mmc_host *host)
 	sdc_set_bus_width(host);
 
 	mmc_set_freq(host, sdc_get_rate(host, csd));
+
+	mmc_set_blocklen(host);
+	sdc_set_capacity(host, csd);
 
 	return rc;
 }

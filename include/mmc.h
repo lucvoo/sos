@@ -55,6 +55,7 @@ struct mmc_host {
 	u32	ocr;
 	u32	scr;
 	u32	rca;	// RCA << 16
+	u32	capacity;	// in 512bit sectors (OK till 2TB);
 
 	const char *name;
 

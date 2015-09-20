@@ -1,5 +1,6 @@
 #include <mmc.h>
 #include <mmc/cmds.h>
+#include <mmc/defs.h>
 #include <mmc/drivers.h>
 #include <errno.h>
 #include <string.h>
@@ -89,6 +90,17 @@ static int mmc_read_cmd(struct mmc_host *host, uint cmd, uint arg, void *buf, ui
 	if (rc)
 		return rc;
 
+	return rc;
+}
+
+static int mmc_set_blocklen(struct mmc_host *host)
+{
+	int rc;
+
+	if (host->ocr & OCR_CCS)
+		return 0;
+
+	rc = mmc_simple_cmd(host, MMC_CMD_SET_BLOCKLEN, 512, NULL);
 	return rc;
 }
 
