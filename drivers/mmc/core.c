@@ -104,6 +104,21 @@ static int mmc_set_blocklen(struct mmc_host *host)
 	return rc;
 }
 
+static int mmc_read_sector(struct mmc_host *host, void *buf, uint sector)
+{
+	u32 addr = sector;
+	int rc;
+
+	if (sector >= host->capacity)
+		return -EINVAL;
+
+	if (!(host->ocr & OCR_CCS))
+		addr <<= 9;
+
+	rc = mmc_read_cmd(host, MMC_CMD_READ_BLOCK, addr, buf, 512);
+	return rc;
+}
+
 static int mmc_go_idle(struct mmc_host *host)
 {
 	int rc;
