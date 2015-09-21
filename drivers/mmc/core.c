@@ -119,6 +119,43 @@ static int mmc_read_sector(struct mmc_host *host, void *buf, uint sector)
 	return rc;
 }
 
+static int mmc_write_cmd(struct mmc_host *host, uint cmd, uint arg, const void *buf, uint cnt)
+{
+	struct mmc_data d;
+	struct mmc_cmd c;
+	int rc;
+
+	d.blk_nbr = 1;
+	d.blk_size = cnt;
+	d.wbuff = buf;
+
+	c.cmd = cmd;
+	c.arg = arg;
+	c.data = &d;
+
+	rc = mmc_send_cmd(host, &c);
+	if (rc)
+		return rc;
+
+	return rc;
+}
+
+static int mmc_write_sector(struct mmc_host *host, const void *buf, uint sector)
+{
+	u32 addr = sector;
+	int rc;
+
+	if (sector >= host->capacity)
+		return -EINVAL;
+
+	if (!(host->ocr & OCR_CCS))
+		addr <<= 9;
+
+	rc = mmc_write_cmd(host, MMC_CMD_WRITE_BLOCK, addr, buf, 512);
+	return rc;
+}
+
+
 static int mmc_go_idle(struct mmc_host *host)
 {
 	int rc;
