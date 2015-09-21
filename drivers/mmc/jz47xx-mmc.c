@@ -157,6 +157,36 @@ timeout:
 	return -ETIMEDOUT;
 }
 
+
+#define	RXFIFO_DEPTH	128
+static int jzmmc_write_data(struct jzmmc *jz, struct mmc_data *data)
+{
+	uint nbr = DIV_ROUND_UP(data->blk_nbr * data->blk_size, 4);
+	const u32 *buf = data->wbuff;
+	uint cnt;
+	int rc;
+
+	cnt = RXFIFO_DEPTH;		// First run: the fifo must be empty
+	while (nbr > 0) {
+		if ((rc = jzmmc_poll_irq(jz, INT_TXFIFO_WR_REQ)))
+			goto timeout;
+
+		if (cnt > nbr)
+			cnt = nbr;
+		nbr -= cnt;
+		do {
+			iowrite32(jz->iobase + MSC_TXFIFO, *buf++);
+		} while (cnt--);
+		cnt = RXFIFO_DEPTH - 8;	// WR_REQ if FIFO < 8
+	}
+
+	return 0;
+
+timeout:
+	pr_dbg("nbr = %d\n", nbr);
+	return rc;
+}
+
 static void jzmmc_clock_disable(struct jzmmc *jz)
 {
 	int timeout = 1000;
@@ -195,6 +225,9 @@ static int jzmmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 		cmdat |= CMDAT_DATA_EN;
 		if (cmd->cmd & MMC_CMD_RDATA) {
 			mask &= ~(INT_RXFIFO_RD_REQ | INT_TIME_OUT_READ);
+		} else {
+			cmdat |= CMDAT_WRITE;
+			mask &= ~INT_TXFIFO_WR_REQ;
 		}
 
 		iowrite32(jz->iobase + MSC_NOB, data->blk_nbr);
@@ -299,6 +332,8 @@ static int jzmmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 	rc = 0;
 	if (cmd->cmd & MMC_CMD_RDATA)
 		rc = jzmmc_read_data(jz, cmd->data);
+	if (cmd->cmd & MMC_CMD_WDATA)
+		rc = jzmmc_write_data(jz, cmd->data);
 
 end:
 	pr_dbg("%s() => %d\n", __func__, rc);
