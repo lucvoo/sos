@@ -119,7 +119,20 @@ static int mmc_read_sectors(struct mmc_host *host, void *buf, uint sector, uint 
 	if (!(host->ocr & OCR_CCS))
 		addr <<= 9;
 
+	if (host->caps & (MMC_CAP_AUTO_CMD23|MMC_CAP_AUTO_CMD12))
+		;
+	else if (host->scr & SCR_CMD23) {
+		rc = mmc_simple_cmd(host, MMC_CMD_SET_BLOCK_COUNT, nbr, NULL);
+		if (rc)
+			goto err;
+	} else {
+		pr_err("READ_BLOCKS not yet supported!\n");
+		return -ENOTSUP;
+	}
+
 	rc = mmc_read_cmd(host, MMC_CMD_READ_BLOCKS, addr, buf, nbr, 512);
+
+err:
 	return rc;
 }
 

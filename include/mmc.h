@@ -46,6 +46,8 @@ struct mmc_host {
 #define	MMC_CAP_18V		(1 << 4)	// support DDR mode at 1.8V
 #define	MMC_CAP_HS_MMC		(1 << 5)	// support MMC high-speed
 #define	MMC_CAP_HS_SD		(1 << 6)	// SUPPORT SD high-speed
+#define	MMC_CAP_AUTO_CMD23	(1 << 7)	// can send CMD23 automatically
+#define	MMC_CAP_AUTO_CMD12	(1 << 8)	// can send CMD12 automatically
 
 	u8	bus_width;
 
