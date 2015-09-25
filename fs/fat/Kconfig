@@ -1,0 +1,4 @@
+menuconfig FATFS
+	bool "FAT"
+	default y if MMC
+

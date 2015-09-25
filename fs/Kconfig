@@ -1,2 +1,5 @@
 menuconfig FS
 	bool "File system"
+
+
+source fs/fat/Kconfig
