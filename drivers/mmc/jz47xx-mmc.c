@@ -29,6 +29,7 @@
 
 #include <mmc.h>
 #include <mmc/cmds.h>
+#include <mmc/defs.h>
 #include <mmc/drivers.h>
 #include <io.h>
 #include <delay.h>
@@ -228,6 +229,14 @@ static int jzmmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 		} else {
 			cmdat |= CMDAT_WRITE;
 			mask &= ~INT_TXFIFO_WR_REQ;
+		}
+
+
+		if (cmd->cmd & MMC_CMD_MULTI_BLOCK) {
+			if (host->scr & SCR_CMD23)
+				cmdat |= CMDAT_AUTO_CMD23;
+			else
+				cmdat |= CMDAT_AUTO_CMD12;
 		}
 
 		iowrite32(jz->iobase + MSC_NOB, data->blk_nbr);
