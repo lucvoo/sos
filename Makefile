@@ -125,6 +125,7 @@ CFLAGS-y   += -isystem $(SYS_INCDIR)
 subdirs-y			:= arch/$(CONFIG_ARCH)
 subdirs-y			+= block
 subdirs-y			+= drivers
+subdirs-y			+= fs
 subdirs-y			+= kapi
 subdirs-y			+= kernel
 subdirs-y			+= lib
