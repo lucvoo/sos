@@ -124,10 +124,10 @@ static int jzmmc_reset(struct mmc_host *host)
 	return 0;
 }
 
-static int jzmmc_read_data(struct jzmmc *jz, struct mmc_data *data)
+static int jzmmc_read_data(struct jzmmc *jz, struct mmc_cmd *cmd)
 {
-	uint nbr = DIV_ROUND_UP(data->blk_nbr * data->blk_size, 4);
-	u32 *buf = data->rbuff;
+	uint nbr = DIV_ROUND_UP(cmd->bnbr * cmd->bsiz, 4);
+	u32 *buf = cmd->rbuff;
 
 	while (nbr > 0) {
 		uint cnt;
@@ -160,10 +160,10 @@ timeout:
 
 
 #define	RXFIFO_DEPTH	128
-static int jzmmc_write_data(struct jzmmc *jz, struct mmc_data *data)
+static int jzmmc_write_data(struct jzmmc *jz, struct mmc_cmd *cmd)
 {
-	uint nbr = DIV_ROUND_UP(data->blk_nbr * data->blk_size, 4);
-	const u32 *buf = data->wbuff;
+	uint nbr = DIV_ROUND_UP(cmd->bnbr * cmd->bsiz, 4);
+	const u32 *buf = cmd->wbuff;
 	uint cnt;
 	int rc;
 
@@ -202,7 +202,6 @@ static void jzmmc_clock_disable(struct jzmmc *jz)
 static int jzmmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 {
 	struct jzmmc *jz = container_of(host, struct jzmmc, host);
-	struct mmc_data *data = cmd->data;
 	u32 stat, mask, cmdat = 0;
 	int rc;
 
@@ -216,7 +215,7 @@ static int jzmmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 	iowrite32(jz->iobase + MSC_ARG, cmd->arg);
 
 	if (cmd->cmd & MMC_CMD_DATA) {
-		if (!data) {
+		if (!cmd->rbuff) {
 			pr_err("data cmd with null buffer!\n");
 			return -EINVAL;
 		}
@@ -239,8 +238,8 @@ static int jzmmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 				cmdat |= CMDAT_AUTO_CMD12;
 		}
 
-		iowrite32(jz->iobase + MSC_NOB, data->blk_nbr);
-		iowrite32(jz->iobase + MSC_BLKLEN, data->blk_size);
+		iowrite32(jz->iobase + MSC_NOB, cmd->bnbr);
+		iowrite32(jz->iobase + MSC_BLKLEN, cmd->bsiz);
 	}
 
 	// setup response
@@ -340,9 +339,9 @@ static int jzmmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 
 	rc = 0;
 	if (cmd->cmd & MMC_CMD_RDATA)
-		rc = jzmmc_read_data(jz, cmd->data);
+		rc = jzmmc_read_data(jz, cmd);
 	if (cmd->cmd & MMC_CMD_WDATA)
-		rc = jzmmc_write_data(jz, cmd->data);
+		rc = jzmmc_write_data(jz, cmd);
 
 end:
 	pr_dbg("%s() => %d\n", __func__, rc);

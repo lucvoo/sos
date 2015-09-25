@@ -37,7 +37,6 @@ static int mmc_send_cmd(struct mmc_host *host, struct mmc_cmd *cmd)
 
 		acmd.cmd = MMC_CMD_APP_CMD;
 		acmd.arg = host->rca;
-		acmd.data = NULL;
 
 		rc = host->send_cmd(host, &acmd);
 		if (rc)
@@ -56,7 +55,6 @@ static int mmc_simple_cmd(struct mmc_host *host, uint cmd, uint arg, u32 *res)
 
 	c.cmd = cmd;
 	c.arg = arg;
-	c.data = NULL;
 
 	rc = mmc_send_cmd(host, &c);
 	if (rc)
@@ -74,17 +72,15 @@ static int mmc_simple_cmd(struct mmc_host *host, uint cmd, uint arg, u32 *res)
 
 static int mmc_read_cmd(struct mmc_host *host, uint cmd, uint arg, void *buf, uint nbr, uint siz)
 {
-	struct mmc_data d;
 	struct mmc_cmd c;
 	int rc;
 
-	d.blk_nbr = nbr;
-	d.blk_size = siz;
-	d.rbuff = buf;
+	c.bnbr = nbr;
+	c.bsiz = siz;
+	c.rbuff = buf;
 
 	c.cmd = cmd;
 	c.arg = arg;
-	c.data = &d;
 
 	rc = mmc_send_cmd(host, &c);
 	if (rc)
@@ -153,17 +149,15 @@ static int mmc_read_sector(struct mmc_host *host, void *buf, uint sector)
 
 static int mmc_write_cmd(struct mmc_host *host, uint cmd, uint arg, const void *buf, uint cnt)
 {
-	struct mmc_data d;
 	struct mmc_cmd c;
 	int rc;
 
-	d.blk_nbr = 1;
-	d.blk_size = cnt;
-	d.wbuff = buf;
+	c.bnbr = 1;
+	c.bsiz = cnt;
+	c.wbuff = buf;
 
 	c.cmd = cmd;
 	c.arg = arg;
-	c.data = &d;
 
 	rc = mmc_send_cmd(host, &c);
 	if (rc)

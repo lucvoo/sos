@@ -2,21 +2,17 @@
 #define	_MMC_H_
 
 
-struct mmc_data {
-	uint			blk_nbr;
-	uint			blk_size;
-	union {
-		void		*rbuff;
-		const void	*wbuff;
-	};
-};
-
 struct mmc_cmd {
 	u32		cmd;
 	u32		arg;
 	u32		resp[4];
 
-	struct mmc_data	*data;
+	u16		bnbr;
+	u16		bsiz;
+	union {
+		void		*rbuff;
+		const void	*wbuff;
+	};
 };
 
 struct mmc_host {

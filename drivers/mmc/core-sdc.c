@@ -31,7 +31,6 @@ static int sdc_send_op_cond(struct mmc_host *host, u32 ocr)
 
 	cmd.cmd = SDC_CMD_SEND_OP_COND;
 	cmd.arg = ocr;
-	cmd.data = NULL;
 
 	while (--tries) {
 		rc = mmc_send_cmd(host, &cmd);
