@@ -181,6 +181,38 @@ static int mmc_write_sector(struct mmc_host *host, const void *buf, uint sector)
 	return rc;
 }
 
+static int mmc_write_sectors(struct mmc_host *host, uint sector, uint nbr, const void *buff)
+{
+	u32 addr = sector;
+	int rc;
+
+	if (sector >= host->capacity)
+		return -EINVAL;
+	if (nbr >= host->capacity)
+		return -EINVAL;
+	if (sector >= (host->capacity - nbr))
+		return -EINVAL;
+
+	if (!(host->ocr & OCR_CCS))
+		addr <<= 9;
+
+	if (host->caps & (MMC_CAP_AUTO_CMD23|MMC_CAP_AUTO_CMD12))
+		;
+	else if (host->scr & SCR_CMD23) {
+		rc = mmc_simple_cmd(host, MMC_CMD_SET_BLOCK_COUNT, nbr, NULL);
+		if (rc)
+			goto err;
+	} else {
+		pr_err("WRITE_BLOCKS not yet supported!\n");
+		return -ENOTSUP;
+	}
+
+	rc = mmc_write_cmd(host, MMC_CMD_WRITE_BLOCKS, addr, buff, nbr, 512);
+
+err:
+	return rc;
+}
+
 
 static int mmc_go_idle(struct mmc_host *host)
 {

@@ -35,7 +35,12 @@
 
 * Block layer
   * infrastructure
-  * add support for some block device (SD card / eMMC)
+  ✓ add basic support for SD card
+  	* add support for DMA & scatter/gather
+	* add support for HS
+	* add support old version of SD specs (pre SDHC)
+	? add support for MMC
+  * add support for eMMC
   * would be nice to have support for SATA ...
 
 * FS
