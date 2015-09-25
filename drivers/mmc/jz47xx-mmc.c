@@ -411,7 +411,8 @@ static void jzmmc_init_dev(struct jzmmc *jz, const char *name, ulong iobase)
 	host->get_cd = jzmmc_get_cd;
 
 	host->vdds = MMC_VDD(34_33, 33_32);	// FIXME: board specific
-	host->caps = MMC_CAP_4BIT | MMC_CAP_SDHC | MMC_CAP_HS_SD | MMC_CAP_HS_MMC;
+	host->caps = MMC_CAP_4BIT | MMC_CAP_SDHC | MMC_CAP_HS_SD | MMC_CAP_HS_MMC |
+		     MMC_CAP_AUTO_CMD23 | MMC_CAP_AUTO_CMD12;
 
 	host->f_max = 48000000;			// FIXME: board specific
 	host->f_min = host->f_max / 128;
