@@ -72,14 +72,14 @@ static int mmc_simple_cmd(struct mmc_host *host, uint cmd, uint arg, u32 *res)
 	return rc;
 }
 
-static int mmc_read_cmd(struct mmc_host *host, uint cmd, uint arg, void *buf, uint cnt)
+static int mmc_read_cmd(struct mmc_host *host, uint cmd, uint arg, void *buf, uint nbr, uint siz)
 {
 	struct mmc_data d;
 	struct mmc_cmd c;
 	int rc;
 
-	d.blk_nbr = 1;
-	d.blk_size = cnt;
+	d.blk_nbr = nbr;
+	d.blk_size = siz;
 	d.rbuff = buf;
 
 	c.cmd = cmd;
@@ -115,7 +115,7 @@ static int mmc_read_sector(struct mmc_host *host, void *buf, uint sector)
 	if (!(host->ocr & OCR_CCS))
 		addr <<= 9;
 
-	rc = mmc_read_cmd(host, MMC_CMD_READ_BLOCK, addr, buf, 512);
+	rc = mmc_read_cmd(host, MMC_CMD_READ_BLOCK, addr, buf, 1, 512);
 	return rc;
 }
 

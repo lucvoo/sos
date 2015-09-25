@@ -80,7 +80,7 @@ static int sdc_get_scr(struct mmc_host *host)
 	u32 scr[2];
 	int rc;
 
-	rc = mmc_read_cmd(host, SDC_CMD_SEND_SCR, 0, scr, sizeof(scr));
+	rc = mmc_read_cmd(host, SDC_CMD_SEND_SCR, 0, scr, 1, sizeof(scr));
 	if (rc)
 		return rc;
 
