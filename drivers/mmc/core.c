@@ -147,13 +147,13 @@ static int mmc_read_sector(struct mmc_host *host, void *buf, uint sector)
 	return rc;
 }
 
-static int mmc_write_cmd(struct mmc_host *host, uint cmd, uint arg, const void *buf, uint cnt)
+static int mmc_write_cmd(struct mmc_host *host, uint cmd, uint arg, const void *buf, uint nbr, uint siz)
 {
 	struct mmc_cmd c;
 	int rc;
 
-	c.bnbr = 1;
-	c.bsiz = cnt;
+	c.bnbr = nbr;
+	c.bsiz = siz;
 	c.wbuff = buf;
 
 	c.cmd = cmd;
@@ -177,7 +177,7 @@ static int mmc_write_sector(struct mmc_host *host, const void *buf, uint sector)
 	if (!(host->ocr & OCR_CCS))
 		addr <<= 9;
 
-	rc = mmc_write_cmd(host, MMC_CMD_WRITE_BLOCK, addr, buf, 512);
+	rc = mmc_write_cmd(host, MMC_CMD_WRITE_BLOCK, addr, buf, 1, 512);
 	return rc;
 }
 
