@@ -5,6 +5,10 @@
 #define	OCR_CCS		(1 << 30)
 #define	OCR_S18		(1 << 24)
 
+#define	SCR_CMD20	(1 <<  0)
+#define	SCR_CMD23	(1 <<  1)
+#define	SCR_CMD48_49	(1 <<  2)
+#define	SCR_CMD58_59	(1 <<  3)
 #define	SCR_SPEC4	(1 << 10)
 #define	SCR_SPEC3	(1 << 15)
 #define	SCR_1BIT	(1 << 16)
