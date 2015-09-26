@@ -33,11 +33,14 @@ uint vsnprintf(char *dest, unsigned size, const char *fmt, va_list ap)
 	return n;
 }
 
-void snprintf(char *dest, unsigned size, const char *fmt, ...)
+int snprintf(char *dest, unsigned size, const char *fmt, ...)
 {
 	va_list ap;
+	uint n;
 
 	va_start(ap, fmt);
-	vsnprintf(dest, size, fmt, ap);
+	n = vsnprintf(dest, size, fmt, ap);
 	va_end(ap);
+
+	return (n < size) ? 0 : -1;
 }
