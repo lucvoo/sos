@@ -7,6 +7,6 @@ void printf(const char *fmt, ...);
 void vprintf(const char *fmt, va_list ap);
 
 void snprintf(char *dest, unsigned size, const char *fmt, ...);
-void vsnprintf(char* dest, unsigned size, const char* fmt, va_list ap);
+uint vsnprintf(char* dest, unsigned size, const char* fmt, va_list ap);
 
 #endif

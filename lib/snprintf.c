@@ -17,7 +17,7 @@ static void snprintf_put(const char *str, unsigned int n, struct xput *xput)
 }
 
 
-void vsnprintf(char *dest, unsigned size, const char *fmt, va_list ap)
+uint vsnprintf(char *dest, unsigned size, const char *fmt, va_list ap)
 {
 	struct xput xput = {
 		.func = snprintf_put,
@@ -29,6 +29,8 @@ void vsnprintf(char *dest, unsigned size, const char *fmt, va_list ap)
 	n = xvprintf(&xput, fmt, ap);
 	if (n < size)
 		dest[n] = 0;
+
+	return n;
 }
 
 void snprintf(char *dest, unsigned size, const char *fmt, ...)
