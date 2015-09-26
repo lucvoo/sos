@@ -123,6 +123,7 @@ SYS_INCDIR := $(shell $(CC) -print-file-name=include)
 CFLAGS-y   += -isystem $(SYS_INCDIR)
 #######################################################################
 subdirs-y			:= arch/$(CONFIG_ARCH)
+subdirs-y			+= block
 subdirs-y			+= drivers
 subdirs-y			+= kapi
 subdirs-y			+= kernel
