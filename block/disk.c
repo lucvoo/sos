@@ -28,6 +28,9 @@ int disk_register(struct disk *disk)
 {
 	int rc = 0;
 
+	disk->parts_nbr = 0;
+	disk->parts = NULL;
+
 	lock_acq(&disks.lock);
 
 	if (disk_lookup(disk->name)) {

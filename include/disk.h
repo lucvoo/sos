@@ -2,6 +2,7 @@
 #define	_DISK_H_
 
 #include <types/sector_t.h>
+#include <partition.h>
 #include <dlist.h>
 
 
@@ -18,6 +19,8 @@ struct disk {
 	const char		*name;
 	sector_t		size;
 	struct disk_ops		*ops;
+	u16			parts_nbr;
+	struct partition	*parts;
 	void			*priv;
 
 	struct dlist		list;
