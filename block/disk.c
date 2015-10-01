@@ -2,6 +2,7 @@
 #include <string.h>
 #include <errno.h>
 #include <lock.h>
+#include "parts.h"
 
 
 static struct disks {
@@ -41,7 +42,7 @@ int disk_register(struct disk *disk)
 	dlist_add_head(&disks.head, &disk->list);
 	lock_rel(&disks.lock);
 
-	// FIXME: should look after partitions
+	rc = disk_partitions(disk);
 
 	return rc;
 }
