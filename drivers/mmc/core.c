@@ -214,6 +214,9 @@ err:
 }
 
 
+#include "core-block.c"
+
+
 static int mmc_go_idle(struct mmc_host *host)
 {
 	int rc;
@@ -326,9 +329,21 @@ static int mmc_init_host(struct mmc_host *host)
 
 int mmc_register_host(struct mmc_host *host)
 {
+	struct disk *disk = &host->disk;
 	int rc;
 
 	rc = mmc_init_host(host);
+	if (rc)
+		return rc;
+
+	disk->name = host->name;
+	disk->size = host->capacity;
+	disk->priv = host;
+	disk->ops = &mmc_blkops;
+
+	rc = disk_register(disk);
+	if (rc)
+		return rc;
 
 	return rc;
 }

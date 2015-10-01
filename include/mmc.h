@@ -1,6 +1,7 @@
 #ifndef	_MMC_H_
 #define	_MMC_H_
 
+#include <disk.h>
 
 struct mmc_cmd {
 	u32		cmd;
@@ -62,6 +63,8 @@ struct mmc_host {
 	int (*set_bus_width)(struct mmc_host *host, uint width);
 	int (*set_freq)(struct mmc_host *host, uint freq);
 	int (*send_cmd)(struct mmc_host *host, struct mmc_cmd *);
+
+	struct disk	disk;
 };
 
 #endif
