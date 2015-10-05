@@ -17,6 +17,7 @@ enum page_flags {
 	PG_free		= 0x00000002,	// free in the binary buddy
 	PG_slab		= 0x00000004,	// used for slab allocation
 	PG_perm		= 0x00000008,	// permanent allocation/won't be freed
+	PG_kmalloc	= 0x00000010,	// used for non-slab based kmalloc
 };
 
 
