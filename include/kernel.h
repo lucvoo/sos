@@ -2,6 +2,7 @@
 #define	_KERNEL_H_
 
 #include <types/kint.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <printf.h>
 #include <compiler.h>
