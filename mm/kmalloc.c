@@ -7,9 +7,6 @@
 #include <lock.h>
 
 
-#define	GRANULARITY	8
-
-
 static struct kmalloc_perm_state {
 	struct lock	lock;
 	void		*buf;
@@ -53,11 +50,17 @@ end:
 
 void *kmalloc(unsigned int size, unsigned int aflags)
 {
-	size = ALIGN(size, 8);
+	void *ptr;
+
+	size = ALIGN(size, sizeof(ulong));
 
 	if (aflags & GFP_PERM)
-		return kmalloc_perm(size, aflags);
+		ptr = kmalloc_perm(size, aflags);
+	else
+		ptr = NULL;
 
-	return NULL;
+	if (ptr && (aflags & GFP_ZERO))
+		memset(ptr, 0, size);
+
+	return ptr;
 }
-
