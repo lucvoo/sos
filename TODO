@@ -5,7 +5,6 @@
 * cleanup early MMU mapping (remove the identity mapping)
 * add a real fault handler
 * free __init memory
-* add kmalloc (going to the full slab/kmem_cache ?)
 * add support for no-mmu ?
 * add support for DT?
 * port to raspberry-pi (ARMV6 - ARM11)
@@ -16,6 +15,7 @@
 * cleanup this kapi thing
 * cleanup scheduler
 * some header need to move to uapi/?
+* add a better kmalloc implementation
 
 * IRQ
   ✓ generic irq operations (iomap irq base address at registration time)

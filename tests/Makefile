@@ -7,6 +7,7 @@ progs-y	+= fastmod10.test
 progs-y	+= fault-undef.test
 progs-y	+= findbit.test
 progs-y	+= hello.test
+progs-y	+= kmalloc.test
 progs-y	+= loops-per-second.test
 progs-y	+= memcpy.test
 progs-$(CONFIG_NET)	+= net.test
