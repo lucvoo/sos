@@ -1,3 +1,4 @@
+#include "kmalloc-internal.h"
 #include <kmalloc.h>
 #include <page-alloc.h>
 #include <atomic.h>
@@ -58,7 +59,7 @@ void *kmalloc(unsigned int size, unsigned int aflags)
 	if (aflags & GFP_PERM)
 		ptr = kmalloc_perm(size, aflags);
 	else
-		ptr = NULL;
+		ptr = __kmalloc(size, aflags);
 
 	if (ptr && (aflags & GFP_ZERO))
 		memset(ptr, 0, size);
