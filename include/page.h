@@ -27,7 +27,7 @@ struct page {
 	unsigned int	order;		// order in the binary buddy (when PG_free)
 
 	struct dlist	list;
-};
+} __aligned(32);
 
 
 // WARNING: most of the time, changing and/or testing the flags need to be done atomically
