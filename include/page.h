@@ -10,6 +10,7 @@
 
 #ifndef	__ASSEMBLY__
 
+#include <atomic.h>
 #include <dlist.h>
 
 enum page_flags {
@@ -26,6 +27,7 @@ struct page {
 
 	unsigned int	order;		// order in the binary buddy (when PG_free)
 
+	atomic_t	count;
 	struct dlist	list;
 } __aligned(32);
 
