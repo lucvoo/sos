@@ -6,6 +6,7 @@ struct blkdev;
 
 struct filesystem {
 	const char	*name;
+	u8		type;
 
 	int (*mount)(struct blkdev *bdev, uint flags, const void *options);
 
