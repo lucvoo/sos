@@ -4,6 +4,7 @@
 
 enum fs_type {
 	FS_TYPE_AUTO,
+	FS_TYPE_FAT,
 };
 
 #endif
