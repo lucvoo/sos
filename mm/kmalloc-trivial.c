@@ -119,3 +119,16 @@ void kfree(const void *ptr)
 	pr_dbg("<- %p, %03x (count = %03x, order = %04x)\n", ptr, size, page->count, page->order);
 	kmalloc_put_page(page, size);
 }
+
+uint __kmalloc_size(const void *ptr)
+{
+	const struct kmalloc_ent *ent;
+
+	if (!ptr)
+		return 0;
+
+	// FIXME: validate ptr
+	// FIXME: validate ent->size
+	ent = container_of(ptr, typeof(*ent), data[0]);
+	return ent->size;
+}
