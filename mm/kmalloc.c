@@ -71,3 +71,36 @@ void *kzalloc(unsigned int size, unsigned int aflags)
 {
 	return kmalloc(size, aflags | GFP_ZERO);
 }
+
+void *krealloc(void *optr, uint nsize, uint aflags)
+{
+	uint osize;
+	uint csize;
+	void *nptr;
+
+	if (!optr)
+		return kmalloc(nsize, aflags);
+
+	nsize = ALIGN(nsize, sizeof(ulong));
+	osize = __kmalloc_size(optr);
+
+	// check if we need to expand, shrink or leave the buffer as it is
+	if (osize < nsize)
+		csize = osize;
+	else if (2 * (osize - nsize) > nsize)
+		csize = nsize;
+	else
+		return (void *) optr;
+
+	nptr = kmalloc(nsize, aflags & ~GFP_ZERO);
+	if (!nptr)
+		goto fail;
+
+	memcpy(nptr, optr, csize);
+	if ((aflags & GFP_ZERO) && (nsize > csize))
+		memset(nptr + csize, 0, nsize - csize);
+
+fail:
+	kfree(optr);
+	return nptr;
+}
