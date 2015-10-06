@@ -39,23 +39,24 @@ static int fat_read_bpb(struct blkdev *bdev, struct fat_bpb *bpb)
 
 	rc = bread(bdev, buf, 0, 1);
 	if (rc)
-		return rc;
+		goto end;
 
+	rc = -EINVAL;
 	if ((bits = log_pow2(readle16(&buf[0x00B]))) < 0)
-		return -EINVAL;
+		goto end;
 	bpb->sector_bits = bits;
 
 	if ((bits = log_pow2(buf[0x00D])) < 0)
-		return -EINVAL;
+		goto end;
 	bpb->cluster_bits = bits;
 
 	reserved_sectors = readle16(&buf[0x00E]);
 	if (reserved_sectors == 0)
-		return -EINVAL;
+		goto end;
 
 	bpb->fat_nbr = buf[0x010];
 	if (bpb->fat_nbr == 0)
-		return -EINVAL;
+		goto end;
 
 	bpb->root_dentries = readle16(&buf[0x011]);
 
@@ -65,7 +66,7 @@ static int fat_read_bpb(struct blkdev *bdev, struct fat_bpb *bpb)
 
 	bpb->media = buf[0x015];
 	if (!(bpb->media == 0xF0 || bpb->media >= 0xF8))
-		return -EINVAL;
+		goto end;
 
 	bpb->fat_siz = readle16(&buf[0x016]);
 	if (bpb->fat_siz == 0) {
@@ -84,7 +85,9 @@ static int fat_read_bpb(struct blkdev *bdev, struct fat_bpb *bpb)
 
 	nbr_clusters = (bpb->sector_nbr - bpb->data_off) >> bpb->cluster_bits;
 
-	return 0;
+	rc = 0;
+end:
+	return rc;
 }
 
 #include <init.h>
