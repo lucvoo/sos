@@ -86,6 +86,27 @@ static int fat_read_bpb(struct blkdev *bdev, struct fat_bpb *bpb)
 
 	nbr_clusters = (bpb->sector_nbr - bpb->data_off) >> bpb->cluster_bits;
 
+
+#define dump_var(name) printf(#name ":\t%d / 0x%x\n", name, name)
+#define dump_bpb(name) dump_var(bpb->name)
+	dump_bpb(sector_bits);
+	dump_bpb(cluster_bits);
+	dump_var(reserved_sectors);
+	dump_bpb(sector_nbr);
+	dump_bpb(media);
+	dump_bpb(fat_nbr);
+	dump_bpb(fat_siz);
+	dump_bpb(fat_off);
+	dump_var(dir_siz);
+	dump_bpb(dir_off);
+	dump_bpb(data_off);
+	dump_bpb(root_cluster);
+
+	pr_note("ROOT:\n");
+	bread(bdev, buf, fat_calc_sector(bpb, bpb->root_cluster), 1);
+	fat_dump_dirs(buf, 512/32);
+
+
 	rc = 0;
 end:
 	return rc;
