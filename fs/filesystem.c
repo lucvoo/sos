@@ -1,5 +1,6 @@
 #include <filesystem.h>
 #include <fs-types.h>
+#include <fs.h>
 #include <errno.h>
 #include <lock.h>
 
@@ -38,5 +39,30 @@ int filesystem_register(struct filesystem *fs)
 
 	lock_rel(&filesystems.lock);
 
+	return rc;
+}
+
+static struct filesystem *filesystem_get(enum fs_type type)
+{
+	struct filesystem *fs;
+
+	lock_acq(&filesystems.lock);
+	fs = fs_lookup(type);
+	lock_rel(&filesystems.lock);
+
+	return fs;
+}
+
+
+int fs_mount(struct blkdev *bdev, enum fs_type type, uint flags, const void *options)
+{
+	struct filesystem *fs;
+	int rc;
+
+	fs = filesystem_get(type);
+	if (!fs)
+		return -EINVAL;
+
+	rc = fs->mount(bdev, flags, options);
 	return rc;
 }
