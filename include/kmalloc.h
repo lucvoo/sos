@@ -9,4 +9,6 @@ void *kmalloc(unsigned int size, unsigned int flags);
 void *kzalloc(unsigned int size, unsigned int flags);
 void *krealloc(void *ptr, unsigned int size, unsigned int flags);
 
+#define	knew(type, aflags)	((type *) kmalloc(sizeof(type), aflags))
+
 #endif
