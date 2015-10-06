@@ -1,4 +1,5 @@
 #include <filesystem.h>
+#include <fs-types.h>
 #include <unaligned.h>
 #include <blkdev.h>
 #include <errno.h>
@@ -90,8 +91,27 @@ end:
 	return rc;
 }
 
+static int fatfs_mount(struct blkdev *bdev, uint flags, const void *options)
+{
+	struct fat_bpb bpb;
+	int rc;
+
+	rc = fat_read_bpb(bdev, &bpb);
+
+	return rc;
+}
+
+
+static struct filesystem fatfs = {
+	.name = "fatfs",
+	.type = FS_TYPE_FAT,
+
+	.mount = fatfs_mount,
+};
+
 #include <init.h>
 static void __init fatfs_init(void)
 {
+	filesystem_register(&fatfs);
 }
 driver_initcall(fatfs_init);
