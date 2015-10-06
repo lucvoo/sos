@@ -2,6 +2,19 @@
 #define	_FAT_H_
 
 
+/*
+ * FAT structure:
+ *
+ *              +---------------------------------------------------------------------------------+
+ *              |  Boot  | FS info | other reserved | FAT #1 | FAT #2... | root dir | data region |
+ *              | sector |  sector | sectors (opt)  |        |   (opt)   |   (opt)  |             |
+ * +------------+---------------------------------------------------------------------------------+
+ * |    size    |       nbr reserved sectors        | fat_siz * fat_nbr  |#entries /|             |
+ * | (#sectors) |                                   |                    | (512/32) |             |
+ * +------------+---------------------------------------------------------------------------------+
+ */
+
+
 struct fat_dir_entry {
 #define	FAT_FREE	0x00
 #define	FAT_DELETED	0xE5
