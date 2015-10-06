@@ -19,4 +19,7 @@ struct blkdev {
 int bdev_register(struct blkdev *bdev);
 struct blkdev *bdev_get(const char *diskname, uint part_idx);
 
+int bread(struct blkdev *bdev, void *buff, sector_t, uint nbr);
+int bwrite(struct blkdev *bdev, sector_t, uint nbr, const void *buff);
+
 #endif
