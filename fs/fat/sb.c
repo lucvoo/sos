@@ -1,6 +1,7 @@
 #include <filesystem.h>
 #include <fs-types.h>
 #include <unaligned.h>
+#include <kmalloc.h>
 #include <blkdev.h>
 #include <errno.h>
 #include <round.h>
@@ -34,9 +35,13 @@ static int fat_read_bpb(struct blkdev *bdev, struct fat_bpb *bpb)
 	uint reserved_sectors;
 	uint nbr_clusters;
 	uint dir_siz;
-	u8 buf[512];			// FIXME: high stack usage!
+	u8 *buf;
 	int bits;
 	int rc;
+
+	buf = kmalloc(512, GFP_KERN);
+	if (!buf)
+		return -ENOMEM;
 
 	rc = bread(bdev, buf, 0, 1);
 	if (rc)
@@ -109,6 +114,7 @@ static int fat_read_bpb(struct blkdev *bdev, struct fat_bpb *bpb)
 
 	rc = 0;
 end:
+	kfree(buf);
 	return rc;
 }
 
