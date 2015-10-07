@@ -78,18 +78,28 @@ static int fat_read_bpb(struct blkdev *bdev, struct fat_bpb *bpb)
 	if (bpb->fat_siz == 0) {
 		bpb->fat_siz = readle32(&buf[0x024]);
 		bpb->root_cluster = readle32(&buf[0x02C]);
+	} else {
+		pr_note("Unsupported FAT12/FAT16\n");
+		goto end;
 	}
 
 
 	bpb->fat_off = reserved_sectors;
 	bpb->dir_off = bpb->fat_off + bpb->fat_siz * bpb->fat_nbr;
 
-	// FIXME: check alignment of root_entries
-	dir_siz = DIV_ROUND_UP(bpb->root_dentries * FAT_DENT_SIZE, 1 << bpb->sector_bits);
-
+	dir_siz = 0;
 	bpb->data_off = bpb->dir_off + dir_siz;
 
 	nbr_clusters = (bpb->sector_nbr - bpb->data_off) >> bpb->cluster_bits;
+
+	if (bpb->root_dentries != 0) {
+		pr_err("FAT32 with non-zero root entries\n");
+		goto end;
+	}
+	if (nbr_clusters < 65525) {
+		pr_err("FAT32 with too few clusters\n");
+		goto end;
+	}
 
 
 #define dump_var(name) printf(#name ":\t%d / 0x%x\n", name, name)
