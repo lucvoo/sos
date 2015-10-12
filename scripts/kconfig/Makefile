@@ -36,6 +36,12 @@ defconfig: $(obj)/conf
 %_config: $(obj)/conf
 	$(Q)$< -D arch/$(CFG_ARCH)/configs/$@ Kconfig
 
+%_defconfig: $(obj)/conf
+	$(Q)rm -f include/arch include/mach include/soc
+	$(Q)rm -f include/config/auto.conf include/config/auto.conf.cmd
+	$(Q)rm -f include/autoconf.h
+	$(Q)$< -D arch/$*/configs/defconfig Kconfig
+
 # Help text used by make help
 help:
 	@echo  '  config	  - Update current config utilising a line-oriented program'
