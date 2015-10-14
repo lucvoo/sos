@@ -6,6 +6,9 @@ do_makefile()
 	dir="$1"
 	out="$2"
 
+	echo "objs-y	:="
+	echo "subdirs-y :="
+	echo
 	cat "$dir/Makefile" | \
 		sed "s:^EXTRA_CFLAGS[^A_Z_-]:$dir/&:"	| \
 		sed "s:^[a-zA-Z0-9_-]*-cflags:$dir/&:"	| \
@@ -21,7 +24,7 @@ do_makefile()
 	echo "-include \$(objs-y:%=$dir/.%.cmd)"
 	echo "endif"
 	echo "ifneq (\$(subdirs-y),)"
-	echo "include \$(subdirs-y:%=$dir/%$out)"
+	echo "-include \$(subdirs-y:%=$dir/%$out)"
 	echo "endif"
 
 }
