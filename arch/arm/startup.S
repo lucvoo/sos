@@ -1,4 +1,5 @@
 #include "arch/arch.h"
+#include "arch/mach/platform_setup.S"
 
 	.section ".vectors","ax"
 	.global __exception_handlers
@@ -19,12 +20,47 @@ __exception_handlers:
 	.text
 
 vector_reset:
-	// call MMU, ...
-#include "arch/mach/platform_setup.S"
+	// platform setup, initialize MMU, ...
+	// return:
+	//	r0: physical address of the L1 MMU table
+	PLATFORM_SETUP
 
-	// move to vectors to their definitive address
-	// FIXME
+	// Prepare value of SCTLR register
+	adr	r1, sctlr_mask
+	ldmia   r1, {r2, r3}	
+	mrc	p15, 0, r4, c1, c0              @ get control register
+	bic	r4, r4, r2
+	orr	r4, r4, r3
 
+	// Set domain access
+	ldr	r1,=0xffffffff		// FIXME
+	mcr	p15, 0, r1, c3, c0, 0	@ load domain access register
+
+	adr	lr, 1f			@ load address to jump when MMU is set
+
+	mov	r1, #0
+	mcr	p15, 0, r1, c7, c7, 0	@ invalidate caches
+	mcr	p15, 0, r1, c8, c7, 0	@ flush TLB (v4)
+
+	mcr	p15, 0, r0, c2, c0, 0	@ load page table pointer
+
+	mcr	p15, 0, r4, c1, c0, 0	@ write control reg
+	mrc	p15, 0, r3, c0, c0, 0	@ read id reg
+	nop
+	nop
+	mov pc, lr
+
+#if 1	// ARM 720
+// FIXME: move this in a separate header file
+	//  R
+	// .RVI ZFRS BLDP WCAM
+	// ..1. 1001 ..11 1101
+sctlr_mask:
+	.word	SCTLR_F|SCTLR_R|SCTLR_A
+	.word	SCTLR_V|SCTLR_Z|SCTLR_S|SCTLR_D|SCTLR_P|SCTLR_W|SCTLR_C|SCTLR_M
+#endif
+
+1:
 	// initialize interrupt/exception environments
 	ldr     sp,=__startup_stack
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_IRQ)
