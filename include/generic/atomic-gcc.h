@@ -73,6 +73,7 @@ static inline int atomic_cmpxchg(atomic_t *ptr, unsigned int old, unsigned int n
 }
 
 
+#define	atomic_tst(ptr, msk)	({ msk & __atomic_load_n(ptr, __BARRIER_SMP); })
 #define	atomic_clr(ptr, msk)	({ msk & __atomic_fetch_and(ptr,~msk, __BARRIER_SMP); })
 #define	atomic_or(ptr, msk)	({ msk & __atomic_fetch_or( ptr, msk, __BARRIER_SMP); })
 #define	atomic_xor(ptr, msk)	({ msk & __atomic_fetch_xor(ptr, msk, __BARRIER_SMP); })
