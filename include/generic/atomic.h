@@ -8,5 +8,6 @@
 #define	__atomic_val(p)		(p)->val
 
 #include <generic/atomic-gcc.h>
+#include <generic/xchg-gcc.h>
 
 #endif

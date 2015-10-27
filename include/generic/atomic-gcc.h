@@ -60,19 +60,6 @@ static inline int atomic_sub_return(atomic_t *ptr, int val)
 #define	atomic_sub_test(p, v)	(atomic_sub_return(p, v) == 0)
 
 
-#include <generic/xchg-gcc.h>
-
-static inline int atomic_xchg(atomic_t *ptr, unsigned int new)
-{
-	return __xchg(&ptr->val, new);
-}
-
-static inline int atomic_cmpxchg(atomic_t *ptr, unsigned int old, unsigned int new)
-{
-	return __cmpxchg(&ptr->val, old, new);
-}
-
-
 #define	atomic_tst(ptr, msk)	({ msk & __atomic_load_n(ptr, __BARRIER_SMP); })
 #define	atomic_clr(ptr, msk)	({ msk & __atomic_fetch_and(ptr,~msk, __BARRIER_SMP); })
 #define	atomic_or(ptr, msk)	({ msk & __atomic_fetch_or( ptr, msk, __BARRIER_SMP); })
