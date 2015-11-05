@@ -13,6 +13,7 @@ ARCHFLAGS-$(CONFIG_ARM926)	+= -mtune=arm926tdmi
 ARCHFLAGS-$(CONFIG_ARM926EJS)	+= -mtune=arm926ej-s
 
 ARCHFLAGS-$(CONFIG_CORTEX_A8)	+= -march=armv7-a -mcpu=cortex-a8 -mtune=cortex-a8
+ARCHFLAGS-$(CONFIG_CORTEX_A9)	+= -march=armv7-a -mcpu=cortex-a9 -mtune=cortex-a9
 
 ARCHFLAGS-$(CONFIG_ARMV7M)	+= -Wa,-mimplicit-it=always
 ARCHFLAGS-$(CONFIG_ARMV7M)	+= -march=armv7-m -mthumb
