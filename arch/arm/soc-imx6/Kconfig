@@ -1,0 +1,8 @@
+config	SOC
+	symbol
+	default imx6
+
+config	SOC_PARAMS
+	bool
+	default y
+	select CORTEX_A9
