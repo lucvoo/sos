@@ -22,10 +22,10 @@ config	ARM926EJS
 
 config	CORTEX_A8
 	bool
-	select ARMV7
+	select ARMV7A
 config	CORTEX_A9
 	bool
-	select ARMV7
+	select ARMV7A
 
 config	CORTEX_M4
 	bool
@@ -46,12 +46,15 @@ config	ARMV6
 config	ARMV6K
 	bool
 	select ARMV6
-config	ARMV7
+config	ARMV7A
 	bool
 config	ARMV7M
 	select NOMMU
 	select HAS_DIV32
 	bool
+config	ARMV7
+	bool
+	default ARMV7A || ARMV7M
 config	ARMVA
 	bool
 	default !ARMV7M
@@ -61,7 +64,7 @@ config	ARM_ARCH
 	default 4 if ARMV4T
 	default 5 if ARMV5
 	default 6 if ARMV6
-	default 7 if ARMV7
+	default 7 if ARMV7A
 	default 7 if ARMV7M
 
 config	BITS
