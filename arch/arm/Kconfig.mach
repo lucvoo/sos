@@ -10,6 +10,9 @@ config MACH_BEAGLEBONE
 config MACH_STM32
 	bool "STM32 family"
 
+config MACH_UDOO_NEO
+	bool "UDOO Neo"
+
 endchoice
 
 if MACH_BEAGLEBONE
@@ -17,4 +20,7 @@ source arch/arm/mach-beaglebone/Kconfig
 endif
 if MACH_STM32
 source arch/arm/mach-stm32/Kconfig
+endif
+if MACH_UDOO_NEO
+source arch/arm/mach-udoo-neo/Kconfig
 endif

@@ -1,0 +1,17 @@
+config MACH
+	symbol
+	default udoo-neo
+
+config	MACH_PARAMS
+	bool
+	default y
+	select SOC_IMX6
+
+config PHYS_ADDR
+	hex
+	default 0x80000000
+
+config PHYS_SIZE
+	hex
+	default 0x40000000
+
