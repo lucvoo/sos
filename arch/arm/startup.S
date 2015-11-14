@@ -189,6 +189,23 @@ create_early_pagetable:
 	str	r4, [r2, ip, lsl #2]
 	bne	1b
 
+#if 0
+	@ 9) dump the table
+	mov	r5, r0
+	mov	r4, #PGD_NBR_ENT
+1:
+	sub	r4, r4, #1
+	adr	r0, fmt
+	mov	r1, r4
+	add	r2, r5, r4, lsl #2
+	ldr	r3, [r5, r4, lsl #2]
+	bl	_os_diag_printf
+	cmp	r4, #0
+	bne	1b
+
+fmt:	.asciz  "MMU[%x] @ %x = %x\n"
+#endif
+
 	bx	lr
 ENDFUN(create_early_pagetable)
 ////////////////////////////////////////////////////////////////////////////////
