@@ -14,3 +14,7 @@ config PHYS_ADDR
 config PHYS_SIZE
 	hex
 	default 0x10000000
+
+config EARLY_DEBUG_ADDR
+	hex
+	default 0x44e00000

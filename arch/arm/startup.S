@@ -165,12 +165,10 @@ create_early_pagetable:
 	orr	r5, r5, r4, lsl #PGD_SECT_SHIFT
 	str	r5, [r0, r4, lsl #2]
 
-#define IOADDR	0x44e00000
-#define	CONFIG_EARLY_DEBUGGING
-#ifdef	CONFIG_EARLY_DEBUGGING
+#ifdef	CONFIG_EARLY_DEBUG_ADDR
 	@ 3) create an identity mapping for early early debugging
 	// FIXME: for the moment only a single section
-	ldr	r4, =IOADDR
+	ldr	r4, =CONFIG_EARLY_DEBUG_ADDR
 	ldr	r5, =PGD_INIT_IO
 	lsr	r4, r4, #PGD_SECT_SHIFT
 	orr	r5, r5, r4, lsl #PGD_SECT_SHIFT
