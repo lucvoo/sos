@@ -176,12 +176,11 @@ create_early_pagetable:
 #endif
 
 	@ 4) create the normal memory phys -> virt mapping for the kernel
-	// FIXME: for the moment just the first 4MB
 	ldr	r5, =PGD_INIT_MEM
 	mov	r4, #(VIRT_ADDR >> PGD_SECT_SHIFT)	@ r4 = VADDR >> PGD_SECT_SHIFT
 	orr	r5, r5, r3				@ r5 = PADDR | PGD_INIT_MEM
 	add	r2, r0, r4, lsl #2			@ r0 = &pgd[vaddr >> PGD_SECT_SHIFT]
-	mov	ip, #4					@ ip = 4 << PGD_SECT_SHIFT
+	mov	ip, #(PHYS_SIZE >> PGD_SECT_SHIFT)
 1:
 	sub	ip, ip, #1
 	cmp	ip, #0
