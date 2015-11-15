@@ -56,6 +56,31 @@ out_unlock:
 }
 
 /*
+ * IRQ flow handler for smart controller
+ *	handle_IRQ_event()
+ *	->eoi() (reuse slot for ->ack())
+ */
+void irq_handle_eoi(struct irqdesc *desc)
+{
+	struct irqaction *action;
+	int ret __unused;
+
+	lock_acq(&desc->lock);
+
+	action = desc->action;
+	if (unlikely(!action)) {
+		desc->chip->mask(desc);	// leave it masked!
+		goto out_unlock;
+	}
+
+	ret = handle_IRQ_event(desc, action);
+	desc->chip->ack(desc);
+
+out_unlock:
+	lock_rel(&desc->lock);
+}
+
+/*
  * IRQ flow handler for simple & SW decoded IRQ:
  *	handle_IRQ_event()
  *

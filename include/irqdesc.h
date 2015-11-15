@@ -18,6 +18,7 @@ struct irqdesc {
 struct irqdesc *irq_get_desc(const char *name, unsigned int irq);
 
 
+void irq_handle_eoi(struct irqdesc *desc);
 void irq_handle_level(struct irqdesc *desc);
 void irq_handle_simple(struct irqdesc *desc);
 
