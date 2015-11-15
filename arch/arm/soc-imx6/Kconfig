@@ -6,6 +6,7 @@ config	SOC_PARAMS
 	bool
 	default y
 	select CORTEX_A9
+	select ARM_GIC
 
 
 choice
