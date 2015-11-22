@@ -1,5 +1,6 @@
 #include <iomap.h>
 #include <io.h>
+#include <arch/cacheflush.h>
 #include <arch/memory.h>
 #include <arch/hw/mmu.h>
 #include <arch/cp15.h>
@@ -83,6 +84,7 @@ static int iomap(paddr_t phys, unsigned long size, unsigned long virt)
 		pgd[virt + i] = (phys + i) << PGD_SECT_SHIFT | PGD_INIT_IO;
 	}
 
+	dcache_clean_range(&pgd[virt], size * 4);
 	return 0;
 }
 
@@ -97,6 +99,9 @@ int iomap_init(const struct iomap_desc *d, unsigned int nbr)
 			break;
 		}
 	}
+
+	asm ("mcr " STRINGIFY(TLBIALL(r0)));
+	asm ("isb");
 
 	return rc;
 }
