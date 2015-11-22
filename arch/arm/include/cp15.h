@@ -1,3 +1,8 @@
+#ifndef	__ASSEMBLY__
+#include <stringify.h>
+#endif
+
+
 #define	MIDR(R)		p15, 0, R,  c0,  c0, 0	// Main ID Register
 #define	CTR(R)		p15, 0, R,  c0,  c0, 1	// Cache Type Register
 #define	TCMTR(R)	p15, 0, R,  c0,  c0, 2	// TCM Type Register IMPLEMENTATION DEFINED
