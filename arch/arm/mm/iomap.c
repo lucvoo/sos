@@ -90,20 +90,19 @@ static int iomap(paddr_t phys, unsigned long size, unsigned long virt)
 
 int iomap_init(const struct iomap_desc *d, unsigned int nbr)
 {
-	int rc = 0;
+	int err = 0;
 
-	for (; nbr; d++, nbr--) {
-		rc = iomap(d->phys, d->size, d->virt);
-		if (rc) {
-			//printf("ioremap() fails for %08x-%08x\n", d->phys, d->phys + d->size - 1);
-			break;
+	for (err = 0; nbr; d++, nbr--) {
+		if (iomap(d->phys, d->size, d->virt)) {
+			pr_dbg("error for %08x:%08x\n", d->phys, d->size);
+			err++;
 		}
 	}
 
 	asm ("mcr " STRINGIFY(TLBIALL(r0)));
 	asm ("isb");
 
-	return rc;
+	return err ? -EINVAL : 0;
 }
 
 
