@@ -29,7 +29,7 @@ static unsigned long *get_pgd(void)
 
 	asm volatile ("mrc " STRINGIFY(TTBR1(%0)): "=r" (pgd) :: "memory");
 
-	return phys_to_virt(pgd & 0xFFFFF000);
+	return phys_to_virt(pgd & 0xFFFFC000);
 }
 
 static int iomap(paddr_t phys, unsigned long size, unsigned long virt)
