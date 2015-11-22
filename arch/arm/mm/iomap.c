@@ -11,15 +11,35 @@
 #if 0
 static void dump_pgd(const unsigned long *p)
 {
+	uint pf = -1;
+	uint pa = 0;
+	int new = 0;
 	int i;
 
 	for (i = 0; i < PGD_NBR_ENT; i++) {
 		unsigned long val = p[i];
+		ulong f = val & 0x00002FFF;
+		ulong a = val >> PGD_SECT_SHIFT;
 
-		if (!val)
-			continue;
-		printf("PGD[%03x] = %08x\n", i, p[i]);
+		if ((f != pf) || ((a == 0) != (pa == 0)) || (a != 0 && (a != (pa + 1)))) {
+			printf("PGD[%03x] = %08x\n", i, p[i]);
+			pf = f;
+			new = 1;
+		} else if (new) {
+			printf("\t   ...\n", i, p[i]);
+			new = 0;
+		}
+
+		pa = a;
 	}
+}
+
+static void test_mmu(ulong va)
+{
+	ulong pa;
+	asm volatile ("mcr " STRINGIFY(ATS1CPR(%0)) :: "r" (va));
+	asm volatile ("mrc " STRINGIFY(PAR(%0)) :  "=r" (pa));
+	printf("VA %08lx -> PA %08lx\n", va, pa);
 }
 #endif
 
