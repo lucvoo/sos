@@ -28,7 +28,8 @@ static void jz4780_clock_setup(void)
 	sclk_m.rate.mult = 25;		// FIXME: adjustable PLL
 	sclk_m.rate.div = 1;
 	sclk_m.clk.parent = &ext.clk;
-	clk_ratio_register(&sclk_m, "sclk_m");
+	sclk_m.clk.name = "sclk_m";
+	clk_ratio_register(&sclk_m);
 
 	#define	msc_mux	sclk_m		// FIXME: MUX(sclk_m, sclk_a)
 
@@ -38,6 +39,7 @@ static void jz4780_clock_setup(void)
 	msc0.offset = 1;
 	msc0.scale = 2;
 	msc0.clk.parent = &msc_mux.clk;
-	clk_divider_register(&msc0, "msc0");
+	msc0.clk.name = "msc0";
+	clk_divider_register(&msc0);
 }
 board_setup_initcall(jz4780_clock_setup);

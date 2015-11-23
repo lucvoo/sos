@@ -1,5 +1,6 @@
 objs-y	+= clk-core.o
 objs-y	+= clk-fixed.o
+objs-y	+= clk-mask.o
 objs-y	+= clk-mmio.o
 objs-y	+= clk-mmio-fixed.o
 objs-y	+= clk-mmio-ratio.o
