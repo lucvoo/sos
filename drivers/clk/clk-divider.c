@@ -1,6 +1,8 @@
 #include "clk-divider.h"
 #include <round.h>
 #include <errno.h>
+#include <bits.h>
+#include <io.h>
 
 
 static unsigned long clk_divider_get_rate(struct clk *clk)
@@ -42,8 +44,40 @@ int clk_divider_register(struct clk_divider *c)
 {
 	int rc;
 
+	if (!c->set_div)
+		c->set_div = clk_divider_set_div;
+	if (!c->get_div)
+		c->get_div = clk_divider_get_div;
+	if (c->scale == 0)
+		c->scale = 1;
 	c->div = c->get_div(c);
 
 	rc = clk_register(&c->clk, &clk_divider_ops);
 	return rc;
+}
+
+
+// generic/default set/get divider
+int clk_divider_set_div(struct clk_divider *c, uint div)
+{
+	u32 val;
+
+	div = (div / c->scale) - c->offset;
+	if (div >= (1U << c->shift))
+		return -EINVAL;
+
+	val = ioread32(c->iobase) & ~MASK(c->shift, c->width);
+	val |= div << c->shift;
+	iowrite32(c->iobase, val);
+	return 0;
+}
+
+uint clk_divider_get_div(struct clk_divider *c)
+{
+	u32 val;
+	uint div;
+
+	val = (ioread32(c->iobase) >> c->shift) & MSK(c->width);
+	div = (val + c->offset) * c->scale;
+	return div;
 }

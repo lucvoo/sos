@@ -11,6 +11,10 @@ struct clk_divider {
 	uint		(*get_div)(struct clk_divider *clk);
 	int		(*set_div)(struct clk_divider *clk, uint div);
 	uint		div;
+	u8		shift;
+	u8		width;
+	u8		offset;
+	u8		scale;
 };
 
 uint clk_divider_get_div(struct clk_divider *clk);
