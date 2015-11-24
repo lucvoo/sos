@@ -6,3 +6,12 @@ config	SOC_PARAMS
 	bool
 	default y
 	select CORTEX_A9
+
+
+choice
+	prompt "IMX6 variant"
+
+config	SOC_IMX6SX
+	bool "IMX6SX"
+
+endchoice

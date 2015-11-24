@@ -6,6 +6,7 @@ config	MACH_PARAMS
 	bool
 	default y
 	select SOC_IMX6
+	select SOC_IMX6SX
 
 config PHYS_ADDR
 	hex
