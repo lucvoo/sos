@@ -118,7 +118,7 @@ config	SMP
 
 config	HZ
 	int "tick frequency"
-	default 100
+	default 32768
 
 config	BOOT
 	bool "Direct boot, without a bootloader"

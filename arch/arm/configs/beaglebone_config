@@ -56,7 +56,7 @@ CONFIG_SOFTIRQ=y
 # CONFIG_KSOFTIRQ is not set
 CONFIG_DSR=y
 # CONFIG_HAS_SMP is not set
-CONFIG_HZ=100
+CONFIG_HZ=32768
 
 #
 # Memory Management
