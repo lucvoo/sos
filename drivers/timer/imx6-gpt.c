@@ -39,8 +39,8 @@
 #define	GPT_CR_FO3		(1 << 31)
 
 #define	GPT_PR		0x04
-#define	GPT_PR_PRESCALER(S)	((S) << 0)
-#define	GPT_PR_PRESCALER_24M(S)	((S) << 12)
+#define	GPT_PR_PRESCALER(S)	(((S) -1) << 0)
+#define	GPT_PR_PRESCALER_24M(S)	(((S) -1) << 12)
 
 #define	GPT_SR		0x08
 #define	GPT_SR_OF1		(1 << 0)
