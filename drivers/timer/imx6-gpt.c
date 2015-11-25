@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <init.h>
 #include <irq.h>
+#include <clk.h>
 #include <io.h>
 
 
@@ -124,8 +125,10 @@ static struct irqaction gpt_irq;
 static int __init gpt_init_timer(void)
 {
 	struct irqdesc *desc;
+	struct clk *clk;
 	void __iomem *base;
 	int rc;
+	ulong rate;
 
 	base = ioremap(GPT_BASE, GPT_SIZE);
 	if (!base)
@@ -134,6 +137,12 @@ static int __init gpt_init_timer(void)
 	desc = irq_get_desc("gic", GPT_IRQ);
 	if (!desc)
 		return -EINVAL;
+
+	clk = clk_get("ckil");
+	if (!clk)
+		return -EINVAL;
+	clk_enable(clk);
+	rate = clk_get_rate(clk);
 
 	gpt.base = base;
 	gpt.name = "gpt",
@@ -144,7 +153,8 @@ static int __init gpt_init_timer(void)
 	iowrite32(base + GPT_CR, 0);
 	iowrite32(base + GPT_OCR1, ~0);
 	iowrite32(base + GPT_IR, GPT_IR_ROV|GPT_IR_OF1);
-	iowrite32(base + GPT_CR, GPT_CR_FRR|GPT_CR_WAITEN|GPT_CR_EN);
+	iowrite32(base + GPT_PR, GPT_PR_PRESCALER(rate/HZ));
+	iowrite32(base + GPT_CR, GPT_CR_FRR|GPT_CR_WAITEN|GPT_CR_EN |GPT_CR_CLKSRC_LFREF);
 
 	irq_create(&gpt_irq, gpt_isr, gpt_dsr, &gpt, 0);
 	irq_attach(desc, &gpt_irq);
