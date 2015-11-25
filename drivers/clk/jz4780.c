@@ -15,29 +15,6 @@ static struct clk_ratio sclk_m;		// FIXME: adjustable PLL
 static struct clk_divider   msc0;
 
 
-static int jz4780_msc_set_divider(struct clk_divider *c, uint div)
-{
-	u32 cdr;
-
-	if (div > 512)
-		return -EINVAL;
-
-	cdr = ioread32(c->iobase) & ~0xFF;
-	cdr |= (div / 2) - 1;
-	iowrite32(c->iobase, cdr);
-	return 0;
-}
-
-static uint jz4780_msc_get_divider(struct clk_divider *c)
-{
-	u32 cdr;
-	uint div;
-
-	cdr = ioread32(c->iobase) & 0xFF;
-	div = (cdr + 1) * 2;
-	return div;
-}
-
 static void jz4780_clock_setup(void)
 {
 	void __iomem* cgubase = ioremap(CGU_BASE, 0x100);
@@ -56,8 +33,10 @@ static void jz4780_clock_setup(void)
 	#define	msc_mux	sclk_m		// FIXME: MUX(sclk_m, sclk_a)
 
 	msc0.iobase = cgubase + CGU_MSC0CDR;
-	msc0.set_div = jz4780_msc_set_divider;
-	msc0.get_div = jz4780_msc_get_divider;
+	msc0.shift = 0;
+	msc0.width = 8;
+	msc0.offset = 1;
+	msc0.scale = 2;
 	msc0.clk.parent = &msc_mux.clk;
 	clk_divider_register(&msc0, "msc0");
 }
