@@ -7,3 +7,6 @@ objs-y	:= \
 
 deps-y	:= \
 	target.lds	\
+
+
+subdirs-y += lib/

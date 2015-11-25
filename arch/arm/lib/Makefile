@@ -1,0 +1,2 @@
+objs-y	:= \
+	memcpy.o	\
