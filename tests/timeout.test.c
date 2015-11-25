@@ -14,8 +14,8 @@ static void fun(void* data)
 
 	printf("t = ...\n");
 
-	for (d = 1 << 15; ; d += 1 << 15) {
-		thread_schedule_timeout(d);
+	for (d = 1; ; d += 1) {
+		thread_schedule_timeout(d * HZ );
 		printf("t = %lx\n", d);
 	}
 }

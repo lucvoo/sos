@@ -2,6 +2,7 @@
 #define _TIMER_DEV_H_
 
 #include <iomem.h>
+#include <hz.h>
 
 
 struct timerdev {

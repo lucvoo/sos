@@ -102,7 +102,7 @@ static int __init stm32_init_timer(struct stm32_timer *stt, const struct stm32_t
 	stt->td.next_rel = stm32_timer_next_rel;
 	stt->td.now = stm32_timer_now;
 
-	iowrite32(base + TIM_PSC, clk_get_rate(clk)/32768);
+	iowrite32(base + TIM_PSC, clk_get_rate(clk)/HZ);
 	iowrite32(base + TIM_EGR, TIM_EGR_UG);
 	iowrite32(base + TIM_DIER, TIM_DIER_UIE);
 	iowrite32(base + TIM_SR, 0);

@@ -21,7 +21,7 @@ void kapi_start(void)
 	printf(os_version);
 
 	for (i = 0; i < ARRAY_SIZE(timeouts); i++) {
-		timers[i].exp = timeouts[i] * 32*1024;
+		timers[i].exp = timeouts[i] * HZ;
 		timers[i].action = timer_action;
 		timers[i].data = &timers[i].exp;
 		timer_add(&timers[i]);
