@@ -127,20 +127,20 @@ static int __init gpt_init_timer(void)
 	struct irqdesc *desc;
 	struct clk *clk;
 	void __iomem *base;
-	int rc;
+	int rc = -EINVAL;
 	ulong rate;
 
 	base = ioremap(GPT_BASE, GPT_SIZE);
 	if (!base)
-		return -EINVAL;
+		goto err_ioremap;
 
 	desc = irq_get_desc("gic", GPT_IRQ);
 	if (!desc)
-		return -EINVAL;
+		goto err_irq;
 
 	clk = clk_get("ckil");
 	if (!clk)
-		return -EINVAL;
+		goto err_clk;
 	clk_enable(clk);
 	rate = clk_get_rate(clk);
 
@@ -161,6 +161,15 @@ static int __init gpt_init_timer(void)
 	irq_unmask(desc);
 
 	rc = timerdev_register(&gpt);
+	if (rc == 0)
+		return rc;
+
+	clk_put(clk);
+err_clk:
+	// FIXME: irq_put_desc() ?
+err_irq:
+	iounmap(base, GPT_SIZE);
+err_ioremap:
 	return rc;
 }
 
