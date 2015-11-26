@@ -10,4 +10,11 @@ struct clk_fixed {
 
 int clk_fixed_register(struct clk_fixed *c);
 
+static int clk_fixed_init(struct clk_fixed *c, const char *name, ulong rate)
+{
+	c->rate.rate = rate;
+	c->clk.name = name;
+	return clk_fixed_register(c);
+}
+
 #endif
