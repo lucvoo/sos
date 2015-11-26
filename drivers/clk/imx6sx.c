@@ -11,10 +11,8 @@ static struct clk_fixed		osc;
 static void imx6sx_clock_setup(void)
 {
 	// root clocks
-	ckil.rate.rate = 1 << 15;
-	clk_fixed_register(&ckil, "ckil");
+	clk_fixed_init(&ckil, "ckil", 1 << 15);
+	clk_fixed_init(&osc,  "osc",   24000000);
 
-	osc.rate.rate = 24000000;
-	clk_fixed_register(&osc, "osc");
 }
 board_setup_initcall(imx6sx_clock_setup);

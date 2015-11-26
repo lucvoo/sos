@@ -19,11 +19,9 @@ static void jz4780_clock_setup(void)
 {
 	void __iomem* cgubase = ioremap(CGU_BASE, 0x100);
 
-	rtc.rate.rate = 1 << 15;
-	clk_fixed_register(&rtc, "rtc");
+	clk_fixed_init(&rtc, "rtc", 1 << 15);
 
-	ext.rate.rate = 48000000;
-	clk_fixed_register(&ext, "ext");
+	clk_fixed_init(&ext, "ext", 48000000);
 
 	sclk_m.rate.mult = 25;		// FIXME: adjustable PLL
 	sclk_m.rate.div = 1;

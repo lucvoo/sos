@@ -23,8 +23,7 @@ static void stm32_clock_setup(void)
 
 	rccbase = ioremap(RCC_BASE, RCC_SIZE);
 
-	sysclk.rate.rate = FREQ_SYSCLK;
-	clk_fixed_register(&sysclk, "sysclk");
+	clk_fixed_init(&sysclk, "sysclk", FREQ_SYSCLK);
 
 	hclk.rate.mult = 1;
 	hclk.rate.div = AHBDIV;
