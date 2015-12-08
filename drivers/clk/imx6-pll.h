@@ -9,6 +9,7 @@
  */
 
 
+#define IMX6PLLT_SYS		(2<<0)
 #define IMX6PLLT_ENET		(6<<0)
 
 #define IMX6PLLF_POWERUP	(1<<8)	// bit set when powered-up not -down

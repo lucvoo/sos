@@ -41,6 +41,27 @@ static void clk_imx6pll_disable(struct clk *clk)
 	iowrite32(c->reg + REG_SET, PLL_POWERDOWN);
 }
 
+static unsigned long clk_imx6pll_get_rate(struct clk *clk)
+{
+	struct clk_imx6pll *c = container_of(clk, struct clk_imx6pll, clk);
+	ulong prate = clk_get_rate(clk->parent);
+	uint val;
+	uint div;
+
+	val = ioread32(c->reg + REG_VAL);
+	div = val & c->mask;
+	if (div == 1)
+		return prate * 22;
+	else
+		return prate * 20;
+}
+
+static const struct clk_ops clk_imx6pll_ops = {
+	.enable   = clk_imx6pll_enable,
+	.disable  = clk_imx6pll_disable,
+	.get_rate = clk_imx6pll_get_rate,
+};
+
 
 static unsigned long clk_imx6pll_get_rate_500MHz(struct clk *clk)
 {
@@ -61,6 +82,11 @@ int clk_imx6pll_register(struct clk_imx6pll *c, void __iomem *ccmbase, uint flag
 	ulong reg;
 
 	switch (type) {
+	case IMX6PLLT_SYS:
+		ops = &clk_imx6pll_ops;
+		reg = CCM_PLL_SYS;
+		mask = 0x1;
+		break;
 	case IMX6PLLT_ENET:
 		ops = &clk_imx6pll_enet_ops;
 		reg = CCM_PLL_ENET;
