@@ -98,5 +98,9 @@ int clk_imx6pll_register(struct clk_imx6pll *c, void __iomem *ccmbase, uint flag
 	c->flags = flags;
 	c->reg = ccmbase + reg;
 	c->mask = mask;
+
+	// use the 24MHz ref clock as bypass src & do not bypass
+	iowrite32(c->reg + REG_CLR, PLL_BYPASS|PLL_BYPASS_SRC_MSK);
+
 	return clk_register(&c->clk, ops);
 }
