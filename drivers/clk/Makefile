@@ -4,6 +4,7 @@ objs-y	+= clk-mask.o
 objs-y	+= clk-mmio.o
 objs-y	+= clk-mmio-fixed.o
 objs-y	+= clk-mmio-ratio.o
+objs-y	+= clk-mux-mmio.o
 objs-y	+= clk-ratio.o
 objs-y	+= clk-divider.o
 objs-y	+= clk-divtable.o
