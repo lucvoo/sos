@@ -24,4 +24,7 @@ int mii_nway_restart(struct mii *mii);
 int mii_init_media(struct mii *mii);
 int mii_check_media(struct mii *mii);
 
+int mii_get_phyid(struct mii *mii, uint paddr, u32 *phy_id);
+int mii_scan_phy(struct mii *mii, uint *paddr, u32 *phy_id);
+
 #endif

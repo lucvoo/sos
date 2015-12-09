@@ -89,3 +89,45 @@ int mii_check_media(struct mii *mii)
 
 	return 1;
 }
+
+
+int mii_get_phyid(struct mii* mii, uint paddr, u32 *phy_id)
+{
+	int res;
+	u32 id;
+
+	res = mii->read(mii, paddr, MII_PHYSID1);
+	if (res < 0)
+		return -EIO;
+	id = res << 16;
+
+	res = mii->read(mii, paddr, MII_PHYSID2);
+	if (res < 0)
+		return -EIO;
+	id |= res << 0;
+
+	*phy_id = id;
+	return 0;
+}
+
+int mii_scan_phy(struct mii* mii, uint *paddr,  u32 *phy_id)
+{
+	uint i;
+	int rc;
+
+	for (i = 0; i < 32; i++) {
+		u32 id;
+
+		rc = mii_get_phyid(mii, i, &id);
+		if (rc)
+			continue;
+		if ((id & 0x1fffffff) == 0x1fffffff)
+			continue;
+		if ((id & 0x1fffffff) == 0x00000000)
+			continue;
+		*paddr = i;
+		*phy_id = id;
+		return 0;
+	}
+	return -EIO;
+}
