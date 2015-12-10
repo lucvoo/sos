@@ -1,5 +1,6 @@
 subdirs-y += clk/
 subdirs-y += irq/
+subdirs-y += pinctrl/
 subdirs-y += timer/
 subdirs-$(CONFIG_GPIO)	+= gpio/
 subdirs-$(CONFIG_MMC)	+= mmc/
