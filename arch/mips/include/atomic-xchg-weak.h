@@ -5,6 +5,7 @@
 static inline int __cmpxchg_weak(volatile uint *ptr, uint old, uint new)
 {
 	asm volatile goto("\n"
+	"	.set noat\n"
 	"	ll	$1, %[ptr]\n"
 	"	bne	$1, %[old], %l[failed]\n"
 	"	 nop\n"
@@ -12,6 +13,7 @@ static inline int __cmpxchg_weak(volatile uint *ptr, uint old, uint new)
 	"	sc	$1, %[ptr]\n"
 	"	beqz	$1, %l[failed]\n"
 	"	 nop\n"
+	"	.set at\n"
 	:
 	: [ptr] "m" (*ptr), [old] "r" (old), [new] "r" (new)
 	: "memory"
