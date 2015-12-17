@@ -27,10 +27,6 @@ HOSTCFLAGS	:= -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer \
 export	HOSTCC HOSTCFLAGS
 
 
-# Look for make include files relative to root of kernel src
-MAKEFLAGS += --include-dir=$(srctree)
-
-
 ifdef	mixed-targets
 # ===========================================================================
 # We're called with mixed targets (*config and build targets).
