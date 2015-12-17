@@ -13,7 +13,10 @@
 #include <clk.h>
 #include <hz.h>
 #include <soc/iomux.h>
+#include <soc/fuse.h>
 #include <mach/pincfg.h>
+#include <unaligned.h>
+#include <byteorder.h>
 
 
 struct enet {
@@ -121,12 +124,40 @@ static int enet_dsr(struct irqdesc *desc, unsigned int count, void *data)
 }
 
 /******************************************************************************/
+static int enet_get_macaddr(struct enet *dev)
+{
+	imx_get_macaddr(&dev->ndev.macaddr);
+	pr_info("MAC address: %pM\n", &dev->ndev.macaddr);
+
+	if (!macaddr_is_valid(&dev->ndev.macaddr)) {
+		return -EINVAL;
+	}
+
+	return 0;
+}
+
+static int enet_set_macaddr(struct netdev *ndev)
+{
+	const u8 *buf;
+	u32 val;
+
+	// FIXME: should only be done with clocks enabled
+	buf = &ndev->macaddr.byte[0];
+	val = read32_unaligned(buf + 0);
+	iowrite32(ndev->iobase + ENET_PALR, cpu_to_be32(val));
+	val = read16_unaligned(buf + 4);
+	iowrite32(ndev->iobase + ENET_PAUR, cpu_to_be32(val));
+	return 0;
+}
+
 static void enet_reinit(struct enet *dev)
 {
 	struct mii *mii = &dev->mii;
 
 	// reset the PHY
 	enet_phy_write(mii, mii->paddr, MII_BMCR, MII_BMCR_RESET);
+
+	enet_set_macaddr(&dev->ndev);
 }
 
 static int enet_open(struct netdev *ndev)
@@ -223,6 +254,11 @@ static int enet_init_dev(struct enet *dev)
 #define	ENET_SIZE	0x00000800
 #define	ENET_IRQCHIP	"gic"
 #define	ENET_IRQIDX	150
+
+	rc = enet_get_macaddr(dev);
+	if (rc)
+		goto err_macaddr;
+
 	iobase = ioremap(ENET_BASE, ENET_SIZE);
 	if (!iobase) {
 		rc = -EINVAL;
@@ -285,6 +321,7 @@ err_irq_attach:
 err_irq:
 	iounmap(iobase, ENET_SIZE);
 err_ioremap:
+err_macaddr:
 	return rc;
 }
 
