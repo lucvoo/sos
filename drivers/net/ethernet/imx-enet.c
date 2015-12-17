@@ -121,6 +121,42 @@ static int enet_dsr(struct irqdesc *desc, unsigned int count, void *data)
 }
 
 /******************************************************************************/
+static void enet_reinit(struct enet *dev)
+{
+	struct mii *mii = &dev->mii;
+
+	// reset the PHY
+	enet_phy_write(mii, mii->paddr, MII_BMCR, MII_BMCR_RESET);
+}
+
+static int enet_open(struct netdev *ndev)
+{
+	struct enet *dev = container_of(ndev, struct enet, ndev);
+	int rc = 0;
+
+	pr_info("enabling %s\n", ndev->ifname);
+
+
+	enet_reinit(dev);
+	irq_unmask(ndev->irq);
+
+	mii_init_media(&dev->mii);
+
+	return rc;
+}
+
+static int enet_poll(struct netdev *ndev)
+{
+	struct enet *dev = container_of(ndev, struct enet, ndev);
+
+	// For debug only
+
+	mii_check_media(&dev->mii);
+
+	return 0;
+}
+
+/******************************************************************************/
 static void enet_reset(struct enet *dev)
 {
 	void __iomem *iobase = dev->ndev.iobase;
@@ -215,6 +251,10 @@ static int enet_init_dev(struct enet *dev)
 	if (rc)
 		goto err_clk;
 
+	// TODO: add netdev ops
+	dev->ndev.open = enet_open;
+	dev->ndev.poll = enet_poll;
+
 	// TODO: add "ethtool" ops
 
 	mii->read = enet_phy_read;
@@ -232,6 +272,9 @@ static int enet_init_dev(struct enet *dev)
 	pr_note("scan_phy(): rc = %d, paddr = %02x, id = %08x\n", rc, mii->paddr, phy_id);
 	if (rc)
 		goto err_phy;
+
+	rc = netdev_register(&dev->ndev);
+	return rc;
 
 err_phy:
 err_mii:
