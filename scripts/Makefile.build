@@ -117,5 +117,6 @@ $(asm-offsets): arch/$(CONFIG_ARCH)/asm-offsets.s
 -include arch/$(CONFIG_ARCH)/.asm-offsets.s.cmd
 
 scripts/Makefile.build: scripts/basic/fixdep
+scripts/basic/fixdep: scripts/basic/fixdep.c
 scripts/basic/%:
 	$(Q)$(MAKE) -f scripts/Makefile.host obj=scripts/basic $@
