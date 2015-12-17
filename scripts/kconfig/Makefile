@@ -85,11 +85,7 @@ $(obj)/kconfig_load.o: $(obj)/lkc_defs.h
 $(obj)/lkc_defs.h: $(src)/lkc_proto.h
 	sed < $< > $@ 's/P(\([^,]*\),.*/#define \1 (\*\1_p)/'
 
-
-$(obj)/zconf.tab.c: $(src)/zconf.y
-$(obj)/lex.zconf.c: $(src)/zconf.l
-$(obj)/zconf.hash.c: $(src)/zconf.gperf
-
+# ===========================================================================
 %.tab.c: %.y
 	bison -l -b $* -p $(notdir $*) $<
 
