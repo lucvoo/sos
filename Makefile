@@ -34,7 +34,7 @@ ifdef	config-targets
 
 %config: FORCE
 	$(Q)mkdir -p include/config
-	$(Q)$(MAKE) -f scripts/Makefile.host obj=scripts/kconfig $@
+	$(Q)$(MAKE) -f scripts/Makefile.host curdir=scripts/kconfig $@
 
 else
 # ===========================================================================

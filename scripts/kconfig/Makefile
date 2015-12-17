@@ -3,7 +3,7 @@
 # These targets are used from top-level makefile
 
 CFG_ARCH ?= $(CONFIG_ARCH)
-VPATH := $(obj)
+VPATH := $(curdir)
 
 PHONY += oldconfig menuconfig config silentoldconfig
 
@@ -79,7 +79,7 @@ mconf-objs	:= mconf.o zconf.tab.o $(lxdialog)
 hostprogs-y := conf
 hostprogs-y += mconf
 
-$(obj)/zconf.tab.o: $(obj)/lex.zconf.c $(obj)/zconf.hash.c
+$(curdir)/zconf.tab.o: $(curdir)/lex.zconf.c $(curdir)/zconf.hash.c
 
 $(obj)/kconfig_load.o: $(obj)/lkc_defs.h
 

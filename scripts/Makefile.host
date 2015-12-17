@@ -3,10 +3,10 @@ __build: FORCE
 
 -include include/config/auto.conf
 include scripts/Kbuild.include
-ifndef obj
+ifndef curdir
 $(warning kbuild: Makefile.host is included improperly)
 endif
-include $(src)/Makefile
+include $(curdir)/Makefile
 
 host-csingle    := $(foreach m,$(hostprogs-y),$(if $($(m)-objs),,$(m)))
 host-cmulti     := $(foreach m,$(hostprogs-y),$(if $($(m)-objs),$(m)))
@@ -15,11 +15,11 @@ host-cmulti     := $(foreach m,$(hostprogs-y),$(if $($(m)-objs),$(m)))
 host-cobjs	:= $(sort $(foreach m,$(hostprogs-y),$($(m)-objs)))
 host-cobjs	+= $(host-csingle:%=%.o)
 
-$(foreach m,$(host-cmulti),$(eval $(obj)/$(m): $(addprefix $(obj)/,$($(m)-objs))))
+$(foreach m,$(host-cmulti),$(eval $(curdir)/$(m): $(addprefix $(curdir)/,$($(m)-objs))))
 
-host-csingle    := $(addprefix $(obj)/,$(host-csingle))
-host-cmulti     := $(addprefix $(obj)/,$(host-cmulti))
-host-cobjs	:= $(addprefix $(obj)/,$(host-cobjs))
+host-csingle	:= $(addprefix $(curdir)/,$(host-csingle))
+host-cmulti	:= $(addprefix $(curdir)/,$(host-cmulti))
+host-cobjs	:= $(addprefix $(curdir)/,$(host-cobjs))
 
 #####
 #####
@@ -28,7 +28,7 @@ host-cobjs	:= $(addprefix $(obj)/,$(host-cobjs))
 # Link an executable based on list of .o files, all plain c
 # host-csingle -> executable
       cmd_host-csingle	= $(HOSTCC) $(HOSTLDFLAGS) -o $@ \
-			  $(addprefix $(obj)/,$(@F).o) \
+			  $(addprefix $(curdir)/,$(@F).o) \
 			  $(HOST_LOADLIBES) $(HOSTLOADLIBES_$(@F))
 $(host-csingle): %: %.o
 	@echo "HOSTLD	$@"
@@ -37,7 +37,7 @@ $(host-csingle): %: %.o
 
 # host-cmulti -> executable
       cmd_host-cmulti	= $(HOSTCC) $(HOSTLDFLAGS) -o $@ \
-			  $(addprefix $(obj)/,$($(@F)-objs)) \
+			  $(addprefix $(curdir)/,$($(@F)-objs)) \
 			  $(HOST_LOADLIBES) $(HOSTLOADLIBES_$(@F))
 $(host-cmulti): %:
 	@echo "HOSTLD	$@"
@@ -73,7 +73,7 @@ FORCE:
 # exist, we will rebuild anyway in that case.
 
 targets := $(sort $(targets))
-cmd_files := $(wildcard $(targets:$(obj)/%=$(obj)/.%.cmd))
+cmd_files := $(wildcard $(targets:$(curdir)/%=$(curdir)/.%.cmd))
 
 ifneq ($(cmd_files),)
   include $(cmd_files)
