@@ -78,11 +78,6 @@ mconf-objs	:= mconf.o zconf.tab.o $(lxdialog)
 hostprogs-y := conf
 hostprogs-y += mconf
 
-# generated files seem to need this to find local include files
-HOSTCFLAGS_lex.zconf.o	:= -I$(src)
-HOSTCFLAGS_zconf.tab.o	:= -I$(src)
-
-
 $(obj)/zconf.tab.o: $(obj)/lex.zconf.c $(obj)/zconf.hash.c
 
 $(obj)/kconfig_load.o: $(obj)/lkc_defs.h
