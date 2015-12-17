@@ -12,9 +12,7 @@ srctree		:= $(CURDIR)
 objtree		:= $(CURDIR)
 obj		:= $(objtree)
 
-VPATH		:= $(srctree)
-
-export srctree objtree VPATH
+export srctree objtree
 
 
 HOSTCC		:= gcc
