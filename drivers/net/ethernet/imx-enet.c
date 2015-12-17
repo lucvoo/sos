@@ -97,6 +97,30 @@ static int enet_mii_init(struct enet *dev)
 	return 0;
 }
 
+/******************************************************************************/
+static int enet_irq(struct irqdesc *desc, void *data)
+{
+	struct enet *dev = data;
+	uint status;
+	int rc = IRQ_NONE;
+
+	pr_dbg("status = %02x\n", status);
+
+	return rc;
+}
+
+static int enet_dsr(struct irqdesc *desc, unsigned int count, void *data)
+{
+	struct enet *dev = data;
+
+	// FIXME: only save if this never sleep
+	//	  which is true for now but ...
+	mii_check_media(&dev->mii);
+
+	return 0;
+}
+
+/******************************************************************************/
 static void enet_reset(struct enet *dev)
 {
 	void __iomem *iobase = dev->ndev.iobase;
@@ -155,6 +179,7 @@ static int enet_init_dev(struct enet *dev)
 {
 	struct mii *mii = &dev->mii;
 	void __iomem *iobase;
+	struct irqdesc *irq;
 	u32 phy_id;
 	int rc;
 
@@ -168,6 +193,23 @@ static int enet_init_dev(struct enet *dev)
 		goto err_ioremap;
 	}
 	dev->ndev.iobase = iobase;
+
+	/*
+	 * FIXME: we have several queues, each with their own interrupt.
+	 */
+	irq = irq_get_desc(ENET_IRQCHIP, ENET_IRQIDX);
+	if (!irq) {
+		pr_err("no such irq: %s(%d)\n", ENET_IRQCHIP, ENET_IRQIDX);
+		// FIXME: goto ...
+		rc = -ENODEV;
+		goto err_irq;
+	}
+	dev->ndev.irq = irq;
+	irq_create(&dev->irq_action, enet_irq, enet_dsr, dev, 0);
+	rc = irq_attach(dev->ndev.irq, &dev->irq_action);
+	if (rc)
+		goto err_irq_attach;
+
 
 	rc = enet_clk_init(dev);
 	if (rc)
@@ -195,7 +237,9 @@ err_phy:
 err_mii:
 	enet_clk_release(dev);
 err_clk:
+err_irq_attach:
 	//irq_put_desc(irq);
+err_irq:
 	iounmap(iobase, ENET_SIZE);
 err_ioremap:
 	return rc;
