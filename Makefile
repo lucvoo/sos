@@ -8,13 +8,6 @@ _all:
 # We process the rest of the Makefile if this is the final invocation of make
 ifndef skip-makefile
 
-srctree		:= $(CURDIR)
-objtree		:= $(CURDIR)
-obj		:= $(objtree)
-
-export srctree objtree
-
-
 HOSTCC		:= gcc
 HOSTCFLAGS	:= -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer \
 		-Wno-strict-aliasing \
@@ -31,7 +24,7 @@ ifdef	mixed-targets
 # Handle them one by one.
 
 %:: FORCE
-	$(Q)$(MAKE) -C $(srctree) KBUILD_SRC= $@
+	$(Q)$(MAKE) $@
 
 else
 ifdef	config-targets
@@ -60,7 +53,7 @@ ifndef	no-dot-config
 # if auto.conf.cmd is missing then we are probably in a cleaned tree so
 # we execute the config step to be sure to catch updated Kconfig files
 include/config/auto.conf: .config include/config/auto.conf.cmd
-	$(Q)$(MAKE) -f $(srctree)/Makefile silentoldconfig
+	$(Q)$(MAKE) -f Makefile silentoldconfig
 else
 # Dummy target needed, because used as prerequisite
 include/config/auto.conf: ;
