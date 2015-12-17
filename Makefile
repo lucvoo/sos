@@ -180,7 +180,7 @@ endif
 
 LDFLAGS+=$(LDFLAGS-y)
 
-include tests/.make
+-include tests/.make
 pgms-deps := libtarget.a arch/$(CONFIG_ARCH)/target.lds
 tests=$(progs-y:%=tests/%)
 tests/: $(tests:%=%.bin)
