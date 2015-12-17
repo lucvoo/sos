@@ -320,9 +320,7 @@ void parse_dep_file(void *map, size_t len)
 			p++;
 		}
 		memcpy(s, m, p-m); s[p-m] = 0;
-		if (strrcmp(s, "include/linux/autoconf.h") &&
-		    strrcmp(s, "arch/um/include/uml-config.h") &&
-		    strrcmp(s, ".ver")) {
+		if (strrcmp(s, "include/autoconf.h")) {
 			printf("  %s \\\n", s);
 			do_config_file(s);
 		}
