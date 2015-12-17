@@ -81,11 +81,6 @@ hostprogs-y += mconf
 
 $(curdir)/zconf.tab.o: $(curdir)/lex.zconf.c $(curdir)/zconf.hash.c
 
-$(obj)/kconfig_load.o: $(obj)/lkc_defs.h
-
-$(obj)/lkc_defs.h: $(src)/lkc_proto.h
-	sed < $< > $@ 's/P(\([^,]*\),.*/#define \1 (\*\1_p)/'
-
 # ===========================================================================
 %.tab.c: %.y
 	bison -l -b $* -p $(notdir $*) $<
