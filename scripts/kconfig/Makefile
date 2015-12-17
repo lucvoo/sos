@@ -3,40 +3,41 @@
 # These targets are used from top-level makefile
 
 CFG_ARCH ?= $(CONFIG_ARCH)
+VPATH := $(obj)
 
 PHONY += oldconfig menuconfig config silentoldconfig
 
-menuconfig: $(obj)/mconf
+menuconfig: mconf
 	$(Q)$< Kconfig
 
-consoleconfig: $(obj)/conf
+consoleconfig: conf
 	$(Q)$< Kconfig
 
-oldconfig: $(obj)/conf
+oldconfig: conf
 	$(Q)$< -o Kconfig
 
-silentoldconfig: $(obj)/conf
+silentoldconfig: conf
 	$(Q)$< -s Kconfig
 
 
 PHONY += randconfig allyesconfig allnoconfig defconfig
 
-randconfig: $(obj)/conf
+randconfig: conf
 	$(Q)$< -r Kconfig
 
-allyesconfig: $(obj)/conf
+allyesconfig: conf
 	$(Q)$< -y Kconfig
 
-allnoconfig: $(obj)/conf
+allnoconfig: conf
 	$(Q)$< -n Kconfig
 
-defconfig: $(obj)/conf
+defconfig: conf
 	$(Q)$< -D arch/$(CFG_ARCH)/configs/defconfig Kconfig
 
-%_config: $(obj)/conf
+%_config: conf
 	$(Q)$< -D arch/$(CFG_ARCH)/configs/$@ Kconfig
 
-%_defconfig: $(obj)/conf
+%_defconfig: conf
 	$(Q)rm -f include/arch include/mach include/soc
 	$(Q)rm -f include/config/auto.conf include/config/auto.conf.cmd
 	$(Q)rm -f include/autoconf.h
