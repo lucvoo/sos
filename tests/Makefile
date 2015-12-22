@@ -3,6 +3,7 @@ objs-y	+= sprng.o
 
 progs-y	+= bug.test
 progs-y	+= bug_on.test
+progs-$(CONFIG_DMA_STREAMING)	+= dma-streaming.test
 progs-y	+= fastmod10.test
 progs-$(CONFIG_FATFS)	+= fatfs.test
 progs-y	+= fault-undef.test
