@@ -1,9 +1,8 @@
 #include <io.h>
-#include <arch/memory.h>
+#include <arch/iomap.h>
 
 
 void __iomem *ioremap(paddr_t phys, unsigned long size)
 {
-	// FIXME
-	return (void __iomem *) (KSEG1_BASE + phys);
+	return __ioremap(phys);
 }
