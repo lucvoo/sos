@@ -4,9 +4,14 @@ choice
 
 config MACH_CI20
 	bool "ci20"
+config MACH_OMEGA
+	bool "Onion's Omega"
 
 endchoice
 
 if MACH_CI20
 source arch/mips/mach-ci20/Kconfig
+endif
+if MACH_OMEGA
+source arch/mips/mach-omega/Kconfig
 endif

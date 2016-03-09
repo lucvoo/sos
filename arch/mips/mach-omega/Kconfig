@@ -1,0 +1,15 @@
+config MACH
+	symbol
+	default omega
+
+config	MACH_PARAMS
+	bool
+	default y
+	select SOC_AR933X
+
+config PHYS_ADDR
+	hex
+	default 0x80000000
+config PHYS_SIZE
+	hex
+	default 0x04000000
