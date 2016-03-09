@@ -43,6 +43,26 @@ config	REMOVE_INIT_SECTIONS
 config	CROSS_COMPILE
 	symbol "Cross compile prefix"
 
+choice
+	prompt "image format"
+	default IMG_FORMAT_UIMG
+	optional
+
+    config IMG_FORMAT_NONE
+	bool "none"
+
+    config IMG_FORMAT_BIN
+	bool "binary"
+
+    config IMG_FORMAT_UIMG
+	bool "u-boot original format (.uimg)"
+
+endchoice
+config	IMG_FORMAT
+	symbol
+	default uimg   if IMG_FORMAT_UIMG
+	default bin    if IMG_FORMAT_BIN
+
 endmenu
 
 

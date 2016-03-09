@@ -202,8 +202,8 @@ $(progs): %: %.o $(pgms-deps) $(libs) kernel/version.o
 
 LOADADDR:=$(shell printf 0x%08x $$((${CONFIG_PHYS_ADDR} + ${CONFIG_TEXT_OFFSET})))
 
-tests/%.tftp: tests/%.uimg
-	$(Q)cp $< /tftpboot/$(CONFIG_MACH).uimg
+tests/%.tftp: tests/%.$(CONFIG_IMG_FORMAT)
+	$(Q)cp $< /tftpboot/$(CONFIG_MACH).$(CONFIG_IMG_FORMAT)
 
 %.uimg: %.bin
 	@echo "MKIMAGE	$@"
