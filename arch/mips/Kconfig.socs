@@ -1,3 +1,10 @@
+config SOC_AR933X
+	bool
+if SOC_AR933X
+source arch/mips/soc-ar933x/Kconfig
+endif
+
+
 config SOC_JZ4780
 	bool
 

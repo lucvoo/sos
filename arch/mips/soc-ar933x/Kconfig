@@ -1,0 +1,14 @@
+menu "AR933x"
+
+config	SOC
+	symbol
+	default	ar933x
+
+config	SOC_PARAMS
+	bool
+	default y
+	select WAIT_BROKEN
+	select CPU_24KC
+	select ENDIAN_BIG
+
+endmenu
