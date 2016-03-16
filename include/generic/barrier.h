@@ -50,4 +50,27 @@
 
 #endif	// CONFIG_SMP
 
+
+#ifndef	CONFIG_DMA_NEEDS_BARRIER
+
+#ifndef	mbr_dma
+#define	mbr_dma()	barrier()
+#endif
+
+#ifndef	mbw_dma
+#define	mbw_dma()	barrier()
+#endif
+
+#else	// CONFIG_DMA_NEEDS_BARRIER
+
+#ifndef	mbr_dma
+#define	mbr_dma()	mbr()
+#endif
+
+#ifndef	mbw_dma
+#define	mbw_dma()	mbw()
+#endif
+
+#endif	// CONFIG_DMA_NEEDS_BARRIER
+
 #endif
