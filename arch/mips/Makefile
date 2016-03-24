@@ -1,3 +1,4 @@
+objs-y	+= 	cache.o
 objs-y	+= 	context.o
 objs-y	+= 	dump-stack.o
 objs-y	+= 	init.o
