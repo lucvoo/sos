@@ -31,6 +31,8 @@ void dump_system_regs(void)
 	dump_cp0(c0_hwrena);
 	dump_cp0(c0_count);
 	dump_cp0(c0_prid);
+	dump_cp0(c0_intctl);
+	dump_cp0(c0_srsctl);
 	dump_cp0(c0_ebase);
 	dump_cp0(c0_config);
 	dump_cp0(c0_config1);
