@@ -166,3 +166,30 @@ void dcache_inval_all(void)
 {
 	__cache_all_op(CACHEOP_D_IDX_WBI, CACHE_LD_LINESIZE, CACHE_LD_SETS, CACHE_LD_WAYS);
 }
+
+
+#ifndef	CONFIG_DMA_COHERENT
+
+#include <arch/barrier.h>
+
+#define	CACHE_LD_SIZE	(CACHE_LD_LINESIZE * CACHE_LD_SETS * CACHE_LD_WAYS)
+
+#define	BUILD_DMA_CACHE_OP(name, op, op_all)		\
+void name(ulong addr, ulong size)			\
+{							\
+	/* FIXME: preempt_disable(); */			\
+							\
+	if (size >= CACHE_LD_SIZE)			\
+		dcache_ ## op_all ## _all();		\
+	else						\
+		dcache_ ## op ## _range(addr, size);	\
+	/* FIXME: preempt_renable(); */			\
+							\
+	__mips_sync();					\
+}
+
+BUILD_DMA_CACHE_OP(dma_cache_inval, inval, inval)
+BUILD_DMA_CACHE_OP(dma_cache_clean, clean, flush)
+BUILD_DMA_CACHE_OP(dma_cache_flush, flush, flush)
+
+#endif
