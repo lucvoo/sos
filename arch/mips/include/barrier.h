@@ -3,6 +3,7 @@
 
 
 #ifdef CONFIG_CPU_HAS_SYNC
+#define	__mips_sync()	asm volatile ("sync" : : : "memory")
 #define	__arch_mb() asm volatile ("sync" : : : "memory")
 #else
 #error FIXME
