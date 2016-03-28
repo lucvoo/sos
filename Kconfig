@@ -154,6 +154,14 @@ config	BOOTADDR
 
 endmenu
 
+
+menu "DMA"
+
+config	DMA_STREAMING
+	bool
+
+endmenu
+
 source mm/Kconfig
 source fs/Kconfig
 source net/Kconfig

@@ -3,6 +3,11 @@ config ARCH
 	default mips
 
 
+config	ARCH_PARAMS
+	bool
+	default ARCH_MIPS
+	select DMA_STREAMING
+
 config	ENDIAN_BIG
 	bool
 config	ENDIAN_LITTLE
