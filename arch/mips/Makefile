@@ -1,5 +1,6 @@
 objs-y	+= 	cache.o
 objs-y	+= 	context.o
+objs-y	+= 	dma-alloc.o
 objs-y	+= 	dma-mapping.o
 objs-y	+= 	dump-stack.o
 objs-y	+= 	init.o

@@ -13,4 +13,10 @@ void dma_rbuff_put(ulong baddr, uint size);
 void dma_wbuff_get(ulong baddr, uint size);
 void dma_wbuff_put(ulong baddr, uint size);
 
+
+#include <types/dma_addr_t.h>
+#include <alloc-flags.h>
+void *dma_alloc_coherent(ulong size, dma_addr_t *addr, ulong aflags);
+void dma_free_coherent(void *cpu_addr, dma_addr_t dma_addr, ulong size);
+
 #endif
