@@ -4,7 +4,4 @@
 void mdelay(unsigned int msec);
 void udelay(unsigned int usec);
 
-// FIXME
-#define	usleep(D)	udelay(D)
-
 #endif
