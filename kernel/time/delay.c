@@ -32,3 +32,8 @@ void udelay(unsigned int usec)
 
 	__udelay(usec);
 }
+
+void mdelay(unsigned int msec)
+{
+	udelay(msec * 1000);
+}
