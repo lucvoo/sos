@@ -22,4 +22,11 @@ static inline void __iomem *__ioremap_nop(paddr_t phys, unsigned long size)
 #define	ioremap(A, S)	__ioremap_nop(A, S)
 #endif
 
+
+static inline void iowrite32_flush(void __iomem *ioaddr, u32 val)
+{
+	iowrite32(ioaddr, val);
+	ioread32(ioaddr);		// sync with write's early ack
+}
+
 #endif
