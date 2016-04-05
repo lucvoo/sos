@@ -29,6 +29,12 @@ static inline paddr_t virt_to_phys(const void *virt)
 }
 
 
+static inline void *phys_to_kseg1(paddr_t phys)
+{
+	return (void *) phys + (KSEG1_BASE - PHYS_ADDR);
+}
+
+
 #define	PFN_OFFSET	(PHYS_ADDR >> PAGE_SHIFT)
 
 #define	__phys_to_pfn(phys)	((unsigned long) ((phys) >> PAGE_SHIFT))
