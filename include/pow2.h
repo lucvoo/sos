@@ -31,4 +31,26 @@ static inline int log_pow2(ulong val)
 	return n;
 }
 
+/**
+ * pow2_roundup - compute the next highest power of two
+ * @val
+ *
+ * notes: returns 0 if val was 0
+ * taken from http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
+ */
+static inline ulong pow2_roundup(ulong val)
+{
+	val--;
+	val |= val >> 1;
+	val |= val >> 2;
+	val |= val >> 4;
+	val |= val >> 8;
+	val |= val >> 16;
+#if CONFIG_BITS == 64
+	val |= val >> 32;
+#endif
+
+	return val + 1;;
+}
+
 #endif
