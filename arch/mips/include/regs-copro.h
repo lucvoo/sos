@@ -61,6 +61,8 @@
 #define	c0_intctl	__COPRO_REG($12, 1)
 #define		INTCTL_VS_OFF	5
 #define		INTCTL_VS_MSK	((1 <<5) - 1)
+#define		INTCTL_IPTI_OFF	29
+#define		INTCTL_IPTI(X)	((X) >> INTCTL_IPTI_OFF)
 
 #define	c0_srsctl	__COPRO_REG($12, 2)
 
