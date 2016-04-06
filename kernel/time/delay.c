@@ -1,5 +1,6 @@
 #include <delay.h>
 #include <barrier.h>
+#include <limits.h>
 #include <hz.h>
 
 
@@ -57,9 +58,17 @@ static void __udelay(uint usecs)
 
 void udelay(unsigned int usec)
 {
-	while (usec > 1024) {
-		__udelay(1024);
-		usec -= 1024;
+	uint div = 1000000;
+	uint mul = HZ;
+	uint max;
+
+	reduce_by_1000(mul, div);
+	reduce_by_1000(mul, div);
+	max = UINT_MAX / mul;
+
+	while (usec >= max) {
+		__udelay(max);
+		usec -= max;
 	}
 
 	__udelay(usec);
