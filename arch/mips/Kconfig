@@ -29,6 +29,10 @@ config	BITS
 	int
 	default 32 if MIPS32
 
+config	C0_COUNTER_DISABLED
+	bool
+	default n
+
 source arch/mips/Kconfig.mach
 source arch/mips/Kconfig.socs
 

@@ -9,6 +9,7 @@ config	SOC_PARAMS
 	default y
 	select HAS_SMP
 	select WAIT_BROKEN
+	select C0_COUNTER_DISABLED
 
 config	JTAG_ENABLE
 	bool "Enable JTAG"
