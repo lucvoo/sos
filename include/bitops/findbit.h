@@ -49,4 +49,24 @@ static inline unsigned long bitop_fmsb(unsigned long val)
 	return sizeof(val)*8 - 1 - __builtin_clzl(val);
 }
 
+/**
+ * Find (upper) binary logarithm
+ *
+ * 00000000	-> undef
+ * 00000001	-> 0 (if clz(0) is well bahaved)
+ * 00000010	-> 1
+ * 00000011	-> 2
+ * 00000100	-> 2
+ * 00000101	-> 3
+ * ...
+ * 00000111	-> 3
+ * 00001000	-> 3
+ * 00001XXX	-> 4
+ * ...
+ */
+static inline unsigned long bitop_log2(unsigned long val)
+{
+	return sizeof(val)*8 - __builtin_clzl(val - 1);
+}
+
 #endif
