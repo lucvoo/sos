@@ -29,7 +29,7 @@
  * FIXME: take the gfp flags in account (need 1 current page per kind)
  */
 
-#define	KMALLOC_PAGE_ORDER	0
+#define	KMALLOC_PAGE_ORDER	1
 #define	KMALLOC_PAGE_SIZE	(PAGE_SIZE << KMALLOC_PAGE_ORDER)
 
 struct kmalloc_ent {
@@ -65,7 +65,7 @@ void *__kmalloc(uint size, uint aflags)
 	void *ptr = NULL;
 	ulong flags;
 
-	if (size > KMALLOC_PAGE_SIZE/2)
+	if (size >= KMALLOC_PAGE_SIZE/2)
 		return NULL;
 
 	size += sizeof(ent->size);
