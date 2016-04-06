@@ -1,4 +1,9 @@
 menu "Timers"
 
+config	MIPS_ARCH_TIMER
+	bool "MIPS architectural timer"
+	depends on ARCH_MIPS
+	depends on !C0_COUNTER_DISABLED
+	default y
 
 endmenu
