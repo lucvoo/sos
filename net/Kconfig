@@ -4,7 +4,7 @@ menuconfig NET
 config	NET_STATS
 	bool "network statistics"
 	depends on NET
-	default y
+	default n
 
 config	ETHERNET
 	bool "Ethernet support"
