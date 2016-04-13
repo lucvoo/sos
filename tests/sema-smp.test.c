@@ -5,6 +5,7 @@
 #include <smp/init.h>
 #include <smp.h>
 #include <semaphore.h>
+#include <hz.h>
 
 
 #define	started(name)	printf("%d: thr0 (%p) started\n", __coreid(), get_current_thread())
@@ -60,7 +61,7 @@ static void fun1(void *data)
 
 	while (1) {
 		printf("%d: thr1 sleep ...\n", __coreid());
-		thread_schedule_timeout(1 << 13);
+		thread_schedule_timeout(HZ/4);
 		printf("%d: thr1 awake!\n", __coreid());
 		printf("%d: thr1 try ...\n", __coreid());
 		semaphore_wait(sem);
@@ -81,7 +82,7 @@ static void fun2(void *data)
 		semaphore_wait(sem);
 		printf("%d: thr2 got!\n", __coreid());
 		printf("%d: thr2 sleep ...\n", __coreid());
-		thread_schedule_timeout(3 << 11);
+		thread_schedule_timeout(3*HZ/16);
 		printf("%d: thr2 awake!\n", __coreid());
 		printf("%d: thr2 rel\n", __coreid());
 		semaphore_post(sem);

@@ -3,6 +3,7 @@
 #include <uartdev.h>
 #include <uart.h>
 #include <sched.h>
+#include <hz.h>
 
 
 static struct thread a __uninit;
@@ -58,7 +59,7 @@ static void fun(void* data)
 	uart_start(up);
 
 	while (1) {
-		thread_schedule_timeout(4096);
+		thread_schedule_timeout(HZ/8);
 		printf("... (%d)\n", n++);
 	}
 }

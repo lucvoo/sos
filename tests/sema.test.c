@@ -5,6 +5,7 @@
 #include <semaphore.h>
 #include <timer.h>
 #include "tests-utils.h"
+#include <hz.h>
 
 
 static struct semaphore sema;
@@ -18,7 +19,7 @@ static void random_delay(void)
 {
 	unsigned long delta;
 
-	delta = ((sprng() | 1) & 0x7)  << 5;
+	delta = ((sprng() | 1) & 0x7) * HZ / 1024;
 	thread_schedule_timeout(delta);
 }
 

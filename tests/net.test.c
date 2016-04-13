@@ -1,11 +1,7 @@
 #include <kapi/kapi.h>
 #include <net/dev.h>
 #include <sched.h>
-
-
-#ifndef	HZ
-#define	HZ		(32*1024)
-#endif
+#include <hz.h>
 
 
 static void netloop(void* data)
