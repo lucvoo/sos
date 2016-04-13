@@ -50,7 +50,6 @@ void __handle_exceptions(struct eframe *regs, unsigned long cause, unsigned long
 	const char *name = exception_names[code];
 
 	printf("EXC: cause = %08X (% 5s), status = %08X, regs @ %p\n", cause, name, status, regs);
-
 	dump_stack(regs, 0);
 }
 
@@ -99,7 +98,7 @@ void __handle_trap(struct eframe *regs)
 		__halt(NULL);
 		break;
 	default:
-		dump_stack(regs, 0);
 		printf("\nUNHANDLED TRAP: %04x\n", code);
+		dump_stack(regs, 0);
 	}
 }
