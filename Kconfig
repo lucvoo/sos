@@ -166,7 +166,7 @@ config	HZ
 
 config	BOOT
 	bool "Direct boot, without a bootloader"
-	default y
+	default n
 config	BOOTER
 	bool "Small bootloader"
 	depends on BOOT
