@@ -3,6 +3,7 @@
 #include <arch/regs-copro.h>
 #include <kernel/bug.h>
 #include <trap.h>
+#include <halt.h>
 
 
 static const char *exception_names[] = {
@@ -92,6 +93,10 @@ void __handle_trap(struct eframe *regs)
 	switch (code) {
 	case TRAP_BUG:
 		__bug(regs, NULL, NULL, 0);
+		break;
+	case TRAP_DIV0_MIPS:
+		printf("\nDIV0 @ PC %08x\n", regs->epc);
+		__halt(NULL);
 		break;
 	default:
 		dump_stack(regs, 0);
