@@ -44,6 +44,8 @@ static inline void set_current_thread(struct thread *curr)
         asm volatile("mcr " STRINGIFY(TPIDRPRW(%0)) :: "r" (curr));
 }
 
+#elif	defined(CONFIG_SMP)
+#error "SMP need per-CPU storage for the current thread"
 #else
 
 #define	NEED___CURRENT_THREAD
