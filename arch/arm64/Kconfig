@@ -1,0 +1,46 @@
+config ARCH
+	symbol
+	default arm64
+
+config	ARMV8
+	bool
+
+config	ARM_ARCH
+	int
+	default 8 if ARMV8
+
+config	BITS
+	int
+	default 64
+
+
+config	CPU_A53
+	bool
+	select ARMV8
+
+config	CPU_A57
+	bool
+	select ARMV8
+
+
+menu "ARM64 options"
+
+comment "Memory"
+
+config	PHYS_ADDR
+	hex "Main RAM physical address"
+
+config	PHYS_SIZE
+	hex "Main RAM size"
+
+config	TEXT_OFFSET
+	hex "Start of kernel image relatively to the start of the RAM"
+	default 0x200000
+	help
+	  See Linux's arm64 booting requirements
+	  (Documentation/arm64/booting.txt).
+
+endmenu
+
+source arch/arm64/Kconfig.mach
+source arch/arm64/Kconfig.socs

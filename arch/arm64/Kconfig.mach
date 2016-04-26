@@ -1,0 +1,9 @@
+comment "Platform/board"
+
+choice
+	prompt "Platform"
+
+config MACH_ARM64_GENERIC
+	bool "generic"
+
+endchoice
