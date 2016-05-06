@@ -120,6 +120,7 @@ config	THUMB2
 config	HAS_VBAR
 	bool "Has VBAR"
 	depends on ARMV6K || ARMV7
+	default ARM_TZ
 config	HIGH_VECTORS
 	bool "Use high vectors"
 	depends on !HAS_VBAR && !ARMV7M
