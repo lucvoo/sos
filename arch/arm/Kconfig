@@ -37,6 +37,8 @@ config	CORTEX_M4
 	bool
 	select ARMV7M
 
+config	ARM_TZ
+	bool
 config	ARMV4T
 	bool
 config	ARMV5
@@ -54,6 +56,7 @@ config	ARMV6K
 	select ARMV6
 config	ARMV7A
 	bool
+	select ARM_TZ
 config	ARMV7M
 	select NOMMU
 	select HAS_DIV32
