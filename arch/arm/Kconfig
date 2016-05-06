@@ -20,10 +20,16 @@ config	ARM926EJS
 	select ARMV5
 	select ARMV5TE
 
+config	CORTEX_A7
+	bool
+	select ARMV7A
 config	CORTEX_A8
 	bool
 	select ARMV7A
 config	CORTEX_A9
+	bool
+	select ARMV7A
+config	CORTEX_A15
 	bool
 	select ARMV7A
 
