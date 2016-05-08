@@ -14,6 +14,11 @@
 #define	REVIDR(R)	p15, 0, R,  c0,  c0, 6	// Revision ID Register a
 #define	ID_PFR0(R)	p15, 0, R,  c0,  c1, 0	// Processor Feature Register 0
 #define	ID_PFR1(R)	p15, 0, R,  c0,  c1, 1	// Processor Feature Register 1
+#define	ID_PFR1_GENERIC_TIMER	(1 << 16)
+#define	ID_PFR1_VITUALIZATION	(1 << 12)
+#define	ID_PFR1_TRUSTZONE	(1 <<  4)
+#define	ID_PFR1_NSACR_RFR	(2 <<  4)
+
 #define	ID_DFR0(R)	p15, 0, R,  c0,  c1, 2	// Debug Feature Register 0
 #define	ID_AFR0(R)	p15, 0, R,  c0,  c1, 3	// Auxiliary Feature Register 0
 #define	ID_MMFR0(R)	p15, 0, R,  c0,  c1, 4	// Memory Model Feature Register 0
