@@ -19,6 +19,7 @@
 #define PSR_F			0x40	// FIQ disabled when =1
 #define PSR_I			0x80	// IRQ disabled when =1
 #define PSR_A			0x0100	// Async abort disabled when =1
+#define PSR_E			0x0200	// big endian when =1
 
 #define PSR_J			0x01000000
 #define PSR_Q			0x08000000
