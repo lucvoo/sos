@@ -4,9 +4,7 @@
 #include <soc/baseaddr.h>
 
 #define	UART_16550_NBR_PORTS	5
-#define	UART_IOSIZE		0x1000
 #define	UART_IRQ_CTRL		"intc"
-#define	UART_REG(N)		(N*4)
 
 #endif
 

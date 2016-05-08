@@ -4,7 +4,7 @@
 #include <io.h>
 #include <interrupt.h>
 #include <irq.h>
-#include <hw/16550.h>
+#include <soc/16550.h>
 #include <init.h>
 
 
@@ -19,8 +19,8 @@ struct uart_16550 {
 #define	to_uart_16550(up)	container_of(up, struct uart_16550, uart)
 
 #include <mach/config-uart-16550.h>
-#define	reg_r(p, R)	ioread8(p->iobase + UART_REG(R))
-#define	reg_w(p, R, V)	iowrite8(p->iobase + UART_REG(R), V)
+#define	reg_r(p, R)	rd_16550(p->iobase, R)
+#define	reg_w(p, R, V)	wr_16550(p->iobase, R, V)
 
 
 static unsigned int uart_16550_rx_chars(struct uart *up, unsigned int lsr)

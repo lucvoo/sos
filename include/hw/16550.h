@@ -1,6 +1,12 @@
 #ifndef	_HW_16550_H_
 #define	_HW_16550_H_
 
+// Access to the register can be by 8, 16 or 32 bits
+#include <utils/concat.h>
+#define	rd_16550(B,R)	CONCAT(ioread,UART_BITS)((B) + (R) * UART_STEP)
+#define	wr_16550(B,R,V)	CONCAT(iowrite,UART_BITS)((B) + (R) * UART_STEP, (V))
+
+
 #define	UART_RBR	0	// Receive Buffer (RO, DLAB=0)
 
 #define	UART_THR	0	// Transmit Holding (WO, DLAB=0)

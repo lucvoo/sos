@@ -4,7 +4,6 @@
 
 
 #define	UART_BASE	(0xa0000000 + (UART4_BASE))
-#define	UART_OFF(X)	((X) * 4)
 #include <hw/16550-diag-putc.h>
 
 
