@@ -2,6 +2,9 @@
 #include <stringify.h>
 #endif
 
+#define	cp_read(R)	({ ulong r; asm("mrc " STRINGIFY(R(%0)) : "=r" (r)); r; })
+#define	cp_write(R,V)	({ asm("mcr " STRINGIFY(R(%0)) :: "r" (V)); })
+
 
 #define	MIDR(R)		p15, 0, R,  c0,  c0, 0	// Main ID Register
 #define	CTR(R)		p15, 0, R,  c0,  c0, 1	// Cache Type Register
