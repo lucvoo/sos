@@ -29,5 +29,6 @@ subdirs-$(CONFIG_SOC_STM32)	+= soc-stm32/
 subdirs-$(CONFIG_SOC_SUNXI_A80)	+= soc-sunxi-a80/
 
 subdirs-$(CONFIG_MACH_BEAGLEBONE)	+= mach-beaglebone/
+subdirs-$(CONFIG_MACH_CUBIEBOARD4)	+= mach-cubieboard4/
 subdirs-$(CONFIG_MACH_STM32)	+= mach-stm32/
 subdirs-$(CONFIG_MACH_UDOO_NEO)	+= mach-udoo-neo/

@@ -7,6 +7,9 @@ config MACH_GENERIC
 config MACH_BEAGLEBONE
 	bool "BeagleBone"
 
+config MACH_CUBIEBOARD4
+	bool "Cubieboard"
+
 config MACH_STM32
 	bool "STM32 family"
 
@@ -17,6 +20,9 @@ endchoice
 
 if MACH_BEAGLEBONE
 source arch/arm/mach-beaglebone/Kconfig
+endif
+if MACH_CUBIEBOARD4
+source arch/arm/mach-cubieboard4/Kconfig
 endif
 if MACH_STM32
 source arch/arm/mach-stm32/Kconfig

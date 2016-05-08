@@ -1,0 +1,20 @@
+config MACH
+	symbol
+	default cubieboard4
+
+config	MACH_PARAMS
+	bool
+	default y
+	select SOC_SUNXI_A80
+
+config PHYS_ADDR
+	hex
+	default 0x20000000
+
+config PHYS_SIZE
+	hex
+	default 0x80000000
+
+config	EARLY_DEBUG_ADDR
+	hex
+	default 0x07000000
