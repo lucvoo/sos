@@ -1,6 +1,6 @@
 #
 # Automatically generated make config: don't edit
-# Sun May  8 11:19:15 2016
+# Sun May  8 16:10:32 2016
 #
 CONFIG_ARCH_ARM=y
 # CONFIG_ARCH_MIPS is not set
@@ -94,7 +94,8 @@ CONFIG_SLAB=y
 #
 # CONFIG_GPIO is not set
 CONFIG_ARM_GIC=y
-# CONFIG_UART is not set
+CONFIG_UART=y
+CONFIG_UART_16550=y
 # CONFIG_MMC is not set
 
 #
