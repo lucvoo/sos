@@ -7,10 +7,18 @@ config SOC_STM32
 config SOC_STM32F4
 	bool
 	select SOC_STM32
+config SOC_SUNXI
+	bool
+config SOC_SUNXI_A80
+	bool
+	select SOC_SUNXI
 
 if SOC_IMX6
 source arch/arm/soc-imx6/Kconfig
 endif
 if SOC_STM32
 source arch/arm/soc-stm32/Kconfig
+endif
+if SOC_SUNXI_A80
+source arch/arm/soc-sunxi-a80/Kconfig
 endif
