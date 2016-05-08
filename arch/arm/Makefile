@@ -3,6 +3,8 @@ objs-y	+= 	dump-stack.o
 objs-y	+= 	init.o
 objs-y	+= 	traps.o
 
+objs-$(CONFIG_GENERIC_TIMER)	+= generic_timer.o
+
 
 objs-$(CONFIG_ARMVA)	+= startup.o
 objs-$(CONFIG_ARMVA)	+= switch_to.o
