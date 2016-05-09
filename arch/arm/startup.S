@@ -56,14 +56,19 @@ GLOBAL(_os_startup):
 	ldr	r6, =SCTLR_SET
 	PLATFORM_SETUP
 
+	ldr	lr, =post_mmu		@ load address to jump when MMU is set
+
+	// at this point we must have:
+	// * exceptions stack initialized (FIXME: can be done later)
+	// * r5/r6:	clr/set mask for SCTLR
+	// * fp:	TTB/pgd (physical address)
+	// * lr:	address to jump to after the MMU is enabled
 mmu_enable:
 	// Prepare SCTLR's value
 	mrc	SCTLR(r4)       	@ get control register
 	bic	r4, r4, r5
 	orr	r4, r4, r6
 	// r4 = value to load into SCTLR
-
-	ldr	lr, =post_mmu		@ load address to jump when MMU is set
 
 	mov	r0, #0			// often need a register with 0x00000000
 
