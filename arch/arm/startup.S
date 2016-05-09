@@ -7,9 +7,8 @@
 
 
 	.section	".startup.text","ax"
-	.global _os_startup
 
-_os_startup:
+GLOBAL(_os_startup):
 	// * We should be loaded at some multiple of 0x8000 (of a 1MB boundary)
 	// * We're in supervisor mode
 	// * MMU should be disabled
@@ -135,9 +134,11 @@ post_mmu:
 #endif
 
 	b	_os_start
+ENDFUN(_os_startup)
 
 ////////////////////////////////////////////////////////////////////////////////
-create_early_pagetable:
+
+LOCAL(create_early_pagetable):
 	@ r1: must be preserved
 	@ r2: must be preserved
 	@ r3: physical start of RAM
