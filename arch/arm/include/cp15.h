@@ -107,6 +107,10 @@
 #define	TLBIMVAA(R)	p15, 0, R,  c8,  c7, 3	// invalidate unified TLB entries by MVA all ASID ø
 						// ø: introduced as part of multiprocessor extension
 
+// Multi-processor & L2 memory system (only Cortex A7, A15 & A17)
+#define	L2CTLR(R)	p15, 1, R,  c9,	c0, 2	// L2 control (MP info)
+#define	L2ECTLR(R)	p15, 1, R,  c9,	c0, 3	// L2 extended control
+
 // performance monitors
 #define	PMCR(R)		p15, 0, R,  c9,	c12, 0
 #define	PMCNTENSET(R)	p15, 0, R,  c9,	c12, 1
