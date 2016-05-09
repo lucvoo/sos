@@ -14,3 +14,4 @@ objs-$(CONFIG_SOC_IMX6)		+= imx6-pll.o
 objs-$(CONFIG_SOC_IMX6SX)	+= imx6sx.o
 objs-$(CONFIG_SOC_JZ4780)	+= jz4780.o
 objs-$(CONFIG_SOC_STM32)	+= stm32.o
+objs-$(CONFIG_SOC_SUNXI_A80)	+= sunxi-a80.o
