@@ -21,6 +21,13 @@
 #endif
 .endm
 
+.macro	early_pgd rd, rs
+	@ rs: phys addr of start of RAM
+
+	// put the pgd just under TEXT_OFFSET
+	add	\rd, \rs, #(TEXT_OFFSET - PGD_NBR_ENT*4)
+.endm
+
 	.section	".startup.text","ax"
 
 GLOBAL(_os_startup):
@@ -44,7 +51,9 @@ GLOBAL(_os_startup):
 	@ r2: ATAGs/DT, 
 
 	phys_ram r3, ip
+	early_pgd r0, r3
 
+	@ r0: phys addr of the early pagetable
 	@ r3: phys addr of start of RAM
 
 	bl	create_early_pagetable
@@ -150,12 +159,10 @@ ENDFUN(_os_startup)
 ////////////////////////////////////////////////////////////////////////////////
 
 LOCAL(create_early_pagetable):
+	@ r0: phys addr of the early pagetable
 	@ r1: must be preserved
 	@ r2: must be preserved
 	@ r3: phys addr of start of RAM
-
-	@ r0: start of page table
-	add	r0, r3, #(TEXT_OFFSET - PGD_NBR_ENT*4)
 
 	@ 1) fill all the entries with fault
 	@ rem: do this in reverse order to spare a register
