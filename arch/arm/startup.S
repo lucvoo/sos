@@ -29,8 +29,9 @@ GLOBAL(_os_startup):
 	ldr	r3, =LOAD_ADDR
 #else
 	// Calculate the physical (load) address
-	adr	ip, _os_startup		@ load/phys address of X
-	ldr	r3, =_os_startup	@ corresponding virtual address
+1:
+	adr	ip, 1b			@ load/phys address of X
+	ldr	r3, =1b			@ corresponding virtual address
 	sub	r3, r3, ip		@ virt(x) - phys(x)
 	rsb	r3, r3, #VIRT_ADDR	@ virt(0) - (virt(x) - phys(x)) = phys(0)
 #endif
