@@ -6,6 +6,21 @@
 #include "arch/cp15.h"
 
 
+.macro	phys_ram rd, tmp
+	// Calculate the physical (load) address
+
+#ifdef	CONFIG_XIP
+	// FIXME
+	ldr	\rd, =LOAD_ADDR
+#else
+1:
+	adr	\tmp, 1b		@ load/phys address of X
+	ldr	\rd, =1b		@ corresponding virtual address
+	sub	\rd, \rd, \tmp		@ virt(x) - phys(x)
+	rsb	\rd, \rd, #VIRT_ADDR	@ virt(0) - (virt(x) - phys(x)) = phys(0)
+#endif
+.endm
+
 	.section	".startup.text","ax"
 
 GLOBAL(_os_startup):
@@ -25,20 +40,12 @@ GLOBAL(_os_startup):
 	// mrc	MIDR(r3)
 	// ...
 
-#ifdef	CONFIG_XIP
-	ldr	r3, =LOAD_ADDR
-#else
-	// Calculate the physical (load) address
-1:
-	adr	ip, 1b			@ load/phys address of X
-	ldr	r3, =1b			@ corresponding virtual address
-	sub	r3, r3, ip		@ virt(x) - phys(x)
-	rsb	r3, r3, #VIRT_ADDR	@ virt(0) - (virt(x) - phys(x)) = phys(0)
-#endif
-
 	@ r1: mach ID,
 	@ r2: ATAGs/DT, 
-	@ r3: PHYS_ADDR
+
+	phys_ram r3, ip
+
+	@ r3: phys addr of start of RAM
 
 	bl	create_early_pagetable
 	mov	fp, r0
@@ -145,7 +152,7 @@ ENDFUN(_os_startup)
 LOCAL(create_early_pagetable):
 	@ r1: must be preserved
 	@ r2: must be preserved
-	@ r3: physical start of RAM
+	@ r3: phys addr of start of RAM
 
 	@ r0: start of page table
 	add	r0, r3, #(TEXT_OFFSET - PGD_NBR_ENT*4)
