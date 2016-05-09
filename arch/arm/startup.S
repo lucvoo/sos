@@ -56,6 +56,7 @@ GLOBAL(_os_startup):
 	ldr	r6, =SCTLR_SET
 	PLATFORM_SETUP
 
+mmu_enable:
 	// Prepare SCTLR's value
 	mrc	SCTLR(r4)       	@ get control register
 	bic	r4, r4, r5
@@ -82,7 +83,6 @@ GLOBAL(_os_startup):
 	mcr	TTBR0(r5)
 	mcr	TTBR1(r5)
 
-mmu_enable:
 	isb
 	mcr	SCTLR(r4)       	@ write control reg
 	isb
