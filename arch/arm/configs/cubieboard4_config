@@ -1,6 +1,6 @@
 #
 # Automatically generated make config: don't edit
-# Sun May  8 16:10:32 2016
+# Wed May 11 10:23:55 2016
 #
 CONFIG_ARCH_ARM=y
 # CONFIG_ARCH_MIPS is not set
@@ -87,7 +87,9 @@ CONFIG_SLAB=y
 # CONFIG_FS is not set
 # CONFIG_FATFS is not set
 # CONFIG_NET is not set
-# CONFIG_LPUSEC_FIXED is not set
+CONFIG_LPUSEC_FIXED=y
+CONFIG_LPUSEC_MULT=5
+CONFIG_LPUSEC_SHIFT=3
 
 #
 # Drivers
