@@ -91,8 +91,6 @@ mmu_enable:
 
 	mov pc, lr
 
-2:	.long	.			@ let store our own (virtual) address
-
 	.ltorg
 
 post_mmu:
