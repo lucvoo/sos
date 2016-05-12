@@ -1,6 +1,6 @@
 #
 # Automatically generated make config: don't edit
-# Wed May 11 10:23:55 2016
+# Thu May 12 10:52:31 2016
 #
 CONFIG_ARCH_ARM=y
 # CONFIG_ARCH_MIPS is not set
@@ -45,6 +45,12 @@ CONFIG_TEXT_OFFSET=0x00008000
 CONFIG_HAS_VBAR=y
 
 #
+# Generic Timer
+#
+CONFIG_GENERIC_TIMER=y
+CONFIG_CNTFRQ=24000000
+
+#
 # Build options
 #
 CONFIG_BUG=y
@@ -67,7 +73,9 @@ CONFIG_INITCALL=y
 CONFIG_NR_THREAD_PRIORITY=32
 CONFIG_FIXED_STACKS=y
 CONFIG_FIXED_STACKS_SHIFT=12
-# CONFIG_SOFTIRQ is not set
+CONFIG_SOFTIRQ=y
+# CONFIG_KSOFTIRQ is not set
+CONFIG_DSR=y
 CONFIG_HAS_SMP=y
 # CONFIG_SMP is not set
 CONFIG_HZ=32768
@@ -87,9 +95,7 @@ CONFIG_SLAB=y
 # CONFIG_FS is not set
 # CONFIG_FATFS is not set
 # CONFIG_NET is not set
-CONFIG_LPUSEC_FIXED=y
-CONFIG_LPUSEC_MULT=5
-CONFIG_LPUSEC_SHIFT=3
+# CONFIG_LPUSEC_FIXED is not set
 
 #
 # Drivers
@@ -99,6 +105,10 @@ CONFIG_ARM_GIC=y
 CONFIG_UART=y
 CONFIG_UART_16550=y
 # CONFIG_MMC is not set
+
+#
+# Timers
+#
 
 #
 # Kernel debugging
