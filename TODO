@@ -67,6 +67,9 @@
 * ARM:
   * add support for ARMv4/ARMv5 ?
   * add support for LPAE ?
+  * SMP:
+    * add support for IPIs
+    * really need per-cpu infrastructure
 
 * ARM-v7M:
   ~ add basic supoort for interrupts & exceptions
