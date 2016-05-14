@@ -112,7 +112,7 @@ static void __init gic_init(void)
 	chip->default_handler = irq_handle_eoi;
 	chip->mask	= gic_irq_mask;
 	chip->unmask	= gic_irq_unmask;
-	chip->ack	= gic_irq_eoi;
+	chip->eoi	= gic_irq_eoi;
 
 	lines = ioread32(chip->iobase + GICD_TYPER);
 	lines = GICD_TYPER_LINES(lines);

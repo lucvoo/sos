@@ -65,7 +65,7 @@ out_unlock:
 /*
  * IRQ flow handler for smart controller
  *	handle_IRQ_event()
- *	->eoi() (reuse slot for ->ack())
+ *	->eoi()
  */
 void irq_handle_eoi(struct irqdesc *desc)
 {
@@ -81,7 +81,7 @@ void irq_handle_eoi(struct irqdesc *desc)
 	}
 
 	ret = handle_irq_locked(desc, action);
-	desc->chip->ack(desc);
+	desc->chip->eoi(desc);
 
 out_unlock:
 	lock_rel(&desc->lock);

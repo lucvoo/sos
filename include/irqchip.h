@@ -12,6 +12,7 @@ struct irqchip {
 	void			(*mask)(struct irqdesc *desc);
 	void			(*mask_ack)(struct irqdesc *desc);
 	void			(*unmask)(struct irqdesc *desc);
+	void			(*eoi)(struct irqdesc *desc);
 
 	void			(*default_handler)(struct irqdesc *desc);
 
