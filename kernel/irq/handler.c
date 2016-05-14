@@ -25,6 +25,17 @@ static int handle_IRQ_event(struct irqdesc *desc, struct irqaction *action)
 	return ret;
 }
 
+static int handle_irq_locked(struct irqdesc *desc, struct irqaction *action)
+{
+	int ret;
+
+	lock_rel(&desc->lock);
+	ret = handle_IRQ_event(desc, action);
+	lock_acq(&desc->lock);
+
+	return ret;
+}
+
 /*
  * IRQ flow handler for 'level' IRQ
  *	->mask_ack()
@@ -43,11 +54,7 @@ void irq_handle_level(struct irqdesc *desc)
 	if (unlikely(!action))		// leave it unmasked!
 		goto out_unlock;
 
-	lock_rel(&desc->lock);
-
-	ret = handle_IRQ_event(desc, action);
-
-	lock_acq(&desc->lock);
+	ret = handle_irq_locked(desc, action);
 
 	irq_unmask(desc);
 
@@ -73,7 +80,7 @@ void irq_handle_eoi(struct irqdesc *desc)
 		goto out_unlock;
 	}
 
-	ret = handle_IRQ_event(desc, action);
+	ret = handle_irq_locked(desc, action);
 	desc->chip->ack(desc);
 
 out_unlock:
@@ -99,7 +106,7 @@ void irq_handle_simple(struct irqdesc *desc)
 		goto out_unlock;
 	}
 
-	ret = handle_IRQ_event(desc, action);
+	ret = handle_irq_locked(desc, action);
 
 out_unlock:
 	lock_rel(&desc->lock);
