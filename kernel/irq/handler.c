@@ -115,12 +115,7 @@ out_unlock:
 
 void irq_handle_desc(struct irqdesc *desc)
 {
-	void (*handler)(struct irqdesc *) = desc->handler;
-
-	if (!handler)
-		handler = irq_handle_level;
-
-	handler(desc);
+	desc->handler(desc);
 }
 
 /**
@@ -134,7 +129,7 @@ void __irq_handler(struct irqdesc *desc, struct eframe *regs)
 	if (!desc)
 		desc = &bad_irqdesc;
 
-	irq_handle_desc(desc);
+	desc->handler(desc);
 
 	if (softirq_pending())
 		__do_softirq();
