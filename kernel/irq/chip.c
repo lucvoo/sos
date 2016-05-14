@@ -67,6 +67,9 @@ void irqchip_init(struct irqdesc *parent, struct irqchip *chip)
 	insert_chip(chip);
 	chip->parent = parent;
 
+	if (!chip->default_handler)
+		chip->default_handler = irq_handle_level;
+
 	for (i = 0; i < chip->irq_nbr; i++) {
 		struct irqdesc *desc = &chip->descs[i];
 
