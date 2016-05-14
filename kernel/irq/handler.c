@@ -39,8 +39,8 @@ static int handle_irq_locked(struct irqdesc *desc, struct irqaction *action)
 /*
  * IRQ flow handler for 'level' IRQ
  *	->mask_ack()
- *	handle_IRQ_event()
- *	->eoi()
+ *	handle IRQ
+ *	->unmask()
  */
 void irq_handle_level(struct irqdesc *desc)
 {
@@ -64,7 +64,7 @@ out_unlock:
 
 /*
  * IRQ flow handler for smart controller
- *	handle_IRQ_event()
+ *	handle IRQ
  *	->eoi()
  */
 void irq_handle_eoi(struct irqdesc *desc)
@@ -89,10 +89,10 @@ out_unlock:
 
 /*
  * IRQ flow handler for simple & SW decoded IRQ:
- *	handle_IRQ_event()
+ *	handle IRQ
  *
- * Used when everything is handled in HW.
- * FIXME: also for nested controller?
+ * Used when everything is handled in HW
+ * or by the parent of nested controllers.
  */
 void irq_handle_simple(struct irqdesc *desc)
 {
@@ -118,9 +118,7 @@ void irq_handle_desc(struct irqdesc *desc)
 	desc->handler(desc);
 }
 
-/**
-* Normal entry for the main irqchip
-*/
+// Normal entry for the main irqchip
 void __irq_handler(struct irqdesc *desc, struct eframe *regs)
 {
 
@@ -135,9 +133,7 @@ void __irq_handler(struct irqdesc *desc, struct eframe *regs)
 		__do_softirq();
 }
 
-/**
-* Entry point for main irqchip written in asm.
-*/
+// Entry point for the main irqchip when written in asm (like ARMv4)
 void __do_IRQ(unsigned int irq, struct eframe *regs)
 {
 	struct irqdesc *desc = irq_get_desc(NULL, irq);
