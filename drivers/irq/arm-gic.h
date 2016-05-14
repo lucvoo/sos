@@ -24,6 +24,12 @@
 #define GICD_ICFGR_MASK			0b11
 #define GICD_NSACR(N)		(0x0e00 + (N) * 4)
 #define GICD_SGIR		 0x0f00
+#define	GICD_SGIR_DEST_LIST		(0 << 24)
+#define	GICD_SGIR_DEST_OTHER		(1 << 24)
+#define	GICD_SGIR_DEST_SELF		(2 << 24)
+#define	GICD_SGIR_LIST(CPU)		((1 << (CPU)) << 16)
+#define	GICD_SGIR_LIST_ALL		(0xff << 16)
+#define	GICD_SGIR_IPI(IPI)		(IPI)
 #define GICD_CPENDSGIR(N)	(0x0f10 + (N) * 4)
 #define GICD_SPENDSGIR(N)	(0x0f20 + (N) * 4)
 

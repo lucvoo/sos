@@ -5,6 +5,7 @@
 #include <init.h>
 #include <soc/irq.h>
 #include <smp/ipi.h>
+#include <errno.h>
 #include "arm-gic.h"
 
 
@@ -162,3 +163,53 @@ static void gic_handle_irq(struct eframe *regs)
 	}
 }
 strong_alias(gic_handle_irq, mach_irq_handler);
+
+/******************************************************************************/
+#ifdef	CONFIG_SMP
+
+// FIXME: msg is a bitmap of ipi numbers ...
+//	  API to be changed because not generic enough
+#define	foreach_ipi(ipi, msg)			\
+	for (ipi = 0; msg; ipi++)		\
+		if ((msg & (1 << ipi)) == 0)	\
+			continue;		\
+		else
+
+static int gic_ipi_send(uint cpu, uint msg)
+{
+	struct gic_intctrl *gic = &gic_intctrl;
+	void __iomem *dist_base = gic->chip.iobase;
+	u32 val;
+	uint ipi;
+
+	if (msg & ~0xffff)
+		return -EINVAL;	// support only IPI 0-15
+
+	switch (cpu) {
+	case SMP_IPI_SELF:
+		val = GICD_SGIR_DEST_SELF;
+		break;
+	case SMP_IPI_OTHER:
+		val = GICD_SGIR_DEST_OTHER;
+		break;
+	case SMP_IPI_ALL:
+		val = GICD_SGIR_DEST_LIST | GICD_SGIR_LIST_ALL;
+		break;
+	case 0 ... 7:
+		val = GICD_SGIR_DEST_LIST | GICD_SGIR_LIST(cpu);
+		break;
+	default:
+		return -EINVAL;
+	}
+
+	foreach_ipi(ipi, msg)
+		iowrite32(dist_base + GICD_SGIR, val | GICD_SGIR_IPI(ipi));
+
+	return 0;
+}
+
+void __smp_ipi_send(uint cpu, uint msg)
+{
+	gic_ipi_send(cpu, msg);
+}
+#endif
