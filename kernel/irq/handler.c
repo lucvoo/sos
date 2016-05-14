@@ -112,6 +112,28 @@ out_unlock:
 	lock_rel(&desc->lock);
 }
 
+/*
+ * IRQ flow handler for local IRQ handling
+ *	handle IRQ
+ *
+ * Used for percpu IRQs
+ */
+void irq_handle_percpu(struct irqdesc *desc)
+{
+	struct irqchip *chip = desc->chip;
+	struct irqaction *action;
+	int ret __unused;
+
+	if (chip->ack)
+		chip->ack(desc);
+
+	action = desc->action;		// assume action is never NULL
+	ret = handle_irq_locked(desc, action);
+
+	if (chip->eoi)
+		chip->eoi(desc);
+}
+
 
 void irq_handle_desc(struct irqdesc *desc)
 {
