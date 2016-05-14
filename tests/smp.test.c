@@ -3,16 +3,9 @@
 #include <sched.h>
 #include <smp/init.h>
 #include <arch/test/fault.h>
-#include <soc/delay.h>
+#include <sleep.h>
 #include <debug.h>
 #include <lock.h>
-
-
-static inline void delay(unsigned long n)
-{
-	while (n--)
-		asm volatile("nop");
-}
 
 
 void kapi_start(void)
@@ -23,7 +16,7 @@ void kapi_start(void)
 
 	__smp_init();
 
-	delay(__ROUGH_LOOPS_PER_SEC);
+	sleep(1);		// FIXME
 
 	dump_system_regs();
 }
