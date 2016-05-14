@@ -4,6 +4,7 @@
 #include <io.h>
 #include <init.h>
 #include <soc/irq.h>
+#include <smp/ipi.h>
 #include "arm-gic.h"
 
 
@@ -153,6 +154,9 @@ static void gic_handle_irq(struct eframe *regs)
 			__irq_handler(desc, regs);
 		} else if (irq < 16) {
 			iowrite32(cpu_base + GICC_EOIR, iar);
+#ifdef	CONFIG_SMP
+			__smp_ipi_process(irq);
+#endif
 		} else
 			return;
 	}
