@@ -11,6 +11,8 @@
 #define	TCMTR(R)	p15, 0, R,  c0,  c0, 2	// TCM Type Register IMPLEMENTATION DEFINED
 #define	TLBTR(R)	p15, 0, R,  c0,  c0, 3	// TLB Type Register IMPLEMENTATION DEFINED
 #define	MPIDR(R)	p15, 0, R,  c0,  c0, 5	// Multiprocessor Affinity Register
+#define	MPIDR_CORE(R)		(((R) >> 0) & 0xff)
+#define	MPIDR_CLUSTER(R)	(((R) >> 8) & 0xff)
 #define	REVIDR(R)	p15, 0, R,  c0,  c0, 6	// Revision ID Register a
 #define	ID_PFR0(R)	p15, 0, R,  c0,  c1, 0	// Processor Feature Register 0
 #define	ID_PFR1(R)	p15, 0, R,  c0,  c1, 1	// Processor Feature Register 1
