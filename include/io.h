@@ -29,4 +29,29 @@ static inline void iowrite32_flush(void __iomem *ioaddr, u32 val)
 	ioread32(ioaddr);		// sync with write's early ack
 }
 
+static inline void ioclr32(void __iomem *addr, u32 clr)
+{
+	u32 val = ioread32(addr);
+
+	val &= ~clr;
+	iowrite32(addr, val);
+}
+
+static inline void ioset32(void __iomem *addr, u32 set)
+{
+	u32 val = ioread32(addr);
+
+	val |= set;
+	iowrite32(addr, val);
+}
+
+static inline void ioclrset32(void __iomem *addr, u32 clr, u32 set, uint off)
+{
+	u32 val = ioread32(addr);
+
+	val &= ~(clr << off);
+	val |=  (set << off);
+	iowrite32(addr, val);
+}
+
 #endif
