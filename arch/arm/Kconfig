@@ -133,6 +133,10 @@ config	NVIC_NBR_IRQ
 	depends on ARMV7M
 	default 96
 
+config	CCI400
+	bool
+	depends on SMP
+
 comment "Generic Timer"
 config	GENERIC_TIMER
 	bool "Generic timer"

@@ -3,6 +3,7 @@ objs-y	+= 	dump-stack.o
 objs-y	+= 	init.o
 objs-y	+= 	traps.o
 
+objs-$(CONFIG_CCI400)	+= cci-400.o
 objs-$(CONFIG_GENERIC_TIMER)	+= generic_timer.o
 
 
