@@ -2,7 +2,9 @@
 #define	_SMP_INIT_H_
 
 
-void __smp_init(void);
+int  __smp_init(void);
+void __smp_startup(void) __noreturn;
+void __smp_start_mach(void);
 void __smp_start(void) __noreturn;
 
 #endif
