@@ -228,6 +228,51 @@ fmt:	.asciz  "MMU[%x] @ %x = %x\n"
 ENDFUN(create_early_pagetable)
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifdef	CONFIG_SMP
+	.text
+
+// entry point for secondary CPUs
+GLOBAL(__smp_startup):
+	// insure that we're in supervisor mode with interrupts disabled
+	msr	cpsr_c, #(PSR_I|PSR_F|PSR_MODE_SVC)
+
+	// FIXME: We should check if the processor ID correspond to the compiled one
+	// mrc	MIDR(r3)
+	// ...
+
+	phys_ram fp, ip
+	early_pgd fp, fp
+	@ fp: phys addr of the early pagetable
+
+	ldr	r5, =SCTLR_CLR		// To be defined in platform_setup.S
+	ldr	r6, =SCTLR_SET
+
+	// FIXME: PLATFORM_SETUP_SMP?
+
+	ldr	lr, =post_mmu_smp	@ load address to jump when MMU is set
+	b	mmu_enable
+
+	// We'll come back here once the MMU is enabled
+
+post_mmu_smp:
+#ifndef	CONFIG_HAS_VBAR
+#error "VBAR is required for SMP"
+#endif
+	ldr	r0, =__exception_handlers
+	mcr	VBAR(r0)
+
+#if CONFIG_ARM_ARCH < 6
+#error "ARMv7 is required for SMP"
+#endif
+
+	// FIXME: what about the exception stack?
+
+	b	__smp_start_mach
+ENDFUN(__smp_startup)
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 
 	.text
 

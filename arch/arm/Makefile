@@ -5,6 +5,7 @@ objs-y	+= 	traps.o
 
 objs-$(CONFIG_CCI400)	+= cci-400.o
 objs-$(CONFIG_GENERIC_TIMER)	+= generic_timer.o
+objs-$(CONFIG_SMP)	+= smp.o
 
 
 objs-$(CONFIG_ARMVA)	+= startup.o
