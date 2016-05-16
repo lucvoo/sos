@@ -7,4 +7,5 @@ config	SOC_PARAMS
 	default y
 	select CORTEX_A7
 	select ARM_GIC
+	select HAS_SMP
 	select CCI400 if SMP
