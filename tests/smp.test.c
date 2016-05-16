@@ -8,17 +8,25 @@
 #include <lock.h>
 
 
-void kapi_start(void)
-{
-	printf(os_version);
+static struct thread main __uninit;
 
+static void start_smp(void *data)
+{
 	dump_system_regs();
 
 	__smp_init();
 
-	sleep(1);		// FIXME
-
+	sleep(3);		// FIXME
+	printf("main OK!\n");
 	dump_system_regs();
+}
+
+void kapi_start(void)
+{
+	printf(os_version);
+
+	thread_create(&main, 2, start_smp, NULL, NULL, 0);
+	thread_start(&main);
 }
 
 
