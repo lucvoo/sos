@@ -54,9 +54,8 @@ void _os_start(void)
 	init_data();
 	initcalls();
 	kapi_start();
-	_thread_scheduler_start();
-
 	__free_initmem();
 
+	_thread_scheduler_start();
 	__cpu_idle();
 }
