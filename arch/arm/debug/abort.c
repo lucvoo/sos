@@ -1,23 +1,29 @@
 #include <exceptions.h>
+#include <halt.h>
+#include <smp.h>
 
 
-// Called from assembler: arch/arm/vector-XX.S
-void pabt_handler(const struct eframe *regs, unsigned long far, unsigned long fsr);
-void dabt_handler(const struct eframe *regs, unsigned long far, unsigned long fsr);
-
-
-void pabt_handler(const struct eframe *regs, unsigned long far, unsigned long fsr)
+static void abort_handler(struct eframe *regs, ulong far, ulong fsr, const char *type)
 {
-	printf("PABT: FAR=%08lx, FSR=%08lx\n", far, fsr);
-	dump_stack(regs, 0);
-	while (1)
-		;
+#ifdef	CONFIG_SMP
+#define	F_CPU	" (cpu %u)"
+#define	A_CPU	, __coreid()
+#else
+#define	F_CPU
+#define	A_CPU
+#endif
+
+	printf("\n%s: FAR=%08lx, FSR=%08lx" F_CPU "\n", type, far, fsr  A_CPU);
+	__halt(regs);
 }
 
-void dabt_handler(const struct eframe *regs, unsigned long far, unsigned long fsr)
+
+void pabt_handler(struct eframe *regs, ulong far, ulong fsr)
 {
-	printf("DABT: FAR=%08lx, FSR=%08lx\n", far, fsr);
-	dump_stack(regs, 0);
-	while (1)
-		;
+	abort_handler(regs, far, fsr, "PABT");
+}
+
+void dabt_handler(struct eframe *regs, ulong far, ulong fsr)
+{
+	abort_handler(regs, far, fsr, "DABT");
 }
