@@ -23,7 +23,7 @@ static int thread_stack(struct thread* t, void *stack, unsigned int size)
 		p = page_alloc(DEFAULT_STACK_PAGE_ORDER, GFP_KERN);
 		if (!p)
 			return -ENOMEM;
-		stack = phys_to_virt(__pfn_to_phys(page_to_pfn(p)));
+		stack = page_to_virt(p);
 	}
 
 	t->stack_base = stack;
