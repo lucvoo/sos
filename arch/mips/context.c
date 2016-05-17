@@ -12,6 +12,14 @@ static void thread_entry(void)
 	__thread_start(func, data);
 }
 
+/*
+ * We can't directly load ctxt->pc with __thread_start()'s address
+ * and ctxt->a0 & a1 with __thread_start()'s args because
+ * the cpu's pc, a0 & a1 will only be loaded at the first schedule()
+ * and this only save/restore the non-call clobered registers
+ * (ctxt->a0 & a1 doesn't even extist).
+ * Thus the need for thead_entry() here above.
+ */
 void thread_load_context(struct thread* t, void (*func)(void*), void* data)
 {
 	struct cpu_context* ctxt = &t->cpu_context;
