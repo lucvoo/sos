@@ -30,3 +30,13 @@ void printf(const char *fmt, ...)
 	lock_rel_rest(&printf_lock, flags);
 	va_end(ap);
 }
+
+// unlocked version of printf()
+void __printf(const char *fmt, ...)
+{
+	va_list ap;
+
+	va_start(ap, fmt);
+	xvprintf(&printf_xput, fmt, ap);
+	va_end(ap);
+}
