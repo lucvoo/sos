@@ -18,9 +18,6 @@ static inline void a80_enable_cpu(uint cpu)
 	uint cluster = cpu / 4;
 	uint core = cpu % 4;
 
-	// 0) set entry point
-	iowrite32(prcm_base + PRCM_CPU_SOFT_ENTRY, virt_to_phys(__smp_startup));
-
 	// 1) assert CPU power-on & core reset
 	ioclr32(prcm_base + PRCM_CX_RST_CTRL(cluster), 1 << core);
 	ioclr32(cpucfg_base + CPUCFG_CX_RESET(cluster), 1 << core);
@@ -45,6 +42,10 @@ static inline void a80_enable_cpu(uint cpu)
 
 static int a80_smp_init(void)
 {
+	void __iomem *prcm_base = ioremap(PRCM_BASE, PRCM_SIZE);
+
+	iowrite32(prcm_base + PRCM_CPU_SOFT_ENTRY, virt_to_phys(__smp_startup));
+
 	return 0;
 }
 
