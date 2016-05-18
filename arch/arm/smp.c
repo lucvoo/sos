@@ -27,9 +27,11 @@ int __smp_init(void)
 	uint cpu;
 	int rc;
 
-
-	// do any global initialization
-
+	rc = smp_ops.init();
+	if (rc) {
+		pr_err("mach smp init failed (%d)\n", rc);
+		return rc;
+	}
 
 	foreach_cpu(cpu) {
 		if (cpu == 0)
