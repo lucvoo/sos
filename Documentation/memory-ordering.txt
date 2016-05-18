@@ -188,7 +188,9 @@ making unneccessary an explicit barrier (... FIXME).
 * rmb		=> L|L
 *  mb		=> X|X
 * load_acquire	=> L(x)|X
+* acquire fence => L|X
 * store_release	=> X|S(x)
+* release fence => X|S
 
 == Concrete minimal memory barrier instruction  ==
 
