@@ -156,6 +156,7 @@ static void gic_handle_irq(struct eframe *regs)
 		} else if (irq < 16) {
 			iowrite32(cpu_base + GICC_EOIR, iar);
 #ifdef	CONFIG_SMP
+			mbr_smp();	// pair with gic_ipi_send()'s write barrier
 			__smp_ipi_process(irq);
 #endif
 		} else
@@ -201,6 +202,9 @@ static int gic_ipi_send(uint cpu, uint msg)
 	default:
 		return -EINVAL;
 	}
+
+	// we're publishing something here
+	mbw_smp();		// pair with gic_handle_irq()'s read barrier
 
 	foreach_ipi(ipi, msg)
 		iowrite32(dist_base + GICD_SGIR, val | GICD_SGIR_IPI(ipi));
