@@ -57,8 +57,9 @@ static void gic_init_private(struct gic_intctrl *gic)
 	uint cpu_ctrl;
 	int i;
 
-	// disable all PPIs & all SGIs
-	iowrite32(dist_base + GICD_ICENABLER(0), GIC_PPI_MASK|GIC_SGI_MASK);
+	// disable PPIs & enable SGIs
+	iowrite32(dist_base + GICD_ICENABLER(0), GIC_PPI_MASK);
+	iowrite32(dist_base + GICD_ISENABLER(0), GIC_SGI_MASK);
 
 	// Set priority on PPI and SGI interrupts
 	for (i = 0; i < 32; i += 4)
