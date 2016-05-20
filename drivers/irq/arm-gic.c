@@ -52,7 +52,7 @@ static void gic_irq_eoi(struct irqdesc *desc)
 static void gic_set_affinity_cpu(struct gic_intctrl *gic, uint cpu)
 {
 	void __iomem *dist_base = gic->chip.iobase;
-	uint irq_nbr = gic->chip.irq_nbr;
+	int irq_nbr = gic->chip.irq_nbr;
 	u32 msk = 1 << cpu;
 	int i;
 
@@ -140,7 +140,7 @@ static void __init gic_init(void)
 	irq_nbr = (lines + 1) * 32;
 	if (irq_nbr > GIC_NBR_IRQ)
 		irq_nbr = GIC_NBR_IRQ;
-	chip->irq_nbr = GIC_NBR_IRQ;
+	chip->irq_nbr = irq_nbr;
 
 	gic_init_shared(gic, irq_nbr);
 	gic_init_private(gic, 0);
