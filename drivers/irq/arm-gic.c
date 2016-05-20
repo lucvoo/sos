@@ -65,10 +65,6 @@ static void gic_init_private(struct gic_intctrl *gic, uint cpu)
 	for (i = 0; i < 32; i += 4)
 		iowrite32(dist_base + GICD_IPRIOR(i/4), GIC_PRIO_DEFAULT * 0x01010101U);
 
-	// PPIs can use the percpu handler
-	for (i = 16; i < 32; i++)
-		gic->descs[i].handler = irq_handle_percpu;
-
 	iowrite32(cpu_base + GICC_PMR, GIC_PRIO_FILTER);
 
 	// enable the CPU interface
@@ -95,6 +91,10 @@ static void gic_init_shared(struct gic_intctrl *gic, uint irq_nbr)
 
 	for (i = 32; i < irq_nbr; i += 4)
 		iowrite32(dist_base + GICD_ITARGETSR(i/4), 0x01010101);
+
+	// PPIs can use the percpu handler
+	for (i = 16; i < 32; i++)
+		gic->descs[i].handler = irq_handle_percpu;
 
 	iowrite32(dist_base + GICD_CTLR, GICD_CTLR_ENABLE);
 }
