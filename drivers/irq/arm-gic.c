@@ -49,6 +49,20 @@ static void gic_irq_eoi(struct irqdesc *desc)
 	iowrite32(gic_get_cpubase(gic) + GICC_EOIR, desc->irq);
 }
 
+static void gic_set_affinity_cpu(struct gic_intctrl *gic, uint cpu)
+{
+	void __iomem *dist_base = gic->chip.iobase;
+	uint irq_nbr = gic->chip.irq_nbr;
+	u32 msk = 1 << cpu;
+	int i;
+
+	// each regs has info for 4 irqs
+	msk |= msk << 8;
+	msk |= msk << 16;
+
+	for (i = 32; i < irq_nbr; i += 4)
+		ioset32(dist_base + GICD_ITARGETSR(i/4), msk);
+}
 
 static void gic_init_private(struct gic_intctrl *gic, uint cpu)
 {
@@ -66,6 +80,9 @@ static void gic_init_private(struct gic_intctrl *gic, uint cpu)
 		iowrite32(dist_base + GICD_IPRIOR(i/4), GIC_PRIO_DEFAULT * 0x01010101U);
 
 	iowrite32(cpu_base + GICC_PMR, GIC_PRIO_FILTER);
+
+	if (cpu == 0)
+		gic_set_affinity_cpu(gic, cpu);
 
 	// enable the CPU interface
 	cpu_ctrl = ioread32(cpu_base + GICC_CTLR);
@@ -88,9 +105,6 @@ static void gic_init_shared(struct gic_intctrl *gic, uint irq_nbr)
 
 	for (i = 32; i < irq_nbr; i += 32)
 		iowrite32(dist_base + GICD_ICENABLER(i/32), 0xFFFFFFFF);
-
-	for (i = 32; i < irq_nbr; i += 4)
-		iowrite32(dist_base + GICD_ITARGETSR(i/4), 0x01010101);
 
 	// PPIs can use the percpu handler
 	for (i = 16; i < 32; i++)
