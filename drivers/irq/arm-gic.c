@@ -50,7 +50,7 @@ static void gic_irq_eoi(struct irqdesc *desc)
 }
 
 
-static void gic_init_private(struct gic_intctrl *gic)
+static void gic_init_private(struct gic_intctrl *gic, uint cpu)
 {
 	void __iomem *dist_base = gic->chip.iobase;
 	void __iomem *cpu_base = gic_get_cpubase(gic);
@@ -129,7 +129,7 @@ static void __init gic_init(void)
 	chip->irq_nbr = GIC_NBR_IRQ;
 
 	gic_init_shared(gic, irq_nbr);
-	gic_init_private(gic);
+	gic_init_private(gic, 0);
 
 	irqchip_init(NULL, chip);
 }
