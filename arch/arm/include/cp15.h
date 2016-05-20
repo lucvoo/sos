@@ -4,6 +4,8 @@
 
 #define	cp_read(R)	({ ulong r; asm("mrc " STRINGIFY(R(%0)) : "=r" (r)); r; })
 #define	cp_write(R,V)	({ asm("mcr " STRINGIFY(R(%0)) :: "r" (V)); })
+#define	cp_read64(R)	({ u64 r; asm("mrrc " STRINGIFY(R(%Q0, %R0)) : "=r" (r)); r; })
+#define	cp_write64(R,V)	({ asm("mcrr " STRINGIFY(R(%Q0, %R0)) :: "r" (V)); })
 
 
 #define	MIDR(R)		p15, 0, R,  c0,  c0, 0	// Main ID Register
