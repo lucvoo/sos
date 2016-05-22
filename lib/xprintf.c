@@ -23,19 +23,19 @@ enum lmod {
 };
 
 
-static unsigned int utostr_bin(char *buf, unsigned prec, unsigned long val, unsigned int shift, unsigned int flags)
+static uint utostr_bin(char *buf, uint prec, ulong val, uint shift, uint flags)
 {
-	unsigned int ten = 'a' - 10;
-	unsigned int mask = (1 << shift) -1;
+	uint ten = 'a' - 10;
+	uint mask = (1 << shift) -1;
 	char *endb = buf - prec;
 	char *buf0 = buf;
-	unsigned int d;
+	uint d;
 
 	if (flags & F_UPPER)
 		ten = 'A' - 10;
 
 	for (d = 0; val > 0 || endb < buf; val >>= shift) {
-		unsigned int digit = val & mask;
+		uint digit = val & mask;
 
 		if ((flags & F_SEP8) && ((d % 8) == 0) && (d > 0))
 			*--buf = '.';
@@ -52,14 +52,14 @@ static unsigned int utostr_bin(char *buf, unsigned prec, unsigned long val, unsi
 	return buf0 - buf;
 }
 
-static unsigned int utostr_dec(char *buf, unsigned prec, unsigned long val)
+static uint utostr_dec(char *buf, uint prec, ulong val)
 {
 	char *endb = buf - prec;
 	char *buf0 = buf;
 
 	for (; val > 0 || endb < buf;) {
-		unsigned int digit;
-		unsigned int tmp;
+		uint digit;
+		uint tmp;
 
 #define METH 2
 #if	(METH == 0) || defined(CONFIG_HAS_DIV32)
@@ -96,12 +96,12 @@ static unsigned int utostr_dec(char *buf, unsigned prec, unsigned long val)
 }
 
 
-static void pad(struct xput *xput, unsigned int n, unsigned int flags)
+static void pad(struct xput *xput, uint n, uint flags)
 {
 	static const char spaces[] = "               ";
 	static const char zeroes[] = "000000000000000";
 	const char *pads = spaces;
-	unsigned s;
+	uint s;
 
 	if (flags & F_ZERO)
 		pads = zeroes;
@@ -115,22 +115,22 @@ static void pad(struct xput *xput, unsigned int n, unsigned int flags)
 	}
 }
 
-static void pad_front(unsigned int n, unsigned int minw, unsigned int flags, struct xput *xput)
+static void pad_front(uint n, uint minw, uint flags, struct xput *xput)
 {
 	if ((n < minw) && (flags & F_LEFT) == 0)
 		pad(xput, minw - n, 0);
 }
 
-static void pad_back(unsigned int n, unsigned int minw, unsigned int flags, struct xput *xput)
+static void pad_back(uint n, uint minw, uint flags, struct xput *xput)
 {
 	if ((n < minw) && (flags & F_LEFT) != 0)
 		pad(xput, minw - n, 0);
 }
 
 /*****************************************************************************/
-static unsigned int xprintf(struct xput *xput, const char *fmt, ...)
+static uint xprintf(struct xput *xput, const char *fmt, ...)
 {
-	unsigned int n;
+	uint n;
 	va_list ap;
 
 	va_start(ap, fmt);
@@ -140,9 +140,9 @@ static unsigned int xprintf(struct xput *xput, const char *fmt, ...)
 	return n;
 }
 
-static int print_buf(struct xput *xput, const char *fmt, char sep, const unsigned char *p, unsigned int len)
+static int print_buf(struct xput *xput, const char *fmt, char sep, const uchar *p, uint len)
 {
-	unsigned int n = 0;
+	uint n = 0;
 
 	n += xprintf(xput, fmt, *p++);
 
@@ -155,17 +155,17 @@ static int print_buf(struct xput *xput, const char *fmt, char sep, const unsigne
 	return n;
 }
 
-static int print_macaddr(struct xput *xput, const unsigned char *p)
+static int print_macaddr(struct xput *xput, const uchar *p)
 {
 	return print_buf(xput, "%02x", ':', p, 6);
 }
 
-static int print_ipv4(struct xput *xput, const unsigned char *p)
+static int print_ipv4(struct xput *xput, const uchar *p)
 {
 	return print_buf(xput, "%d", '.', p, 4);
 }
 
-static unsigned int print_binhex(struct xput *xput, const unsigned char *p, unsigned int len)
+static uint print_binhex(struct xput *xput, const uchar *p, uint len)
 {
 	if (!len)
 		return 0;
@@ -174,18 +174,18 @@ static unsigned int print_binhex(struct xput *xput, const unsigned char *p, unsi
 }
 
 /*****************************************************************************/
-unsigned int xvprintf(struct xput *xput, const char *fmt, va_list ap)
+uint xvprintf(struct xput *xput, const char *fmt, va_list ap)
 {
 	char *begin = xput->dest;
 
 	while (1) {
-		char buff[sizeof(unsigned long)*8 +8];		// enough for output in base 2 & seps
-		unsigned int minw;
-		unsigned int prec;
-		unsigned int idx;
-		unsigned int n;
-		unsigned int c;
-		unsigned flags = 0;
+		char buff[sizeof(ulong)*8 +8];		// enough for output in base 2 & seps
+		uint minw;
+		uint prec;
+		uint idx;
+		uint n;
+		uint c;
+		uint flags = 0;
 		const char *s;
 		int lmod;
 
@@ -239,7 +239,7 @@ unsigned int xvprintf(struct xput *xput, const char *fmt, va_list ap)
 		}
 
 		for ( ; (c = *fmt); fmt++) {
-			unsigned int d = c - '0';
+			uint d = c - '0';
 
 			if (d > 9)
 				break;
@@ -258,7 +258,7 @@ prec:
 			}
 			prec = 0;
 			for ( ; (c = *fmt); fmt++) {
-				unsigned int d = c - '0';
+				uint d = c - '0';
 
 				if (d > 9)
 					break;
@@ -299,14 +299,14 @@ len_mods:
 		// 5) type specifier
 		switch (c = *fmt++) {
 			char *buf;
-			unsigned int shift;
-			unsigned long uval;
-			signed long sval;
+			uint shift;
+			ulong uval;
+			long sval;
 			int sign;
 			int neg;
 
 		case 'c':
-			uval = va_arg(ap, unsigned int);
+			uval = va_arg(ap, uint);
 
 			buff[0] = uval;
 			s = buff;
@@ -319,7 +319,7 @@ len_mods:
 			if (!s)
 				s = "<nil>";
 			if (c == 'B')
-				n = va_arg(ap, unsigned int);
+				n = va_arg(ap, uint);
 			else
 				n = strlen(s);
 			break;
@@ -367,7 +367,7 @@ len_mods:
 			default:
 				// FIXME: mess with pagging
 				xput->func("0x", 2, xput);
-				uval = (unsigned long) ptr;
+				uval = (ulong) ptr;
 				prec = sizeof(long) * 2;
 				shift = 4;
 				sign = 0;
@@ -387,8 +387,8 @@ len_mods:
 		case 'b':
 			switch (lmod) {
 			default:
-			case lm_none:	uval = va_arg(ap, unsigned int);	break;
-			case lm_l:	uval = va_arg(ap, unsigned long);	break;
+			case lm_none:	uval = va_arg(ap, uint);	break;
+			case lm_l:	uval = va_arg(ap, ulong);	break;
 			//case q_ll:	uval = va_arg(ap, unsigned long long);	break;
 			}
 			neg = 0;
