@@ -31,8 +31,7 @@ void kapi_start(void)
 		t0 = timerdev_read();
 
 #define	SECS	10
-		timer.exp = SECS * HZ;
-		timer_add_rel(&timer);
+		timer_add_rel(&timer, SECS * HZ);
 
 		n = 0;
 #define	STEPS 1000

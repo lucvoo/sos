@@ -94,14 +94,11 @@ void timer_add(struct timer *t)
 	lock_rel_irq(&timers.lock);
 }
 
-void timer_add_rel(struct timer *t)
+void timer_add_rel(struct timer *t, ulong ticks)
 {
-	unsigned long now;
-
 	lock_acq_irq(&timers.lock);
 
-	now = td->now(td);
-	t->exp += now;
+	t->exp = td->now(td) + ticks;
 	timer_add_locked(t);
 
 	lock_rel_irq(&timers.lock);
