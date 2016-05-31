@@ -1,6 +1,7 @@
 objs-y	+= sprng.o
 
 
+progs-$(CONFIG_ARM_GENERIC_TIMER)	+= arm-generic-timer.test
 progs-y	+= bug.test
 progs-y	+= bug_on.test
 progs-y	+= delay.test
