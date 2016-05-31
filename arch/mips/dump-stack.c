@@ -8,8 +8,10 @@
 #endif
 
 
-void dump_stack(const struct eframe *f, unsigned int flags)
+void __arch_dump_stack(const struct eframe *f)
 {
+#define	printf	__printf
+
 	printf("PC %08lx  status %08lx cause %08lx core %d\n"
 	       "r0 %08lx, at %08lx, v0 %08lx, v1 %08lx\n"
 	       "a0 %08lx, a1 %08lx, a2 %08lx, a3 %08lx\n"
