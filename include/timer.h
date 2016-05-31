@@ -14,7 +14,7 @@ struct timer {
 };
 
 
-void timer_add(struct timer *t);
+void timer_add_abs(struct timer *t);
 void timer_add_rel(struct timer *t, ulong ticks);
 void timer_del(struct timer *t);
 

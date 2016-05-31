@@ -85,7 +85,7 @@ static void timer_add_locked(struct timer *t)
 	timer_program();
 }
 
-void timer_add(struct timer *t)
+void timer_add_abs(struct timer *t)
 {
 	lock_acq_irq(&timers.lock);
 
