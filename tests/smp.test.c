@@ -6,6 +6,7 @@
 #include <sleep.h>
 #include <debug.h>
 #include <lock.h>
+#include <smp.h>
 
 
 static struct thread main __uninit;
@@ -32,11 +33,13 @@ void kapi_start(void)
 
 void kapi_start_smp(void)
 {
-	printf("OK?\n");
+	uint cpu = __coreid();
+
+	printf("cpu %d: OK?\n", cpu);
 
 	dump_system_regs();
 
         undef_instruction();
 
-	printf("OK!\n");
+	printf("cpu %d: OK!\n", cpu);
 }
