@@ -7,11 +7,11 @@
 #define	foreach_cpu(cpu)	for (cpu = 0; cpu < NR_CPUS; cpu++)
 
 // FIXME: should allocate this dynamically
-static struct thread idle_threads[NR_CPUS-1];
+extern struct thread init_thread[];
 
 static int smp_boot_cpu(uint cpu)
 {
-	struct thread *idle = &idle_threads[cpu-1];
+	struct thread *idle = &init_thread[cpu];
 	int rc;
 
 	// initialize the thread with the default stack size
