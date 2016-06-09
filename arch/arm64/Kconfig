@@ -27,6 +27,37 @@ menu "ARM64 options"
 
 comment "Memory"
 
+choice
+	prompt "Page size"
+	default PAGESIZE_4K
+
+config	PAGESIZE_4K
+	bool "4K"
+
+config	PAGESIZE_16K
+	bool "16K"
+	depends on BROKEN
+
+config	PAGESIZE_64K
+	bool "64K"
+	depends on BROKEN
+endchoice
+
+config	PAGE_BITS
+	int
+	default 12 if PAGESIZE_4K
+	default 14 if PAGESIZE_16K
+	default 16 if PAGESIZE_64K
+
+
+config	VA_BITS
+	int "Virtual Address range"
+	depends on !PAGESIZE_16K || BROKEN
+	depends on !PAGESIZE_64K || BROKEN
+	range 25 48
+	default 39 if PAGESIZE_4K
+
+
 config	PHYS_ADDR
 	hex "Main RAM physical address"
 
