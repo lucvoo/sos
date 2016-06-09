@@ -2,7 +2,7 @@ choice
 	prompt "Platform"
 	default	MACH_BEAGLEBONE
 
-config MACH_GENERIC
+config MACH_ARM_GENERIC
 	bool "generic"
 config MACH_BEAGLEBONE
 	bool "BeagleBone"
