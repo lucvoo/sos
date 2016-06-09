@@ -25,6 +25,12 @@ endif
 
 menu "Build options"
 
+config BROKEN
+	bool
+config BROKEN_ON_SMP
+	bool
+	default BROKEN || !SMP
+
 config BUG
 	bool "BUG() support"
 	default y
