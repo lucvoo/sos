@@ -1,6 +1,7 @@
 objs-y	+= context.o
 objs-y	+= startup.o
 objs-y	+= switch_to.o
+objs-y	+= vectors.o
 
 
 deps-y	:= \
