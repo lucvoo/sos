@@ -11,34 +11,16 @@ static void fun(void* data)
 	const char* str = data;
 
 	do {
-		printf("thread %s going to sleep ...\n", str);
-		thread_sleep();
-		printf("thread %s running\n", str);
+		printf("thread %s yield ...\n", str);
 		thread_yield();
 	} while (1);
 }
 
-static struct thread c __uninit;
-
-static void func(void* data)
-{
-	const char* str = data;
-
-	do {
-		printf("thread %s wakeup a\n", str);
-		thread_wakeup(&a);
-		thread_yield();
-		printf("thread %s wakeup a\n", str);
-		thread_wakeup(&b);
-		thread_yield();
-	} while (1);
-}
 
 void kapi_start(void)
 {
 	static char namea[] = "a";
 	static char nameb[] = "b";
-	static char namec[] = "c";
 
 	printf(os_version);
 
@@ -46,7 +28,4 @@ void kapi_start(void)
 	thread_create(&b, 2, fun, nameb, NULL, 0);
 	thread_start(&a);
 	thread_start(&b);
-
-	thread_create(&c, 2, func, namec, NULL, 0);
-	thread_start(&c);
 }
