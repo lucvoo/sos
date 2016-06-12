@@ -4,6 +4,9 @@ config ARCH
 
 config	ARMV8
 	bool
+	default y
+	select HAS_DIV32
+	select HAS_DIV64
 
 config	ARM_ARCH
 	int
