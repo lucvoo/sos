@@ -4,3 +4,6 @@ AFLAGS-y	+= -include arch/assembly.h
 
 ARCHFLAGS-y			+= -mabi=lp64
 ARCHFLAGS-y			+= -mgeneral-regs-only
+
+ARCHFLAGS-$(CONFIG_CPU_A53)	+= -mcpu=cortex-a53
+ARCHFLAGS-$(CONFIG_CPU_A53)	+= -mfix-cortex-a53-835769
