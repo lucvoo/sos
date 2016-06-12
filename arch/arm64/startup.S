@@ -50,6 +50,8 @@ startup:
 	mov	sp, x0
 #endif
 
+	// mark the end of the frame chain
+	stp	xzr, xzr, [sp, #16]!
 	mov	fp, #0
 	b	_os_start
 
