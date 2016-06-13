@@ -7,6 +7,7 @@ config	ARMV8
 	default y
 	select HAS_DIV32
 	select HAS_DIV64
+	select BUG
 
 config	ARM_ARCH
 	int
