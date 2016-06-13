@@ -9,7 +9,7 @@
 
 #define	BITS_EXTRACT(VAL, BITS)	_BIT_EXTRACT(VAL, BITS)
 #define	_BIT_EXTRACT(VAL, O, W)	(((VAL) >> (O)) & MSK(W))
-#define	BITS_INSERT(VAL, BITS)	_BIT_INSERT(VAL, BITS)
-#define	_BIT_INSERT(VAL, O, W)	((VAL) << (O))
+#define	BITS_INSERT(BASE, BITS, VAL)	_BIT_INSERT(BASE, BITS, VAL)
+#define	_BIT_INSERT(BASE, O, W, VAL)	((BASE & ~MASK(O, W)) | ((VAL) << (O)))
 
 #endif
