@@ -10,15 +10,19 @@
 #define	VIRT_LAST	UL(0xffffffffffffffff)
 
 #define	PHYS_ADDR	UL(CONFIG_PHYS_ADDR)
-#define	VIRT_ADDR	(UL(0xffffffffffffffff) << VIRT_BITS)
+#ifdef	CONFIG_NOMMU
+#define	VIRT_ADDR	UL(CONFIG_VIRT_ADDR)
+#define	IOMEM_VIRT	IOMEM_PHYS
+#else
+#define	VIRT_ADDR	(VIRT_LAST << VIRT_BITS)
+#define	IOMEM_VIRT	(VIRT_LAST - IOMEM_SIZE + 1)
+#endif
 
 #ifndef	TEXT_OFFSET
 #define	TEXT_OFFSET	UL(CONFIG_TEXT_OFFSET)
 #endif
 
 
-// TOP IOMEM_SIZE
-#define	IOMEM_VIRT	(VIRT_LAST - IOMEM_SIZE + 1)
 
 // TODO: reserve space for VMALLOC, PCI IO, ...
 

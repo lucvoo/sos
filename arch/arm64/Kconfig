@@ -67,9 +67,20 @@ config	PHYS_ADDR
 config	PHYS_SIZE
 	hex "Main RAM size"
 
+config	ARM64_NOMMU
+	bool "MMU disabled"
+	default n
+	select NOMMU
+
+config	VIRT_ADDR
+	hex "non-standard virtual address"
+	depends on ARM64_NOMMU
+	default PHYS_ADDR
+
 config	TEXT_OFFSET
 	hex "Start of kernel image relatively to the start of the RAM"
-	default 0x200000
+	default 0x0		if NOMMU
+	default 0x200000	if   MMU
 	help
 	  See Linux's arm64 booting requirements
 	  (Documentation/arm64/booting.txt).
