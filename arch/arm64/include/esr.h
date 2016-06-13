@@ -1,6 +1,9 @@
 #ifndef	_ARCH_ESR_H_
 #define	_ARCH_ESR_H_
 
+#include <bits.h>
+
+
 #define	ESR_EC_UNKNOWN		0b000000
 #define	ESR_EC_IABORT_EL0	0b100000
 #define	ESR_EC_IABORT_EL1	0b100001
@@ -20,5 +23,17 @@
 #define	ESR_EC_BRK32		0b111000
 #define	ESR_EC_VEC_DBG32	0b111000
 #define	ESR_EC_BRK64		0b111100
+
+#define	ESR_ISS_DABORT_ISV	(1 << 24)
+#define	ESR_ISS_DABORT_SAS	BITS(22, 2)
+#define	ESR_ISS_DABORT_SSE	(1 << 24)
+#define	ESR_ISS_DABORT_SF	(1 << 15)
+#define	ESR_ISS_DABORT_AR	(1 << 14)
+#define	ESR_ISS_DABORT_FnV	(1 << 10)
+#define	ESR_ISS_DABORT_EA	(1 << 9)
+#define	ESR_ISS_DABORT_CM	(1 << 8)
+#define	ESR_ISS_DABORT_S1PTW	(1 << 7)
+#define	ESR_ISS_DABORT_Wnr	(1 << 6)
+#define	ESR_ISS_DABORT_DFSC	BITS(0, 5)
 
 #endif
