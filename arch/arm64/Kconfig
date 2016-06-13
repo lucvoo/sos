@@ -29,6 +29,13 @@ config	CPU_A57
 
 menu "ARM64 options"
 
+config	ARM64_BOOT
+	bool "Enable stuff a bootloader should do"
+
+config	ARM64_DROP_EL3_EL1
+	bool "Drop from el3 to el1"
+	depends on ARM64_BOOT
+
 comment "Memory"
 
 choice

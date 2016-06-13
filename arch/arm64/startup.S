@@ -1,4 +1,5 @@
 #include <arch/assembly.h>
+#include <arch/switch_el.S>
 #include <arch/memory.h>
 #include <arch/arch.h>
 
@@ -36,7 +37,9 @@ _os_startup:
 startup:
 	// TODO: copy boot args
 
-	// TODO: drop to EL1 if needed
+#if defined(CONFIG_ARM64_DROP_EL3_EL1)
+	switch_el3_el1
+#endif
 
 	ldr	x5, =__exception_vectors
 	msr	vbar_el1, x5
