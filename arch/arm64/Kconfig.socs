@@ -1,3 +1,13 @@
 menu "SoC options"
 
+config SOC_ALLWINNER
+	bool
+config SOC_A64
+	bool
+	select SOC_ALLWINNER
+
+if SOC_A64
+source arch/arm64/soc-A64/Kconfig
+endif
+
 endmenu
