@@ -75,12 +75,14 @@
   ~ add basic supoort for interrupts & exceptions
 
 * ARM64:
+  ✓ drop from EL3 to EL1, as it should
+  ✓ basic exception handling
   * enable icache
-  * enble MMU & dcache
+  * run on SDRAM
+  * enable MMU & dcache
   * ioremap
   * GIC
   * timer
-  * SDRAM
 
 * MIPS:
   ✓ add support for interrupts & other exceptions
