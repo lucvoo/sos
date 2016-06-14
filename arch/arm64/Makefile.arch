@@ -1,0 +1,6 @@
+CROSS_COMPILE	?= aarch64-none-elf-
+
+AFLAGS-y	+= -include arch/assembly.h
+
+ARCHFLAGS-y			+= -mabi=lp64
+ARCHFLAGS-y			+= -mgeneral-regs-only
