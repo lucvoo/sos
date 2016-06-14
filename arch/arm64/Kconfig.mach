@@ -2,8 +2,15 @@ comment "Platform/board"
 
 choice
 	prompt "Platform"
+	default	MACH_PINE64
 
 config MACH_ARM64_GENERIC
 	bool "generic"
+config MACH_PINE64
+	bool "Pine64"
 
 endchoice
+
+if MACH_PINE64
+source arch/arm64/mach-pine64/Kconfig
+endif
