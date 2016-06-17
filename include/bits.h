@@ -12,4 +12,9 @@
 #define	BITS_INSERT(BASE, BITS, VAL)	_BIT_INSERT(BASE, BITS, VAL)
 #define	_BIT_INSERT(BASE, O, W, VAL)	((BASE & ~MASK(O, W)) | ((VAL) << (O)))
 
+#define	BITS_WIDTH(BITS)		_BITS_WIDTH(BITS)
+#define	_BITS_WIDTH(O, W)		(W)
+#define	BITS_OFFSET(BITS)		_BITS_OFFSET(BITS)
+#define	_BITS_OFFSET(O, W)		(O)
+
 #endif
