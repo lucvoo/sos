@@ -35,10 +35,10 @@ static inline void *phys_to_kseg1(paddr_t phys)
 }
 
 
-#define	PFN_OFFSET	(PHYS_ADDR >> PAGE_SHIFT)
+#define	PFN_OFFSET		0
 
-#define	__phys_to_pfn(phys)	((unsigned long) ((phys) >> PAGE_SHIFT))
-#define	__pfn_to_phys(pfn)	(((paddr_t)(pfn)) << PAGE_SHIFT)
+#define	__phys_to_pfn(phys)	((uint)(((phys) - PHYS_ADDR) >> PAGE_SHIFT))
+#define	__pfn_to_phys(pfn)	((((paddr_t)(pfn)) << PAGE_SHIFT) + PHYS_ADDR)
 
 #endif
 
