@@ -14,8 +14,6 @@ static inline paddr_t virt_to_phys(const void *virt)
 }
 
 
-#define	PFN_OFFSET		0
-
 #define	__phys_to_pfn(phys)	((uint)(((phys) - PHYS_ADDR) >> PAGE_SHIFT))
 #define	__pfn_to_phys(pfn)	((((paddr_t)(pfn)) << PAGE_SHIFT) + PHYS_ADDR)
 

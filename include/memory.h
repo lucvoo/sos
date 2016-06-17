@@ -7,8 +7,8 @@
 // Simple flat, linear, continuous memory layout
 extern struct page pagemap[];
 
-#define	pfn_to_page(pfn)	&pagemap[(pfn) - PFN_OFFSET]
-#define	page_to_pfn(pag)	(((pag) - pagemap) + PFN_OFFSET)
+#define	pfn_to_page(pfn)	&pagemap[pfn]
+#define	page_to_pfn(pag)	((pag) - pagemap)
 
 #define	page_to_phys(pag)	__pfn_to_phys(page_to_pfn(pag))
 #define	page_to_virt(pag)	phys_to_virt(page_to_phys(pag))
