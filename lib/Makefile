@@ -6,6 +6,7 @@ objs-y	+= memcmp.o
 objs-y	+= memcpy.o
 objs-y	+= memset.o
 objs-y	+= printf.o
+objs-y	+= prng.o
 objs-y	+= snprintf.o
 objs-y	+= sqrt.o
 objs-y	+= statistics.o
