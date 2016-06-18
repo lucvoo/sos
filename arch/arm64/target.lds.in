@@ -41,6 +41,7 @@ SECTIONS
 			*(.init.text)
 
 #ifdef CONFIG_INITCALL
+		. = WORD_ALIGN;
 		PROVIDE(__INITCALL_LIST__ = .);
 			KEEP(*(SORT(.initcall*)))
 			LONG(0);
