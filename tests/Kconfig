@@ -1,0 +1,16 @@
+menu "Testing"
+
+config	MEMTESTER
+	bool "memtester"
+
+config	MEMTESTER_ADDR
+	hex "memtester address"
+	depends on MEMTESTER
+	default VIRT_ADDR
+
+config	MEMTESTER_SIZE
+	hex "memtester address"
+	depends on MEMTESTER
+	default PHYS_SIZE
+
+endmenu
