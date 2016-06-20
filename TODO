@@ -78,7 +78,7 @@
   ✓ drop from EL3 to EL1, as it should
   ✓ basic exception handling
   * enable icache
-  * run on SDRAM
+  ✓ run on SDRAM
   * enable MMU & dcache
   * ioremap
   * GIC
