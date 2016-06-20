@@ -101,6 +101,8 @@ static int test_alloc_free_all(const char *name, unsigned long (*free_all)(unsig
 
 		if (!p && order == 0)
 			break;
+		if (i == MAX_ALLOCS)
+			break;
 	}
 
 	dbg("no memory left! (nbr alloc = %u, total = %lu)\n", i, n);
