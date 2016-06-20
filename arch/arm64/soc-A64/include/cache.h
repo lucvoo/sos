@@ -1,21 +1,35 @@
 #ifndef	_SOC_CACHE_H_
 #define	_SOC_CACHE_H_
 
-#define	CACHE_LI_SETS		128
-#define	CACHE_LI_WAYS		4
-#define	CACHE_LI_LINESIZE	64
 
-#define	CACHE_LD_SETS		128
-#define	CACHE_LD_WAYS		4
-#define	CACHE_LD_LINESIZE	64
+#define	CACHE_LI_SET_ORDER	7
+#define	CACHE_LI_WAY_ORDER	2
+#define	CACHE_LI_SIZ_ORDER	6
 
+#define	CACHE_LI_SETS		(1 << CACHE_LI_SET_ORDER)
+#define	CACHE_LI_WAYS		(1 << CACHE_LI_WAY_ORDER)
+#define	CACHE_LI_LINESIZE	(1 << CACHE_LI_SIZ_ORDER)
+
+
+#define	CACHE_LD_SET_ORDER	7
+#define	CACHE_LD_WAY_ORDER	2
+#define	CACHE_LD_SIZ_ORDER	6
+
+#define	CACHE_LD_SETS		(1 << CACHE_LD_SET_ORDER)
+#define	CACHE_LD_WAYS		(1 << CACHE_LD_WAY_ORDER)
+#define	CACHE_LD_LINESIZE	(1 << CACHE_LD_SIZ_ORDER)
+
+
+#define	CACHE_L2_SET_ORDER	9
+#define	CACHE_L2_WAY_ORDER	4
+#define	CACHE_L2_SIZ_ORDER	6
+
+#define	CACHE_L2_SETS		(1 << CACHE_L2_SET_ORDER)
+#define	CACHE_L2_WAYS		(1 << CACHE_L2_WAY_ORDER)
+#define	CACHE_L2_LINESIZE	(1 << CACHE_L2_SIZ_ORDER)
 
 // LoUIS: L2
 // LoC:	  L2
 // LoUU:  L2
-
-// Note: L2 must be used dynamically since
-//	 it's not the same on the 2 clusters:
-//	 512K / 2048 K
 
 #endif
