@@ -26,24 +26,24 @@
 #define PSR_EL0		(0 << 2)
 #define PSR_SPh		(1 << 0)
 
-#define	SCTLR_UCI	(1 << 26)
-#define	SCTLR_EE	(1 << 25)
-#define	SCTLR_E0E	(1 << 24)
-#define	SCTLR_WXN	(1 << 19)
-#define	SCTLR_nTWE	(1 << 18)
-#define	SCTLR_nTWI	(1 << 16)
-#define	SCTLR_UCT	(1 << 15)
-#define	SCTLR_DZE	(1 << 14)
-#define	SCTLR_I		(1 << 12)
-#define	SCTLR_UMA	(1 << 9)
-#define	SCTLR_SED	(1 << 8)
-#define	SCTLR_ITD	(1 << 7)
-#define	SCTLR_CP15EN	(1 << 5)
-#define	SCTLR_SA0	(1 << 4)
-#define	SCTLR_SA	(1 << 3)
-#define	SCTLR_C		(1 << 2)
-#define	SCTLR_A		(1 << 1)
-#define	SCTLR_M		(1 << 0)
+#define	SCTLR_UCI	(1 << 26)		// trap EL0 cache maint. ops
+#define	SCTLR_EE	(1 << 25)		// endianness at EL1
+#define	SCTLR_E0E	(1 << 24)		// endianness at EL0
+#define	SCTLR_WXN	(1 << 19)		// Write implies eXecute Never
+#define	SCTLR_nTWE	(1 << 18)		// don't trap on WFE
+#define	SCTLR_nTWI	(1 << 16)		// don't trap on WFI
+#define	SCTLR_UCT	(1 << 15)		// trap EL0 access to CTR_EL0
+#define	SCTLR_DZE	(1 << 14)		// trap EL0 access to DC ZVA
+#define	SCTLR_I		(1 << 12)		// Instructtion cache
+#define	SCTLR_UMA	(1 << 9)		// trap EL0 to PSTATE.DAIF
+#define	SCTLR_SED	(1 << 8)		// SETEND disable
+#define	SCTLR_ITD	(1 << 7)		// IT disable
+#define	SCTLR_CP15EN	(1 << 5)		// CP15 barrier enable
+#define	SCTLR_SA0	(1 << 4)		// EL0 Stack Alignment check
+#define	SCTLR_SA	(1 << 3)		// EL1 Stack Alignment check
+#define	SCTLR_C		(1 << 2)		// Cache enable
+#define	SCTLR_A		(1 << 1)		// Alignment check
+#define	SCTLR_M		(1 << 0)		// MMU enable for EL0 & EL1
 
 
 #define	CPTR_TCPAC	(1 << 31)
