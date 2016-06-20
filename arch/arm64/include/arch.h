@@ -50,4 +50,25 @@
 #define	CPTR_TTA	(1 << 20)
 #define	CPTR_TFP	(1 << 10)
 
+
+#define	CLIDR_ICB	BITS(30, 3)
+#define	CLIDR_LoUU	BITS(27, 3)
+#define	CLIDR_LoC	BITS(24, 3)
+#define	CLIDR_LoUIS	BITS(21, 3)
+#define	CLIDR_CTYPE(N)	BITS(((N)-1)*3, 3)
+#define	CLIDR_CTYPE_NONE	0b000
+#define	CLIDR_CTYPE_ICACHE	0b001
+#define	CLIDR_CTYPE_DCACHE	0b010
+#define	CLIDR_CTYPE_BOTH	0b011
+#define	CLIDR_CTYPE_UNIFIED	0b100
+
+#define	CSSELR_LEVEL	BITS(1, 3)
+
+#define	CCSIDR_LINESIZE	BITS(0, 3)
+#define	CCSIDR_NWAYS	BITS(3, 10)
+#define	CCSIDR_NSETS	BITS(13, 15)
+
+#define	DCISW_LEVEL	BITS(1, 3)
+#define	DCISW_TOPBIT	32
+
 #endif
