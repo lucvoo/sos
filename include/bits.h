@@ -18,5 +18,6 @@
 #define	_BITS_WIDTH(O, W)		(W)
 #define	BITS_OFFSET(BITS)		_BITS_OFFSET(BITS)
 #define	_BITS_OFFSET(O, W)		(O)
+#define	BITS_MASK(BITS)			MASK(BITS)
 
 #endif
