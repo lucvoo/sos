@@ -3,10 +3,44 @@
 #include <arch/barrier.h>
 #include <arch/arch.h>
 #include <arch/msr.h>
+#include <soc/cache.h>
 
 
 #define	dc(op, val)	asm volatile("dc " #op ", %0" :: "r" (val));
 
+#if defined(CACHE_L2_SETS)
+static void dcache_inval_all_level(uint level, uint ll, uint lw, uint ls)
+{
+	uint val;
+	uint os;	// bit offset for set (L in refman)
+	uint ow;	// bit offset for ways (A in refman)
+	uint nways = 1 << lw;
+	uint nsets = 1 << ls;
+
+	os = ll;
+	ow = 32 - lw;
+
+	val = level << 1;
+	val |= nways << ow;
+	do {
+		val |= nsets << os;
+		val -= 1 << ow;
+
+		do {
+			val -= 1 << os;
+			dc(isw, val);
+		} while (val & MASK(os, ls));
+	} while (val & MASK(ow, lw));
+
+	dsb(sy);
+}
+
+void dcache_inval_all(void)
+{
+	dcache_inval_all_level(2, CACHE_L2_SIZ_ORDER, CACHE_L2_WAY_ORDER, CACHE_L2_SET_ORDER);
+	dcache_inval_all_level(1, CACHE_LD_SIZ_ORDER, CACHE_LD_WAY_ORDER, CACHE_LD_SET_ORDER);
+}
+#else
 static void dcache_inval_all_level(uint level)
 {
 	uint val;
@@ -66,3 +100,4 @@ void dcache_inval_all(void)
 		dcache_inval_all_level(l);
 	}
 }
+#endif
