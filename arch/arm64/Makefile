@@ -1,4 +1,5 @@
 objs-y	+= cache.o
+objs-y	+= cache-all.o
 objs-y	+= context.o
 objs-y	+= debug/dump_system_regs.o
 objs-y	+= dump-stack.o
