@@ -57,10 +57,10 @@ static int __init paging_init(unsigned long nbr)
 
 	// add all the unused pages to the page freelists
 	pfn = __phys_to_pfn(virt_to_phys(heap_top));
-	pages_add(pfn, nbr - (pfn - PFN_OFFSET));
+	pages_add(pfn, nbr - pfn);
 
 	// and mark all the others as reserved
-	pages_reserved(PFN_OFFSET, pfn - PFN_OFFSET);
+	pages_reserved(0, pfn);
 
 	return 0;
 }

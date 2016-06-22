@@ -16,29 +16,12 @@
 
 #ifndef	__ASSEMBLY__
 
-#include <types/paddr_t.h>
-
-static inline void *phys_to_virt(paddr_t phys)
-{
-	return (void *) phys + (VIRT_ADDR - PHYS_ADDR);
-}
-
-static inline paddr_t virt_to_phys(const void *virt)
-{
-	return (paddr_t) virt - (VIRT_ADDR - PHYS_ADDR);
-}
-
+#include <generic/memory.h>
 
 static inline void *phys_to_kseg1(paddr_t phys)
 {
 	return (void *) phys + (KSEG1_BASE - PHYS_ADDR);
 }
-
-
-#define	PFN_OFFSET	(PHYS_ADDR >> PAGE_SHIFT)
-
-#define	__phys_to_pfn(phys)	((unsigned long) ((phys) >> PAGE_SHIFT))
-#define	__pfn_to_phys(pfn)	(((paddr_t)(pfn)) << PAGE_SHIFT)
 
 #endif
 
