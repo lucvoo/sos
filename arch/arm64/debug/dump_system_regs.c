@@ -4,7 +4,7 @@
 
 
 #define	reg(NAME)	({ ulong r; asm("mrs %x0, " NAME : "=r" (r)); r; })
-#define	dump(NAME, VAL)	printf("%18s:\t%016X\n", NAME, VAL)
+#define	dump(NAME, VAL)	printf("%18s:\t%016lx\n", NAME, VAL)
 #define	dump_reg_(NAME)	dump(NAME, reg(NAME))
 #define	dump_reg(NAME)		dump_reg_(#NAME)
 #define	dump_elx(NAME, L)	dump_reg_(#NAME "_el" #L)
