@@ -13,5 +13,13 @@
 // PGD == top level
 #define	PGD_BITS	(MMU_BITS % MMU_GRAN)
 #define	PGD_NBR_ENT	(1 << PGD_BITS)
+#define	PGD_SIZE	(UL(1) << (VIRT_BITS-PGD_BITS))
+
+
+// Memory Type
+#define	MT_DEV		0
+#define	MT_MEM		1
+#define	MT_MEM_NC	2
+#define	MT_MEM_WT	3
 
 #endif
