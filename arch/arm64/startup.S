@@ -2,8 +2,12 @@
 #include <arch/switch_el.S>
 #include <arch/memory.h>
 #include <arch/arch.h>
+#include <arch/mmu.h>
 
 
+idpgd	.req	x25
+sctlr	.req	x26
+xpm	.req	x27
 fp	.req	x29
 
 
@@ -52,10 +56,52 @@ startup:
 	ldr     x0, =__startup_stack + CONFIG_STARTUP_STACK_SIZE - 16
 	mov	sp, x0
 #endif
+	ldr	x1, =(VIRT_ADDR - PHYS_ADDR)
+	sub	sp, x0, x1
+
+	// setup MAIR & TCR, init & return the identity table
+	bl	__arch_mmu_setup
+	mov	idpgd, x0
+
+	// invalidate the page table to avoid any stale entries
+	mov	x1, #(PGD_NBR_ENT * 8)
+	bl	__dcache_inv_range
+
+	// load the (virtual!) address to jump when MMU is set
+	ldr	xpm, =post_mmu
+
+	// load the TBRs with the identity mapping
+	msr	ttbr0_el1, idpgd	// load TTBR0
+	msr	ttbr1_el1, idpgd	// load TTBR1
+	isb
+
+	// enable the MMU & the caches
+	mrs	sctlr, sctlr_el1
+	orr	sctlr, sctlr, SCTLR_I
+	orr	sctlr, sctlr, SCTLR_C
+	orr	sctlr, sctlr, SCTLR_M
+	msr	sctlr_el1, sctlr	// write control reg
+	isb
+
+	ic	iallu			// invalidate I-cache
+	dsb	nsh
+	isb
+
+	br	xpm			// jump to absolute virtual address
+
+
+post_mmu:
+	// From here we run with the MMU on & with virtual addresses
+
+	// setup the normal stack
+	ldr	x1, =(VIRT_ADDR - PHYS_ADDR)
+	add	sp, sp, x1
 
 	// mark the end of the frame chain
 	stp	xzr, xzr, [sp, #16]!
 	mov	fp, #0
+
+	// OK, jump to the C code
 	b	_os_start
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -77,9 +77,9 @@
 * ARM64:
   ✓ drop from EL3 to EL1, as it should
   ✓ basic exception handling
-  * enable icache
   ✓ run on SDRAM
-  * enable MMU & dcache
+  ✓ enable MMU & dcache
+  ✓ enable icache
   * ioremap
   * GIC
   * timer
