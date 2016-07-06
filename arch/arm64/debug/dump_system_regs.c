@@ -10,15 +10,11 @@
 #define	dump_elx(NAME, L)	dump_reg_(#NAME "_el" #L)
 #define	dump_el0(NAME)		dump_elx(NAME, 0)
 #define	dump_el1(NAME)		dump_elx(NAME, 1)
-#define	dump_el(NAME, L) do {						\
-				if (L == 3 && el == 3)			\
+#define	dump_el23(NAME) do {						\
+				if (el == 3)				\
 					dump_elx(NAME, 3);		\
-				else if (L >= 2 && el >= 2)		\
+				if (el >= 2)				\
 					dump_elx(NAME, 2);		\
-				else if (L >= 1 && el >= 1)		\
-					dump_elx(NAME, 1);		\
-				else					\
-					printf("%18s:\t-\n", #NAME);	\
 			} while (0)
 
 
@@ -51,19 +47,18 @@ void dump_system_regs(void)
 	dump_reg(nzcv);
 	dump_el1(contextidr);
 	dump_el1(sctlr);
-	dump_el(sctlr, 3);
+	dump_el23(sctlr);
 	dump_el1(vbar);
 	dump_el1(isr);
 	dump_el1(tpidr);
-	dump_el1(contextidr);
 
 	printf("\n");
-	dump_el(tcr, 3);
+	dump_el1(tcr);
 	dump_el1(ttbr0);
-	dump_el(ttbr0, 3);
+	dump_el23(ttbr0);
 	dump_el1(ttbr1);
 	dump_el1(mair);
-	dump_el(mair, 3);
+	dump_el23(mair);
 
 	printf("\n");
 	if (el >= 2) {
@@ -72,7 +67,7 @@ void dump_system_regs(void)
 	if (el == 3) {
 		dump_elx(scr, 3);
 		dump_elx(cptr, 3);
-		dump_el(rvbar, 3);
+		dump_el23(rvbar);
 		//dump_el1(cbar);
 	}
 
@@ -80,7 +75,7 @@ void dump_system_regs(void)
 	dump_el0(cntfrq);
 
 	printf("\n");
-	dump_el(spsr, 3);
-	dump_el(elr, 3);
-	dump_el(vbar, 3);
+	dump_el23(spsr);
+	dump_el23(elr);
+	dump_el23(vbar);
 }
