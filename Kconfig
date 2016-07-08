@@ -84,13 +84,14 @@ config	XSMALL
 	bool "Xsmall kernel" if n
 	default n
 
-config	NEED_INTERRUPT_STACK
-	bool "is an interrupt stack needed?"
+config	INTERRUPT_STACK
+	bool "interrupt stack?"
+	depends on !FIXED_STACKS
 	default n
 
 config	INTERRUPT_STACK_SIZE
 	int "Interrupt stack size"
-	depends on NEED_INTERRUPT_STACK
+	depends on INTERRUPT_STACK
 	default 4096
 
 config	EXCEPTION_STACK_SIZE

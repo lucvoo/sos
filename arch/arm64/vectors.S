@@ -72,7 +72,7 @@
 .endm
 
 
-#ifdef CONFIG_NEED_INTERRUPT_STACK
+#ifdef CONFIG_INTERRUPT_STACK
 .macro	get_irq_stack
 	mov	x19, sp			// preserve the original sp
 
