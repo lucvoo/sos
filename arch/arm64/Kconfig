@@ -97,3 +97,17 @@ endmenu
 
 source arch/arm64/Kconfig.mach
 source arch/arm64/Kconfig.socs
+
+
+menu "ARM64 options"
+
+comment "Generic Timer"
+config	GENERIC_TIMER
+	bool "Generic timer"
+	default y
+
+config	CNTFRQ
+	int "Generic timer frequency"
+	depends on GENERIC_TIMER
+
+endmenu
