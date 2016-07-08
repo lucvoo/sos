@@ -41,6 +41,11 @@ _os_startup:
 startup:
 	// TODO: copy boot args
 
+#ifdef	CONFIG_CNTFRQ
+	ldr	x6, =CONFIG_CNTFRQ
+	msr	cntfrq_el0, x6
+#endif
+
 #if defined(CONFIG_ARM64_DROP_EL3_EL1)
 	switch_el3_el1
 #endif
