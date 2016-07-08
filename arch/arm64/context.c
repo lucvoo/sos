@@ -21,10 +21,10 @@ static void thread_entry(void)
  * (ctxt->x0 & x1 doesn't even exist).
  * Thus the need for thead_entry() here above.
  */
-void thread_load_context(struct thread* t, void (*func)(void*), void* data)
+void thread_load_context(struct thread* t, void (*func)(void*), void* data, void* stack_top)
 {
 	struct cpu_context* ctxt = &t->cpu_context;
-	ulong *sp = (void *) thread_get_stack_top(t);
+	ulong *sp = stack_top;
 
 	ctxt->x[19] = (ulong) func;
 	ctxt->x[20] = (ulong) data;
