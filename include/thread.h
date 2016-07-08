@@ -10,6 +10,9 @@
 
 #ifdef	CONFIG_THREAD_STACK
 #define	THREAD_SIZE	(1 << CONFIG_THREAD_STACK_SHIFT)
+#define	__thread_align	__aligned(THREAD_SIZE)
+#else
+#define	__thread_align
 #endif
 
 #define	TIF_NEED_RESCHED	0x00000001
@@ -27,10 +30,8 @@ struct thread {
 #ifndef	CONFIG_THREAD_STACK
 	void*			stack_base;
 	unsigned long		stack_size;
-};
-#else
-} __attribute__((aligned(THREAD_SIZE)));
 #endif
+} __thread_align;
 
 
 static inline unsigned long thread_get_stack_top(const struct thread *t)
