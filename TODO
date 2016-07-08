@@ -80,9 +80,10 @@
   ✓ run on SDRAM
   ✓ enable MMU & dcache
   ✓ enable icache
+  ✓ interrupts
+  ✓ GIC
+  ✓ timer
   * ioremap
-  * GIC
-  * timer
 
 * MIPS:
   ✓ add support for interrupts & other exceptions
