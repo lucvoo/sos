@@ -4,7 +4,7 @@
 
 struct thread init_thread __uninit;
 
-#ifndef CONFIG_FIXED_STACKS
+#ifndef CONFIG_THREAD_STACK
 #include <init.h>
 #include <page.h>
 

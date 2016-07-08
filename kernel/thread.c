@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 
-#ifndef CONFIG_FIXED_STACKS
+#ifndef CONFIG_THREAD_STACK
 #include <page.h>
 #include <memory.h>
 #include <page-alloc.h>

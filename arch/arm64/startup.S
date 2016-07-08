@@ -53,9 +53,9 @@ startup:
 	ldr	x5, =__exception_vectors
 	msr	vbar_el1, x5
 
-#ifdef	CONFIG_FIXED_STACKS
+#ifdef	CONFIG_THREAD_STACK
 	// initialize stack
-	ldr     x0, =init_thread + (1 << CONFIG_FIXED_STACKS_SHIFT) - 16
+	ldr     x0, =init_thread + (1 << CONFIG_THREAD_STACK_SHIFT) - 16
 	mov	sp, x0
 #else
 	ldr     x0, =__startup_stack + CONFIG_STARTUP_STACK_SIZE - 16

@@ -84,9 +84,19 @@ config	XSMALL
 	bool "Xsmall kernel" if n
 	default n
 
+config	THREAD_STACK
+	bool "Let the stack be embedded into struct thread"
+	default y
+
+config	THREAD_STACK_SHIFT
+	int "Size of the stacks, in power of 2"
+	depends on THREAD_STACK
+	range 12 14
+	default 14
+
 config	INTERRUPT_STACK
 	bool "interrupt stack?"
-	depends on !FIXED_STACKS
+	depends on !THREAD_STACK
 	default n
 
 config	INTERRUPT_STACK_SIZE
@@ -100,7 +110,7 @@ config	EXCEPTION_STACK_SIZE
 
 config	STARTUP_STACK_SIZE
 	int "startup stack size"
-	depends on !FIXED_STACKS
+	depends on !THREAD_STACK
 	default 4096
 
 config	STACK_ALIGNMENT
@@ -115,16 +125,6 @@ config	NR_THREAD_PRIORITY
 	int "Number of threads priority levels"
 	range 2 32
 	default 32
-
-config	FIXED_STACKS
-	bool "Use the same size for all stacks"
-	default y
-
-config	FIXED_STACKS_SHIFT
-	int "Size of the stacks, in power of 2"
-	depends on FIXED_STACKS
-	range 12 14
-	default 14
 
 config	SOFTIRQ
 	bool "Need softirq?"

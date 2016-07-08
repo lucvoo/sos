@@ -9,7 +9,7 @@ struct cpu_context {
 struct thread;
 
 
-#ifdef	CONFIG_FIXED_STACKS
+#ifdef	CONFIG_THREAD_STACK
 static inline ulong * get_current_sp(void)
 {
 	register ulong *sp asm ("sp");
