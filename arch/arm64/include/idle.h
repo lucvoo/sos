@@ -4,6 +4,7 @@
 
 static void mach_idle(void)
 {
+	__asm__ __volatile__ ("dsb	sy");
 	__asm__ __volatile__ ("wfi");
 }
 
