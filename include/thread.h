@@ -27,21 +27,7 @@ struct thread {
 	struct dlist		run_list;
 	unsigned long		flags;
 	int			state;
-#ifndef	CONFIG_THREAD_STACK
-	void*			stack_base;
-	unsigned long		stack_size;
-#endif
 } __thread_align;
-
-
-static inline unsigned long thread_get_stack_top(const struct thread *t)
-{
-#ifndef	CONFIG_THREAD_STACK
-	return (unsigned long)t->stack_base + t->stack_size;
-#else
-	return (unsigned long)t + THREAD_SIZE;
-#endif
-}
 
 
 static inline int thread_flag_test(const struct thread* t, unsigned long flag)
