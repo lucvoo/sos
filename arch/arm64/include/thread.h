@@ -25,6 +25,18 @@ static inline struct thread* get_current_thread(void)
 static inline void set_current_thread(struct thread *curr)
 {
 }
+#else
+static inline struct thread* get_current_thread(void)
+{
+	register struct thread *curr;
+        asm volatile("mrs	%0, tpidr_el1" : "=r" (curr));
+	return curr;
+}
+
+static inline void set_current_thread(struct thread *curr)
+{
+        asm volatile("msr	tpidr_el1, %0" :: "r" (curr));
+}
 #endif
 
 #endif
