@@ -72,6 +72,37 @@
 .endm
 
 
+#ifdef CONFIG_NEED_INTERRUPT_STACK
+.macro	get_irq_stack
+	mov	x19, sp			// preserve the original sp
+
+	// WARNING: nested interrupts won't be supported
+	//	    (at least not without some chnages)
+#ifndef CONFIG_SMP
+	ldr	x0, =__interrupt_stack	+ CONFIG_INTERRUPT_STACK_SIZE
+	mov	sp, x0
+#else
+#error	"TODO: percpu IRQ stacks"
+#endif
+
+	// mark the end of the frame chain
+	stp     xzr, xzr, [sp, #16]!
+.endm
+
+.macro	put_irq_stack
+	mov	sp, x19			// restore the original sp
+.endm
+#else
+.macro	get_irq_stack
+.endm
+
+.macro	put_irq_stack
+.endm
+#endif
+
+
+////////////////////////////////////////////////////////////////////////////////
+
 .align 6
 LOCAL(except_return):
 	regs_restore
@@ -96,7 +127,11 @@ ENDFUN(except_el1_sync)
 .align 6
 LOCAL(except_el1_irq):
 	mov	x0,  sp			// eframe args to handler
+
+	get_irq_stack
 	bl	mach_irq_handler
+	put_irq_stack
+
 	b	except_return
 ENDFUN(except_el1_irq)
 
