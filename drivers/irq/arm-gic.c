@@ -49,26 +49,40 @@ static void gic_irq_eoi(struct irqdesc *desc)
 	iowrite32(gic_get_cpubase(gic) + GICC_EOIR, desc->irq);
 }
 
+static void gic_set_affinity_cpu(struct gic_intctrl *gic, uint cpu)
+{
+	void __iomem *dist_base = gic->chip.iobase;
+	int irq_nbr = gic->chip.irq_nbr;
+	u32 msk = 1 << cpu;
+	int i;
 
-static void gic_init_private(struct gic_intctrl *gic)
+	// each regs has info for 4 irqs
+	msk |= msk << 8;
+	msk |= msk << 16;
+
+	for (i = 32; i < irq_nbr; i += 4)
+		ioset32(dist_base + GICD_ITARGETSR(i/4), msk);
+}
+
+static void gic_init_private(struct gic_intctrl *gic, uint cpu)
 {
 	void __iomem *dist_base = gic->chip.iobase;
 	void __iomem *cpu_base = gic_get_cpubase(gic);
 	uint cpu_ctrl;
 	int i;
 
-	// disable all PPIs & all SGIs
-	iowrite32(dist_base + GICD_ICENABLER(0), GIC_PPI_MASK|GIC_SGI_MASK);
+	// disable PPIs & enable SGIs
+	iowrite32(dist_base + GICD_ICENABLER(0), GIC_PPI_MASK);
+	iowrite32(dist_base + GICD_ISENABLER(0), GIC_SGI_MASK);
 
 	// Set priority on PPI and SGI interrupts
 	for (i = 0; i < 32; i += 4)
 		iowrite32(dist_base + GICD_IPRIOR(i/4), GIC_PRIO_DEFAULT * 0x01010101U);
 
-	// PPIs can use the percpu handler
-	for (i = 16; i < 32; i++)
-		gic->descs[i].handler = irq_handle_percpu;
-
 	iowrite32(cpu_base + GICC_PMR, GIC_PRIO_FILTER);
+
+	if (cpu == 0)
+		gic_set_affinity_cpu(gic, cpu);
 
 	// enable the CPU interface
 	cpu_ctrl = ioread32(cpu_base + GICC_CTLR);
@@ -92,8 +106,9 @@ static void gic_init_shared(struct gic_intctrl *gic, uint irq_nbr)
 	for (i = 32; i < irq_nbr; i += 32)
 		iowrite32(dist_base + GICD_ICENABLER(i/32), 0xFFFFFFFF);
 
-	for (i = 32; i < irq_nbr; i += 4)
-		iowrite32(dist_base + GICD_ITARGETSR(i/4), 0x01010101);
+	// PPIs can use the percpu handler
+	for (i = 16; i < 32; i++)
+		gic->descs[i].handler = irq_handle_percpu;
 
 	iowrite32(dist_base + GICD_CTLR, GICD_CTLR_ENABLE);
 }
@@ -125,10 +140,10 @@ static void __init gic_init(void)
 	irq_nbr = (lines + 1) * 32;
 	if (irq_nbr > GIC_NBR_IRQ)
 		irq_nbr = GIC_NBR_IRQ;
-	chip->irq_nbr = GIC_NBR_IRQ;
+	chip->irq_nbr = irq_nbr;
 
 	gic_init_shared(gic, irq_nbr);
-	gic_init_private(gic);
+	gic_init_private(gic, 0);
 
 	irqchip_init(NULL, chip);
 }

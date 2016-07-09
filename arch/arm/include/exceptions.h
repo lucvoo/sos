@@ -14,4 +14,9 @@ struct eframe {
 #endif
 };
 
+
+// called from asm
+void pabt_handler(struct eframe *regs, ulong far, ulong fsr);
+void dabt_handler(struct eframe *regs, ulong far, ulong fsr);
+
 #endif

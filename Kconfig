@@ -176,3 +176,4 @@ source kernel/time/Kconfig
 source drivers/Kconfig
 
 source kernel/debug/Kconfig
+source tests/Kconfig

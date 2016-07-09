@@ -3,6 +3,7 @@
 
 #include <stdarg.h>
 
+void __printf(const char *fmt, ...);
 void printf(const char *fmt, ...);
 void vprintf(const char *fmt, va_list ap);
 

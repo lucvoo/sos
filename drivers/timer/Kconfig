@@ -1,5 +1,10 @@
 menu "Timers"
 
+config	ARM_GENERIC_TIMER
+	bool "ARM generic timer"
+	depends on GENERIC_TIMER
+	default y
+
 config	MIPS_ARCH_TIMER
 	bool "MIPS architectural timer"
 	depends on ARCH_MIPS

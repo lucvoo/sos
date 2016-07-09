@@ -19,8 +19,7 @@ long thread_schedule_timeout(unsigned long ticks)
 
 	t.action = wakeup;
 	t.data   = th;
-	t.exp    = ticks;
-	timer_add_rel(&t);
+	timer_add_rel(&t, ticks);
 
 	thread_schedule();
 

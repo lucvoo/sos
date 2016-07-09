@@ -1,6 +1,7 @@
 objs-y	+= sprng.o
 
 
+progs-$(CONFIG_ARM_GENERIC_TIMER)	+= arm-generic-timer.test
 progs-y	+= bug.test
 progs-y	+= bug_on.test
 progs-y	+= delay.test
@@ -13,6 +14,7 @@ progs-y	+= hello.test
 progs-y	+= kmalloc.test
 progs-y	+= loops-per-second.test
 progs-y	+= memcpy.test
+progs-$(CONFIG_MEMTESTER)	+= memtester.test
 progs-$(CONFIG_NET)	+= net.test
 progs-$(CONFIG_MM_PAGE)	+= page-alloc.test
 progs-y	+= printf.test

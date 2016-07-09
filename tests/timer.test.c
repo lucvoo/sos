@@ -24,6 +24,6 @@ void kapi_start(void)
 		timers[i].exp = timeouts[i] * HZ;
 		timers[i].action = timer_action;
 		timers[i].data = &timers[i].exp;
-		timer_add(&timers[i]);
+		timer_add_abs(&timers[i]);
 	}
 }

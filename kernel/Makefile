@@ -9,6 +9,7 @@ objs-y	+= halt.o
 objs-y	+= idle.o
 objs-y	+= sched.o
 objs-y	+= schedule-timeout.o
+objs-y	+= stack-dump.o
 objs-y	+= thread.o
 objs-y	+= undef.o
 objs-y	+= waitqueue.o

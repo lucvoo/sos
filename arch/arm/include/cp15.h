@@ -2,8 +2,10 @@
 #include <stringify.h>
 #endif
 
-#define	cp_read(R)	({ ulong r; asm("mrc " STRINGIFY(R(%0)) : "=r" (r)); r; })
-#define	cp_write(R,V)	({ asm("mcr " STRINGIFY(R(%0)) :: "r" (V)); })
+#define	cp_read(R)	({ ulong r; asm volatile("mrc " STRINGIFY(R(%0)) : "=r" (r)); r; })
+#define	cp_write(R,V)	({ asm volatile("mcr " STRINGIFY(R(%0)) :: "r" (V)); })
+#define	cp_read64(R)	({ u64 r; asm volatile("mrrc " STRINGIFY(R(%Q0, %R0)) : "=r" (r)); r; })
+#define	cp_write64(R,V)	({ asm volatile("mcrr " STRINGIFY(R(%Q0, %R0)) :: "r" (V)); })
 
 
 #define	MIDR(R)		p15, 0, R,  c0,  c0, 0	// Main ID Register
@@ -147,7 +149,21 @@
 // Generic Timer Extension
 #define	CNTFRQ(R)	p15, 0, R, c14,  c0, 0	// Counter Frequency Register
 #define	CNTKCTL(R)	p15, 0, R, c14,  c1, 0	// Timer PL1 Control Register
+#define	CNTKCTL_PL0PTEN		(1 << 9)
+#define	CNTKCTL_PL0VTEN		(1 << 8)
+#define	CNTKCTL_EVNTEN		(1 << 2)
+#define	CNTKCTL_PL0VCTEN	(1 << 1)
+#define	CNTKCTL_PL0PCTEN	(1 << 0)
+#define	CNTKCTL_PRESERVE	0xfffffc00
 #define	CNTP_TVAL(R)	p15, 0, R, c14,  c2, 0	// PL1 Physical Timer Value register
 #define	CNTP_CTL(R)	p15, 0, R, c14,  c2, 1	// PL1 Physical Control register
+#define	CNTX_CTL_ISTATUS	(1 << 2)
+#define	CNTX_CTL_IMASK		(1 << 1)
+#define	CNTX_CTL_ENABLE		(1 << 0)
 #define	CNTV_TVAL(R)	p15, 0, R, c14,  c3, 0	// PL1 Virtual Timer Value register
 #define	CNTV_CTL(R)	p15, 0, R, c14,  c3, 1	// PL1 Virtual Control register
+
+#define	CNTPCNT(Q,R)	p15, 0, Q, R, c14	// PL1 Physical Counter register
+#define	CNTP_CVAL(Q,R)	p15, 2, Q, R, c14	// Physical Timer Compare Value register
+#define	CNTVCNT(Q,R)	p15, 1, Q, R, c14	// PL1 Virtual Counter register
+#define	CNTV_CVAL(Q,R)	p15, 3, Q, R, c14	// Virtual Timer Compare Value register

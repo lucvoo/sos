@@ -31,7 +31,7 @@ static void loops_per_second(void* data)
 	timer.data = &timer;
 
 	counter = 0;
-	timer_add(&timer);
+	timer_add_abs(&timer);
 	while (--counter) {
 	}
 

@@ -2,7 +2,11 @@
 #include <arch/cp15.h>
 #include <arch/irqflags.h>
 #include <stringify.h>
+#include <lock.h>
 
+
+extern struct lock printf_lock;
+#define	printf __printf
 
 #define	BYTE(V, N)	(((V) >> ((N)*8)) & 0xFF)
 
@@ -13,6 +17,8 @@
 
 void dump_system_regs(void)
 {
+	ulong flags = lock_acq_save(&printf_lock);
+
 	printf("\n");
 	dump_cp15(MIDR);
 	dump_cp15(TCMTR);
@@ -46,4 +52,6 @@ void dump_system_regs(void)
 	printf("\n");
 	dump_cp15(CNTFRQ);
 #endif
+
+	lock_rel_rest(&printf_lock, flags);
 }
