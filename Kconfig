@@ -84,8 +84,13 @@ config	XSMALL
 	bool "Xsmall kernel" if n
 	default n
 
+menu "Stack options"
+choice
+	prompt "Stack type"
+	default THREAD_STACK
+
 config	THREAD_STACK
-	bool "Let the stack be embedded into struct thread"
+	bool "embedded into struct thread"
 	default y
 
 config	THREAD_STACK_SHIFT
@@ -93,6 +98,11 @@ config	THREAD_STACK_SHIFT
 	depends on THREAD_STACK
 	range 12 14
 	default 14
+
+config	EXTERN_STACK
+	bool "separated from struct thread"
+
+endchoice
 
 config	INTERRUPT_STACK
 	bool "interrupt stack?"
@@ -116,6 +126,8 @@ config	STARTUP_STACK_SIZE
 config	STACK_ALIGNMENT
 	int "Stacks alignment"
 	default 16
+
+endmenu
 
 config	INITCALL
 	bool "initcalls support" if XSMALL
