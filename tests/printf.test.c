@@ -11,7 +11,11 @@ static const struct printf_num_vector {
 	long val;
 	const char *res;
 } vectors[] = {
+#if	CONFIG_BITS == 32
 	{ "%p", 	           0, 	"0x00000000" },
+#elif	CONFIG_BITS == 64
+	{ "%p", 	           0, 	"0x0000000000000000" },
+#endif
 	{ "%c", 	         'a', 	"a" },
 	{ "%c", 	         'a', 	"a" },
 
