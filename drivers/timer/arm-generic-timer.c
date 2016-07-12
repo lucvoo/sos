@@ -1,9 +1,8 @@
 #include <timerdev.h>
-#include <hw/generic-timer.h>
+#include <arch/generic-timer.h>
 #include <soc/generic-timer.h>
 #include <arch/barrier.h>
 #include <interrupt.h>
-#include <arch/cp15.h>
 #include <errno.h>
 #include <init.h>
 #include <irq.h>
@@ -18,7 +17,7 @@ static inline u64 agt_counter(void)
 	u64 val;
 
 	isb();
-	val = cp_read64(CNTVCNT);
+	val = arch_timer_get_counter();
 	return val;
 }
 
@@ -27,12 +26,12 @@ static int agt_isr(struct irqdesc *desc, void *data)
 {
 	u32 ctrl;
 
-	ctrl = cp_read(CNTV_CTL);
+	ctrl = arch_timer_get_ctrl();
 	if (!(ctrl & CNTX_CTL_ISTATUS))
 		return IRQ_NONE;
 
 	ctrl |= CNTX_CTL_IMASK;
-	cp_write(CNTV_CTL, ctrl);
+	arch_timer_set_ctrl(ctrl);
 
 	return IRQ_HANDLED | IRQ_CALL_DSR;
 }
@@ -62,11 +61,11 @@ static int agt_next_rel(struct timerdev *td, ulong val)
 
 	// FIXME: overrun is quite short (3 min)
 
-	ctrl = cp_read(CNTV_CTL);
+	ctrl = arch_timer_get_ctrl();
 	ctrl |= CNTX_CTL_ENABLE;
 	ctrl &= ~CNTX_CTL_IMASK;
-	cp_write(CNTV_TVAL, val);
-	cp_write(CNTV_CTL, ctrl);
+	arch_timer_set_tval(val);
+	arch_timer_set_ctrl(ctrl);
 
 	return 0;
 }
@@ -75,9 +74,9 @@ static int agt_stop(struct timerdev *td)
 {
 	u32 ctrl;
 
-	ctrl = cp_read(CNTV_CTL);
+	ctrl = arch_timer_get_ctrl();
 	ctrl &= ~CNTX_CTL_ENABLE;
-	cp_write(CNTV_CTL, ctrl);
+	arch_timer_set_ctrl(ctrl);
 
 	return 0;
 }
@@ -85,13 +84,13 @@ static int agt_stop(struct timerdev *td)
 
 static void agt_user_access(void)
 {
-	u32 ctrl = cp_read(CNTKCTL);
+	u32 ctrl = arch_timer_get_kctl();
 
 	// only allow access to the virtual counter
 	ctrl &= CNTKCTL_PRESERVE;
 	ctrl |= CNTKCTL_PL0VCTEN;
 
-	cp_write(CNTKCTL, ctrl);
+	arch_timer_set_kctl(ctrl);
 }
 
 static int agt_init_local(struct timerdev *td, uint cpu)
