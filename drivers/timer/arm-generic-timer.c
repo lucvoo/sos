@@ -1,4 +1,5 @@
 #include <timerdev.h>
+#include <hw/generic-timer.h>
 #include <soc/generic-timer.h>
 #include <arch/barrier.h>
 #include <interrupt.h>

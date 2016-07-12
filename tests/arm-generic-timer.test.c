@@ -1,4 +1,5 @@
 #include <kapi/kapi.h>
+#include <hw/generic-timer.h>
 #include <arch/cp15.h>
 #include <utils.h>
 #include <timer.h>
