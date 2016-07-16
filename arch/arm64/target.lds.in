@@ -48,21 +48,23 @@ SECTIONS
 	} > rom
 
 	.rodata : {
-			*(.rodata*)
+			*(SORT_BY_ALIGNMENT(.rodata*))
 	} > rom
 
 	.data : WORD_ALIGN {
 		PROVIDE(__data_load = LOADADDR(.data));
 		PROVIDE(__data_start = .);
-			*(.data*)
+			*(SORT_BY_ALIGNMENT(.data*))
 		. = WORD_ALIGN;
 		PROVIDE(__data_end = .);
 	} > ram AT> rom
 
 	.bss : WORD_ALIGN {
 		PROVIDE(__bss_start = .);
-			*(.bss*)
-			*(COMMON)
+			*(
+				SORT_BY_ALIGNMENT(.bss*)
+				SORT_BY_ALIGNMENT(COMMON)
+			)
 		PROVIDE(__bss_end = .);
 	} > ram
 
