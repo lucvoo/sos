@@ -20,12 +20,6 @@ MEMORY {
 #else
 #define	rom ram
 #endif
-
-#ifdef	HIGH_VECTORS
-	highvectors	: ORIGIN = 0xFFFF0000, LENGTH = 0x00010000
-#else
-#define	highvectors	ram
-#endif
 }
 
 SECTIONS
