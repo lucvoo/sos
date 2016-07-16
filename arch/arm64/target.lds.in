@@ -63,12 +63,6 @@ SECTIONS
 			*(.rodata*)
 	} > rom
 
-	.ARM.exidx : {			// used for unwind
-		PROVIDE(__exidx_start = .);
-		*(.ARM.exidx* .gnu.linkonce.armexidx.*)
-		PROVIDE(__exidx_end = .);
-	} > rom
-
 	.data : WORD_ALIGN {
 		PROVIDE(__data_load = LOADADDR(.data));
 		PROVIDE(__data_start = .);
