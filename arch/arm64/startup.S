@@ -56,17 +56,6 @@ startup:
 	ldr	x5, =__exception_vectors
 	msr	vbar_el1, x5
 
-#ifdef	CONFIG_THREAD_STACK
-	// initialize stack
-	ldr     x0, =init_thread + (1 << CONFIG_THREAD_STACK_SHIFT) - 16
-	mov	sp, x0
-#else
-	ldr     x0, =__startup_stack + CONFIG_STARTUP_STACK_SIZE - 16
-	mov	sp, x0
-#endif
-	ldr	x1, =(VIRT_ADDR - PHYS_ADDR)
-	sub	sp, x0, x1
-
 	// setup MAIR & TCR, init & return the identity table
 	bl	__arch_mmu_setup
 	mov	idpgd, x0
@@ -99,11 +88,14 @@ post_mmu:
 	// From here we run with the MMU on & with virtual addresses
 
 	// setup the normal stack
-	ldr	x1, =(VIRT_ADDR - PHYS_ADDR)
-	add	sp, sp, x1
-
-	// mark the end of the frame chain
-	stp	xzr, xzr, [sp, #16]!
+#ifdef	CONFIG_THREAD_STACK
+	// initialize stack
+	ldr     x0, =init_thread + (1 << CONFIG_THREAD_STACK_SHIFT) - 16
+#else
+	ldr     x0, =__startup_stack + CONFIG_STARTUP_STACK_SIZE - 16
+#endif
+	mov	sp, x0
+	stp	xzr, xzr, [sp, #16]!	// mark the end of the frame chain
 	mov	fp, #0
 
 	// OK, jump to the C code
