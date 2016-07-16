@@ -42,14 +42,8 @@ SECTIONS
 #endif
 	} > rom
 
-	.vectors :  {
-		PROVIDE(__vectors_start = LOADADDR(.vectors));
-		KEEP(*(.vectors))
-		PROVIDE(__vectors_end   = LOADADDR(.vectors) + SIZEOF(.vectors));
-    	} > highvectors AT > rom
-
-	. = LOADADDR(.vectors) + SIZEOF(.vectors);
 	.text : TEXT_ALIGN {
+			*(.vectors)
 			*(.text*)
 	} > rom
 
