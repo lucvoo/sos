@@ -41,6 +41,9 @@ _os_startup:
 startup:
 	// TODO: copy boot args
 
+	// load the (virtual!) address to jump when MMU is set
+	ldr	xpm, =post_mmu
+
 #ifdef	CONFIG_CNTFRQ
 	ldr	x6, =CONFIG_CNTFRQ
 	msr	cntfrq_el0, x6
@@ -71,9 +74,6 @@ startup:
 	// invalidate the page table to avoid any stale entries
 	mov	x1, #(PGD_NBR_ENT * 8)
 	bl	__dcache_inv_range
-
-	// load the (virtual!) address to jump when MMU is set
-	ldr	xpm, =post_mmu
 
 	// load the TBRs with the identity mapping
 	msr	ttbr0_el1, idpgd	// load TTBR0
