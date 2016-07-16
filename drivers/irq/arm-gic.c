@@ -6,6 +6,7 @@
 #include <soc/irq.h>
 #include <smp/ipi.h>
 #include <errno.h>
+#include <barrier.h>
 #include "arm-gic.h"
 
 
