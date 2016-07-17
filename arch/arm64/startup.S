@@ -4,6 +4,7 @@
 #include <arch/stack.h>
 #include <arch/arch.h>
 #include <arch/mmu.h>
+#include <soc/asm.h>
 
 
 idpgd	.req	x25
@@ -46,6 +47,8 @@ startup:
 	ldr	xpm, =post_mmu
 
 startup_cpu:
+	startup_cpu	x4, x5
+
 #ifdef	CONFIG_CNTFRQ
 	ldr	x6, =CONFIG_CNTFRQ
 	msr	cntfrq_el0, x6
