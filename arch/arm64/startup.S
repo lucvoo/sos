@@ -1,6 +1,7 @@
 #include <arch/assembly.h>
 #include <arch/switch_el.S>
 #include <arch/memory.h>
+#include <arch/stack.h>
 #include <arch/arch.h>
 #include <arch/mmu.h>
 
@@ -88,14 +89,9 @@ post_mmu:
 	// From here we run with the MMU on & with virtual addresses
 
 	// setup the normal stack
-#ifdef	CONFIG_THREAD_STACK
-	// initialize stack
-	ldr     x0, =init_thread + (1 << CONFIG_THREAD_STACK_SHIFT) - 16
-#else
-	ldr     x0, =__startup_stack + CONFIG_STARTUP_STACK_SIZE - 16
-#endif
+	ldr     x0, =__startup_stack + STARTUP_STACK_SIZE
 	mov	sp, x0
-	stp	xzr, xzr, [sp, #16]!	// mark the end of the frame chain
+	stp	xzr, xzr, [sp, #-16]!	// mark the end of the frame chain
 	mov	fp, #0
 
 	// OK, jump to the C code
