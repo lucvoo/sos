@@ -10,6 +10,7 @@ objs-y	+= startup.o
 objs-y	+= switch_to.o
 objs-y	+= vectors.o
 
+objs-$(CONFIG_SMP)	+= smp.o
 
 deps-y	:= \
 	target.lds	\

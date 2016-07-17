@@ -45,6 +45,7 @@ startup:
 	// load the (virtual!) address to jump when MMU is set
 	ldr	xpm, =post_mmu
 
+startup_cpu:
 #ifdef	CONFIG_CNTFRQ
 	ldr	x6, =CONFIG_CNTFRQ
 	msr	cntfrq_el0, x6
@@ -104,5 +105,28 @@ post_mmu:
 
 	// OK, jump to the C code
 	b	_os_start
+
+////////////////////////////////////////////////////////////////////////////////
+
+#ifdef	CONFIG_SMP
+	.text
+
+// entry point for secondary CPUs
+GLOBAL(__smp_startup):
+
+	// load the (virtual!) address to jump when MMU is set
+	ldr	xpm, =post_mmu_smp
+
+	// initialize the cpu
+	b	startup_cpu
+
+post_mmu_smp:
+	bl	dcache_inval_all
+	// From here we run with the MMU on & with virtual addresses
+
+	// need to setup the stack before calling
+	b	__smp_start_idle_thread
+ENDFUN(__smp_startup)
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////

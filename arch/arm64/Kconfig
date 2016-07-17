@@ -8,6 +8,7 @@ config	ARMV8
 	select HAS_DIV32
 	select HAS_DIV64
 	select BUG
+	select HAS_SMP
 
 config	ARM_ARCH
 	int
