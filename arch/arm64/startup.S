@@ -57,6 +57,14 @@ startup:
 	ldr	x5, =__exception_vectors
 	msr	vbar_el1, x5
 
+#if 1	// early stack for debugging
+	ldr     x4, =__startup_stack + STARTUP_STACK_SIZE
+	ldr     x5, =(VIRT_ADDR - PHYS_ADDR)
+	sub	sp, x4, x5
+	stp	xzr, xzr, [sp, #-16]!	// mark the end of the frame chain
+	mov	fp, #0
+#endif
+
 	// setup MAIR & TCR, init & return the identity table
 	bl	__arch_mmu_setup
 	mov	idpgd, x0
