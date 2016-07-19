@@ -267,7 +267,7 @@ post_mmu_smp:
 
 	// FIXME: what about the exception stack?
 
-	b	__smp_start_mach
+	b	__smp_start_idle_thread
 ENDFUN(__smp_startup)
 #endif
 
