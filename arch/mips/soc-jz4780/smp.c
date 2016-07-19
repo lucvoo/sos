@@ -85,7 +85,7 @@ static struct thread idle_thread_core1;
 
 struct thread *__smp_sec_cpu_thread;
 
-void __smp_init(void)
+int __smp_init(void)
 {
 	extern void __jz4780_smp_sec_cpu_entry(void);
 
@@ -128,4 +128,6 @@ void __smp_init(void)
 	__smp_sec_cpu_thread = &idle_thread_core1;
 	c0_chgbits(c0_core_reim, CORE_REIM_ENTRY_MSK, entry - KSEG0_BASE + KSEG1_BASE);
 	c0_chgbits(c0_core_ctrl, CORE_CTRL_SW_RST1|CORE_CTRL_RPC1, CORE_CTRL_RPC1);
+
+	return 0;
 }
