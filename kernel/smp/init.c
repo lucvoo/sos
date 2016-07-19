@@ -11,7 +11,8 @@ void __smp_start(void)
 {
 	uint cpu = __coreid();
 
-	smp_ops.init_cpu(cpu);
+	if (smp_ops.init_cpu)
+		smp_ops.init_cpu(cpu);
 
 	kapi_start_smp();
 	_thread_scheduler_start();
