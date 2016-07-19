@@ -82,7 +82,7 @@ static int dm9000_eeprom_wait(struct dm9000 *dev)
 		if (!(epc & EPCR_ERRE))
 			break;
 
-		usleep(100);
+		udelay(100);
 	}
 
 	return n;
