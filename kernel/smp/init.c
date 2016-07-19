@@ -49,6 +49,17 @@ int __weak __smp_init(void)
 }
 
 
+// This function MUST NOT use the stack, ever: it hasn't one yet.
+struct thread *__smp_init_idle_thread(void);		// called from asm
+struct thread *__smp_init_idle_thread(void)
+{
+	struct thread *idle = &init_thread[__coreid()];
+
+	set_current_thread(idle);
+
+	return idle;
+}
+
 void __smp_start(void)
 {
 	uint cpu = __coreid();
