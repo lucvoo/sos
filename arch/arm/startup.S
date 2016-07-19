@@ -1,4 +1,5 @@
 #include <arch/assembly.h>
+#include <arch/asm-offsets.h>
 #include "arch/arch.h"
 #include <mach/platform_setup.S>
 #include "arch/memory.h"
@@ -267,7 +268,10 @@ post_mmu_smp:
 
 	// FIXME: what about the exception stack?
 
-	b	__smp_start_idle_thread
+	// need to setup the stack before calling __smp_start
+	bl	__smp_init_idle_thread
+	ldr	sp, [r0, THR_CTXT_SP]
+	b	__smp_start
 ENDFUN(__smp_startup)
 #endif
 

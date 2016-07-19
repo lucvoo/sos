@@ -10,6 +10,7 @@
 int main(void)
 {
   DEFINE(TI_CPU_SAVE,		offsetof(struct thread, cpu_context));
+  DEFINE(THR_CTXT_SP,		offsetof(struct thread, cpu_context.sp));
   BLANK();
   DEFINE(S_SP,			offsetof(struct eframe, sp));
   DEFINE(S_LR,			offsetof(struct eframe, lr));
