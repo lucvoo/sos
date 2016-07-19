@@ -15,12 +15,10 @@
 #endif
 
 
-.extern	__smp_sec_cpu_thread
-
 .section .init.text.smp_entry,"ax",@progbits
 .balign	SMP_ENTRY_ALIGN
 
-ENTRY(__jz4780_smp_sec_cpu_entry, global)
+ENTRY(__smp_entry, global)
 	.set noreorder
 	mtc0	$0, c0_cause
 
@@ -48,10 +46,12 @@ ENTRY(__jz4780_smp_sec_cpu_entry, global)
 	la	t4, __ex_base
 	mtc0	t4, c0_ebase
 
+	// get the idle thread
+	jal	__smp_init_idle_thread
+
 	// load gp & sp
-	la	t5, __smp_sec_cpu_thread
-	lw	gp, 0(t5)
-	lw	sp, THR_CPU_SP(gp)
+	move	gp, v0
+	lw	sp, THR_CPU_SP(v0)
 
 	// enable MBOX interrupt
 	ori	t0, ST0_IM3
@@ -59,4 +59,4 @@ ENTRY(__jz4780_smp_sec_cpu_entry, global)
 
 	la	t6, __smp_start
 	jr.hb	t6
-ENDFUN(__jz4780_smp_sec_cpu_entry)
+ENDFUN(__smp_entry)

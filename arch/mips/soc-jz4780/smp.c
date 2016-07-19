@@ -1,4 +1,5 @@
 #include <smp/init.h>
+#include <smp/ops.h>
 #include <arch/copro.h>
 #include <arch/memory.h>
 #include <io.h>
@@ -78,22 +79,11 @@ void __smp_ipi_send(unsigned int cpu, unsigned int msg)
 }
 
 static struct irqaction mbox_action;
+
 /******************************************************************************/
 
-
-static struct thread idle_thread_core1;
-
-struct thread *__smp_sec_cpu_thread;
-
-int __smp_init(void)
+static int jz4780_smp_init(void)
 {
-	extern void __jz4780_smp_sec_cpu_entry(void);
-
-	void __iomem *cgu = ioremap(CGU_BASE, CGU_SIZE);
-	unsigned long entry;
-	unsigned int gated;
-	unsigned int lpcr;
-
 	// setup the mailboxes' irq handler
 	irq_create(&mbox_action, mbox_irq_handler, NULL, NULL, 0);
 	irq_attach(irq_get_desc("cpuintc", IRQ_MBOX), &mbox_action);
@@ -106,8 +96,17 @@ int __smp_init(void)
 	c0_setbits(c0_status, ST0_IM0 << IRQ_MBOX);
 	ehb();
 
-	// initialize the thread with the default stack size
-	thread_create(&idle_thread_core1, 0, NULL, NULL, NULL, 0);
+	return 0;
+}
+
+static int jz4780_smp_boot_cpu(struct thread *idle, uint cpu)
+{
+	extern void __smp_entry(void);
+
+	void __iomem *cgu = ioremap(CGU_BASE, CGU_SIZE);
+	unsigned long entry;
+	unsigned int gated;
+	unsigned int lpcr;
 
 	// ungate the core clock
 	gated = ioread32(cgu + CGU_CLKGR1);
@@ -123,11 +122,24 @@ int __smp_init(void)
 	while(ioread32(cgu + CGU_LPCR) & CGU_LPCR_SCPU_ST)
 		;
 
-	// setup the address of the entry point, its setup stack and un-reset the core
-	entry = (unsigned long) &__jz4780_smp_sec_cpu_entry;
-	__smp_sec_cpu_thread = &idle_thread_core1;
+	// setup the address of the entry point
+	entry = (unsigned long) &__smp_entry;
 	c0_chgbits(c0_core_reim, CORE_REIM_ENTRY_MSK, entry - KSEG0_BASE + KSEG1_BASE);
+
+	// un-reset the core
 	c0_chgbits(c0_core_ctrl, CORE_CTRL_SW_RST1|CORE_CTRL_RPC1, CORE_CTRL_RPC1);
 
 	return 0;
 }
+
+
+static int jz4780_smp_init_cpu(uint cpu)
+{
+	return 0;
+}
+
+struct smp_ops smp_ops = {
+	.init     = jz4780_smp_init,
+	.init_cpu = jz4780_smp_init_cpu,
+	.boot_cpu = jz4780_smp_boot_cpu,
+};
