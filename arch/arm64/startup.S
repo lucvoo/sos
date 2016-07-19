@@ -1,4 +1,5 @@
 #include <arch/assembly.h>
+#include <arch/asm-offsets.h>
 #include <arch/switch_el.S>
 #include <arch/memory.h>
 #include <arch/stack.h>
@@ -127,8 +128,11 @@ post_mmu_smp:
 	bl	dcache_inval_all
 	// From here we run with the MMU on & with virtual addresses
 
-	// need to setup the stack before calling
-	b	__smp_start_idle_thread
+	// need to setup the stack before calling __smp_start
+	bl	__smp_init_idle_thread
+	ldr	x1, [x0, THR_CTXT_SP]
+	mov	sp, x1
+	b	__smp_start
 ENDFUN(__smp_startup)
 #endif
 
