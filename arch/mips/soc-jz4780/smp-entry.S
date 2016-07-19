@@ -4,6 +4,7 @@
 #include <arch/memory.h>
 #include <arch/cacheop.h>
 #include <arch/cachesize.h>
+#include <soc/smp.h>
 
 
 #if ICACHE_SIZE != DCACHE_SIZE
@@ -17,7 +18,7 @@
 .extern	__smp_sec_cpu_thread
 
 .section .init.text.smp_entry,"ax",@progbits
-.balign	0x10000
+.balign	SMP_ENTRY_ALIGN
 
 ENTRY(__jz4780_smp_sec_cpu_entry, global)
 	.set noreorder
