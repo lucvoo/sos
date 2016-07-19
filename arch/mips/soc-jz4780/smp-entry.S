@@ -3,11 +3,15 @@
 #include <arch/assembly.h>
 #include <arch/memory.h>
 #include <arch/cacheop.h>
+#include <arch/cachesize.h>
 
 
-// FIXME: get this from the config register?
-#define	CACHE_SIZE	(32*1024)
-#define	CACHE_LINESIZE	32
+#if ICACHE_SIZE != DCACHE_SIZE
+#error	"icache & dcache must have the same size"
+#endif
+#if CACHE_LI_LINESIZE != CACHE_LD_LINESIZE
+#error	"icache & dcache must have the same linesize"
+#endif
 
 
 .extern	__smp_sec_cpu_thread
@@ -24,12 +28,12 @@ ENTRY(__jz4780_smp_sec_cpu_entry, global)
 
 	// Cache setup
 	li	t1, KSEG0_BASE
-	ori	t2, t1, CACHE_SIZE
+	ori	t2, t1, DCACHE_SIZE
 	mtc0	$0, c0_taglo
 1:	cache	CACHEOP_I_IDX_STA, 0(t1)
 	cache	CACHEOP_D_IDX_STA, 0(t1)
 	bne	t1, t2, 1b
-	addiu	t1, t1, CACHE_LINESIZE
+	addiu	t1, t1, CACHE_LD_LINESIZE
 
 	// KSEG0 cache coherency attribute
 	mfc0	t3, c0_config
