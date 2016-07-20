@@ -1,5 +1,8 @@
 menu "Timers"
 
+source kernel/time/Kconfig
+
+
 config	ARM_GENERIC_TIMER
 	bool "ARM generic timer"
 	depends on GENERIC_TIMER
