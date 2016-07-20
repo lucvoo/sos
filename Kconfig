@@ -91,7 +91,6 @@ choice
 
 config	THREAD_STACK
 	bool "embedded into struct thread"
-	default y
 
 config	THREAD_STACK_SHIFT
 	int "Size of the stacks, in power of 2"
