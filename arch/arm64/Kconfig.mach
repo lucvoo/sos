@@ -1,5 +1,3 @@
-comment "Platform/board"
-
 choice
 	prompt "Platform"
 	default	MACH_PINE64
