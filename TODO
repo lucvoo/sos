@@ -57,6 +57,8 @@
     ✓ wakeup: need to choose a good CPU (same as last or idle)
     ✓ wakeup: may need to wakeup others CPUs (IPI)
   * add per-cpu infrastructure ?
+  ! need printf serialization
+  ! need per-cpu timers
 
 * RTC:
   * add basic support
