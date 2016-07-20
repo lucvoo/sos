@@ -20,12 +20,6 @@ MEMORY {
 #else
 #define	rom ram
 #endif
-
-#ifdef	HIGH_VECTORS
-	highvectors	: ORIGIN = 0xFFFF0000, LENGTH = 0x00010000
-#else
-#define	highvectors	ram
-#endif
 }
 
 SECTIONS
@@ -48,39 +42,29 @@ SECTIONS
 #endif
 	} > rom
 
-	.vectors :  {
-		PROVIDE(__vectors_start = LOADADDR(.vectors));
-		KEEP(*(.vectors))
-		PROVIDE(__vectors_end   = LOADADDR(.vectors) + SIZEOF(.vectors));
-    	} > highvectors AT > rom
-
-	. = LOADADDR(.vectors) + SIZEOF(.vectors);
 	.text : TEXT_ALIGN {
+			*(.vectors)
 			*(.text*)
 	} > rom
 
 	.rodata : {
-			*(.rodata*)
-	} > rom
-
-	.ARM.exidx : {			// used for unwind
-		PROVIDE(__exidx_start = .);
-		*(.ARM.exidx* .gnu.linkonce.armexidx.*)
-		PROVIDE(__exidx_end = .);
+			*(SORT_BY_ALIGNMENT(.rodata*))
 	} > rom
 
 	.data : WORD_ALIGN {
 		PROVIDE(__data_load = LOADADDR(.data));
 		PROVIDE(__data_start = .);
-			*(.data*)
+			*(SORT_BY_ALIGNMENT(.data*))
 		. = WORD_ALIGN;
 		PROVIDE(__data_end = .);
 	} > ram AT> rom
 
 	.bss : WORD_ALIGN {
 		PROVIDE(__bss_start = .);
-			*(.bss*)
-			*(COMMON)
+			*(
+				SORT_BY_ALIGNMENT(.bss*)
+				SORT_BY_ALIGNMENT(COMMON)
+			)
 		PROVIDE(__bss_end = .);
 	} > ram
 
