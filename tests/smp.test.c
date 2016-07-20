@@ -19,7 +19,6 @@ static void start_smp(void *data)
 
 	sleep(3);		// FIXME
 	printf("main OK!\n");
-	dump_system_regs();
 }
 
 void kapi_start(void)
