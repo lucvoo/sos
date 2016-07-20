@@ -23,7 +23,6 @@ static void utostr(char *buf, unsigned size, unsigned val, unsigned base)
 
 static void _diag_vprintf(const char *fmt, va_list ap)
 {
-	unsigned long irqflags = __local_irq_save();
 	unsigned int c;
 	unsigned prec;
 	int idx;
@@ -111,8 +110,6 @@ parse:
 	if (idx) {
 		_os_diag_write_buf(fmt - idx - 1, idx);
 	}
-
-        __local_irq_rest(irqflags);
 }
 
 void _os_diag_printf(const char *fmt, ...)

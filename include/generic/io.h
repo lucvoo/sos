@@ -11,4 +11,9 @@
 #define ioread16(a)	(__chk_io_ptr(a), *(volatile const u16 __force *)(a))
 #define ioread32(a)	(__chk_io_ptr(a), *(volatile const u32 __force *)(a))
 
+#ifdef	CONFIG_64BIT
+#define iowrite64(a, v)	(__chk_io_ptr(a), *(volatile       u64 __force *)(a) = (v))
+#define ioread64(a)	(__chk_io_ptr(a), *(volatile const u64 __force *)(a))
+#endif
+
 #endif

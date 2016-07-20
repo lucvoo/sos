@@ -9,6 +9,6 @@ struct smp_ops {
 	int (*init_cpu)(uint cpu);
 };
 
-struct smp_ops smp_ops;
+extern struct smp_ops smp_ops;
 
 #endif

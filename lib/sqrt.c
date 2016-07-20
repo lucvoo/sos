@@ -3,7 +3,7 @@
 unsigned long sqrtl(unsigned long n)
 {
 	unsigned long r = 0;
-	unsigned long b = 1 << (sizeof(n) * 8 - 2);
+	unsigned long b = 1UL << (sizeof(n) * 8 - 2);
 
 	// b = the highest power of 4 not greater than n
 	while (b > n)

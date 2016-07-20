@@ -49,8 +49,6 @@ static int a80_smp_init(void)
 	return 0;
 }
 
-static struct thread *boot_threads[NR_CPUS];
-
 static int a80_smp_boot_cpu(struct thread *idle, uint cpu)
 {
 
@@ -58,24 +56,11 @@ static int a80_smp_boot_cpu(struct thread *idle, uint cpu)
 
 	// FIXME: CCI-400
 
-	boot_threads[cpu]= idle;
 	a80_enable_cpu(cpu);
 
 	return 0;
 }
 
-void __smp_start_mach(void) __attribute__((naked));
-void __smp_start_mach(void)
-{
-	struct thread *idle = boot_threads[__coreid()];
-
-	set_current_thread(idle);
-
-	asm("\n"
-	"	ldr	sp, %0\n"
-	"	b	__smp_start"
-	:: "m" (idle->cpu_context.sp));
-}
 
 static int a80_smp_init_cpu(uint cpu)
 {

@@ -74,6 +74,17 @@
 * ARM-v7M:
   ~ add basic supoort for interrupts & exceptions
 
+* ARM64:
+  ✓ drop from EL3 to EL1, as it should
+  ✓ basic exception handling
+  ✓ run on SDRAM
+  ✓ enable MMU & dcache
+  ✓ enable icache
+  ✓ interrupts
+  ✓ GIC
+  ✓ timer
+  * ioremap
+
 * MIPS:
   ✓ add support for interrupts & other exceptions
 

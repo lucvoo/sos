@@ -1,0 +1,114 @@
+config ARCH
+	symbol
+	default arm64
+
+config	ARMV8
+	bool
+	default y
+	select HAS_DIV32
+	select HAS_DIV64
+	select BUG
+	select HAS_SMP
+
+config	ARM_ARCH
+	int
+	default 8 if ARMV8
+
+config	BITS
+	int
+	default 64
+
+
+config	CPU_A53
+	bool
+	select ARMV8
+
+config	CPU_A57
+	bool
+	select ARMV8
+
+
+menu "ARM64 options"
+
+config	ARM64_BOOT
+	bool "Enable stuff a bootloader should do"
+
+config	ARM64_DROP_EL3_EL1
+	bool "Drop from el3 to el1"
+	depends on ARM64_BOOT
+
+comment "Memory"
+
+choice
+	prompt "Page size"
+	default PAGESIZE_4K
+
+config	PAGESIZE_4K
+	bool "4K"
+
+config	PAGESIZE_16K
+	bool "16K"
+	depends on BROKEN
+
+config	PAGESIZE_64K
+	bool "64K"
+	depends on BROKEN
+endchoice
+
+config	PAGE_BITS
+	int
+	default 12 if PAGESIZE_4K
+	default 14 if PAGESIZE_16K
+	default 16 if PAGESIZE_64K
+
+
+config	VA_BITS
+	int "Virtual Address range"
+	depends on !PAGESIZE_16K || BROKEN
+	depends on !PAGESIZE_64K || BROKEN
+	range 25 48
+	default 39 if PAGESIZE_4K
+
+
+config	PHYS_ADDR
+	hex "Main RAM physical address"
+
+config	PHYS_SIZE
+	hex "Main RAM size"
+
+config	ARM64_NOMMU
+	bool "MMU disabled"
+	default n
+	select NOMMU
+
+config	VIRT_ADDR
+	hex "non-standard virtual address"
+	depends on ARM64_NOMMU
+	default PHYS_ADDR
+
+config	TEXT_OFFSET
+	hex "Start of kernel image relatively to the start of the RAM"
+	default 0x0		if NOMMU
+	default 0x200000	if   MMU
+	help
+	  See Linux's arm64 booting requirements
+	  (Documentation/arm64/booting.txt).
+
+endmenu
+
+source arch/arm64/Kconfig.mach
+source arch/arm64/Kconfig.socs
+
+
+menu "ARM64 options"
+
+comment "Generic Timer"
+config	GENERIC_TIMER
+	bool "Generic timer"
+	default y
+
+config	CNTFRQ
+	int "Generic timer frequency"
+	depends on GENERIC_TIMER
+
+endmenu

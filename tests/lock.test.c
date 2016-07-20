@@ -2,37 +2,44 @@
 #include <version.h>
 #include <sched.h>
 #include <smp/init.h>
+#include <smp.h>
 #include <lock.h>
 
 
 static struct lock lock;
 
-void kapi_start(void)
+
+static void do_loop(void)
 {
+	uint cpu = __coreid();
 	int n = 0;
 
+	printf("cpu%d started\n", cpu);
+
+	lock_acq(&lock);
+	printf("\n");
+	lock_rel(&lock);
+
+	while (1) {
+		lock_acq(&lock);
+		__printf("thr%d: %d\n", cpu, n++);
+		lock_rel(&lock);
+	}
+}
+
+void kapi_start(void)
+{
 	printf(os_version);
 
 	lock_acq(&lock);
 	__smp_init();
 	lock_rel(&lock);
 
-	while (1) {
-		lock_acq(&lock);
-		++n;
-		printf("CORE 0: %08x\n", n);
-		lock_rel(&lock);
-	}
+	do_loop();
 }
 
 
 void kapi_start_smp(void)
 {
-	printf("SMP started\n");
-
-	while (1) {
-		lock_acq(&lock);
-		printf("CORE 1\n");
-		lock_rel(&lock);
-	}
+	do_loop();
 }

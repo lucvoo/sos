@@ -30,8 +30,8 @@ _os_startup:
 	mtc0	$0, c0_context
 
         // initialize stack
-#ifdef	CONFIG_FIXED_STACKS
-	la	sp, init_thread + (1 << CONFIG_FIXED_STACKS_SHIFT) - 4
+#ifdef	CONFIG_THREAD_STACK
+	la	sp, init_thread + (1 << CONFIG_THREAD_STACK_SHIFT) - 4
 #else
 	la	sp, __startup_stack + CONFIG_STARTUP_STACK_SIZE
 #endif

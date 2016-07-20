@@ -1,5 +1,5 @@
 #include <kapi/kapi.h>
-#include <arch/cp15.h>
+#include <arch/generic-timer.h>
 #include <utils.h>
 #include <timer.h>
 #include <sched.h>
@@ -18,9 +18,9 @@ static void fun(void* data)
 		u32 hi, lo;
 		u32 s, f, fns;
 
-		ref = cp_read64(CNTVCNT);
+		ref = arch_timer_get_counter();
 		thread_schedule_timeout(d * HZ);
-		now = cp_read64(CNTVCNT);
+		now = arch_timer_get_counter();
 		now -= ref;
 		hi = now >> 32;
 		lo = now & 0xffffffff;

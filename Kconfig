@@ -7,6 +7,9 @@ choice
 config ARCH_ARM
 	bool "ARM"
 
+config ARCH_ARM64
+	bool "ARM64"
+
 config ARCH_MIPS
 	bool "MIPS"
 
@@ -17,6 +20,9 @@ source arch/Kconfig.features
 
 if ARCH_ARM
 source arch/arm/Kconfig
+endif
+if ARCH_ARM64
+source arch/arm64/Kconfig
 endif
 if ARCH_MIPS
 source arch/mips/Kconfig
@@ -78,13 +84,34 @@ config	XSMALL
 	bool "Xsmall kernel" if n
 	default n
 
-config	NEED_INTERRUPT_STACK
-	bool "is an interrupt stack needed?"
+menu "Stack options"
+choice
+	prompt "Stack type"
+	default THREAD_STACK
+
+config	THREAD_STACK
+	bool "embedded into struct thread"
+	default y
+
+config	THREAD_STACK_SHIFT
+	int "Size of the stacks, in power of 2"
+	depends on THREAD_STACK
+	range 12 14
+	default 14
+
+config	EXTERN_STACK
+	bool "separated from struct thread"
+
+endchoice
+
+config	INTERRUPT_STACK
+	bool "interrupt stack?"
+	depends on !THREAD_STACK
 	default n
 
 config	INTERRUPT_STACK_SIZE
 	int "Interrupt stack size"
-	depends on NEED_INTERRUPT_STACK
+	depends on INTERRUPT_STACK
 	default 4096
 
 config	EXCEPTION_STACK_SIZE
@@ -93,12 +120,14 @@ config	EXCEPTION_STACK_SIZE
 
 config	STARTUP_STACK_SIZE
 	int "startup stack size"
-	depends on !FIXED_STACKS
+	depends on !THREAD_STACK
 	default 4096
 
 config	STACK_ALIGNMENT
 	int "Stacks alignment"
 	default 16
+
+endmenu
 
 config	INITCALL
 	bool "initcalls support" if XSMALL
@@ -108,16 +137,6 @@ config	NR_THREAD_PRIORITY
 	int "Number of threads priority levels"
 	range 2 32
 	default 32
-
-config	FIXED_STACKS
-	bool "Use the same size for all stacks"
-	default y
-
-config	FIXED_STACKS_SHIFT
-	int "Size of the stacks, in power of 2"
-	depends on FIXED_STACKS
-	range 12 14
-	default 14
 
 config	SOFTIRQ
 	bool "Need softirq?"

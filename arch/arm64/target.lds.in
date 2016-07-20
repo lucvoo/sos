@@ -1,0 +1,93 @@
+#include "arch/memory.h"
+#include "page.h"
+
+
+#ifdef CONFIG_REMOVE_INIT_SECTIONS
+#define	TEXT_ALIGN	ALIGN(PAGE_SIZE)
+#else
+#define	TEXT_ALIGN	ALIGN(__SIZEOF_LONG__)
+#endif
+
+#define	WORD_ALIGN	ALIGN(__SIZEOF_LONG__)
+
+ENTRY(_os_startup)
+GROUP(libtarget.a libgcc.a)
+
+MEMORY {
+	ram		: ORIGIN = VIRT_ADDR + TEXT_OFFSET, LENGTH = 0xFFFFFFFF
+#ifdef CONFIG_XIP
+	rom		: ORIGIN = CONFIG_XIP_VADDR, LENGTH = CONFIG_XIP_SIZE
+#else
+#define	rom ram
+#endif
+
+#ifdef	HIGH_VECTORS
+	highvectors	: ORIGIN = 0xFFFF0000, LENGTH = 0x00010000
+#else
+#define	highvectors	ram
+#endif
+}
+
+SECTIONS
+{
+
+	.entry :  {
+		KEEP(*(.entry))
+			*(.entry.text)
+	} > rom
+
+	.init : {
+			*(.startup.text)
+			*(.init.text)
+
+#ifdef CONFIG_INITCALL
+		. = WORD_ALIGN;
+		PROVIDE(__INITCALL_LIST__ = .);
+			KEEP(*(SORT(.initcall*)))
+			LONG(0);
+#endif
+	} > rom
+
+	.vectors :  {
+		PROVIDE(__vectors_start = LOADADDR(.vectors));
+		KEEP(*(.vectors))
+		PROVIDE(__vectors_end   = LOADADDR(.vectors) + SIZEOF(.vectors));
+    	} > highvectors AT > rom
+
+	. = LOADADDR(.vectors) + SIZEOF(.vectors);
+	.text : TEXT_ALIGN {
+			*(.text*)
+	} > rom
+
+	.rodata : {
+			*(.rodata*)
+	} > rom
+
+	.ARM.exidx : {			// used for unwind
+		PROVIDE(__exidx_start = .);
+		*(.ARM.exidx* .gnu.linkonce.armexidx.*)
+		PROVIDE(__exidx_end = .);
+	} > rom
+
+	.data : WORD_ALIGN {
+		PROVIDE(__data_load = LOADADDR(.data));
+		PROVIDE(__data_start = .);
+			*(.data*)
+		. = WORD_ALIGN;
+		PROVIDE(__data_end = .);
+	} > ram AT> rom
+
+	.bss : WORD_ALIGN {
+		PROVIDE(__bss_start = .);
+			*(.bss*)
+			*(COMMON)
+		PROVIDE(__bss_end = .);
+	} > ram
+
+	.uninit (NOLOAD) : TEXT_ALIGN {
+			*(SORT_BY_ALIGNMENT(.uninit*))
+	} > ram
+
+	. = ALIGN(PAGE_SIZE);
+	PROVIDE(pagemap = .);
+}

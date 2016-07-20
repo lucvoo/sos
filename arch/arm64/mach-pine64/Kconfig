@@ -1,0 +1,8 @@
+config MACH
+	symbol
+	default pine64
+
+config	MACH_PARAMS
+	bool
+	default y
+	select SOC_A64

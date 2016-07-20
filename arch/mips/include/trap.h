@@ -6,6 +6,7 @@ static inline void __TRAP_COND(int trap, int cond)
 {
 	asm volatile ("tne	$0, %1, %0" : : "i" (trap), "r" (cond));
 }
+#define	__TRAP_COND(T, C)	__TRAP_COND(T, C)
 
 static inline void __TRAP(int trap)
 {

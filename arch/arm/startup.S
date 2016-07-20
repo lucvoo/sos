@@ -1,4 +1,5 @@
 #include <arch/assembly.h>
+#include <arch/asm-offsets.h>
 #include "arch/arch.h"
 #include <mach/platform_setup.S>
 #include "arch/memory.h"
@@ -146,9 +147,9 @@ post_mmu:
 	// initialize CPSR (machine state register)
 	mov     r0,#(PSR_I|PSR_F|PSR_MODE_SVC)
 	msr     cpsr_c, r0
-#ifdef	CONFIG_FIXED_STACKS
+#ifdef	CONFIG_THREAD_STACK
 	// initialize stack
-	ldr     sp,=init_thread + (1 << CONFIG_FIXED_STACKS_SHIFT) - 4
+	ldr     sp,=init_thread + (1 << CONFIG_THREAD_STACK_SHIFT) - 4
 #else
 	ldr     sp,=__startup_stack + CONFIG_STARTUP_STACK_SIZE
 #endif
@@ -267,7 +268,10 @@ post_mmu_smp:
 
 	// FIXME: what about the exception stack?
 
-	b	__smp_start_mach
+	// need to setup the stack before calling __smp_start
+	bl	__smp_init_idle_thread
+	ldr	sp, [r0, THR_CTXT_SP]
+	b	__smp_start
 ENDFUN(__smp_startup)
 #endif
 

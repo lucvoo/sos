@@ -1,0 +1,9 @@
+config  SOC
+        symbol
+        default A64
+
+config	SOC_PARAMS
+	bool
+	default y
+	select CPU_A53
+	select ARM_GIC

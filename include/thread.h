@@ -8,8 +8,11 @@
 #define	THREAD_STATE_EXITED	3
 #define	THREAD_STATE_IDLE	4
 
-#ifdef	CONFIG_FIXED_STACKS
-#define	THREAD_SIZE	(1 << CONFIG_FIXED_STACKS_SHIFT)
+#ifdef	CONFIG_THREAD_STACK
+#define	THREAD_SIZE	(1 << CONFIG_THREAD_STACK_SHIFT)
+#define	__thread_align	__aligned(THREAD_SIZE)
+#else
+#define	__thread_align
 #endif
 
 #define	TIF_NEED_RESCHED	0x00000001
@@ -24,23 +27,7 @@ struct thread {
 	struct dlist		run_list;
 	unsigned long		flags;
 	int			state;
-#ifndef	CONFIG_FIXED_STACKS
-	void*			stack_base;
-	unsigned long		stack_size;
-};
-#else
-} __attribute__((aligned(THREAD_SIZE)));
-#endif
-
-
-static inline unsigned long thread_get_stack_top(const struct thread *t)
-{
-#ifndef	CONFIG_FIXED_STACKS
-	return (unsigned long)t->stack_base + t->stack_size;
-#else
-	return (unsigned long)t + THREAD_SIZE;
-#endif
-}
+} __thread_align;
 
 
 static inline int thread_flag_test(const struct thread* t, unsigned long flag)
@@ -65,7 +52,7 @@ void thread_yield(void);
 void thread_sleep(void);
 void thread_wakeup(struct thread* t);
 
-void thread_load_context(struct thread* t, void (*func)(void*), void* data);
+void thread_load_context(struct thread* t, void (*func)(void*), void* data, void* stack_top);
 void __thread_start(void (*fun)(void *data), void *data);
 
 #endif

@@ -12,7 +12,7 @@ struct cpu_context {
 
 struct thread;
 
-#ifdef	CONFIG_FIXED_STACKS
+#ifdef	CONFIG_THREAD_STACK
 static inline struct thread* get_current_thread(void)
 {
 	register unsigned long sp asm ("sp");
