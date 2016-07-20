@@ -23,7 +23,7 @@ config	ARM926EJS
 config	CORTEX_A7
 	bool
 	select ARMV7A
-	select GENERIC_TIMER
+	select ARM_GENERIC_TIMER
 	select HAS_DIV32
 config	CORTEX_A8
 	bool
@@ -34,7 +34,7 @@ config	CORTEX_A9
 config	CORTEX_A15
 	bool
 	select ARMV7A
-	select GENERIC_TIMER
+	select ARM_GENERIC_TIMER
 	select HAS_DIV32
 
 config	CORTEX_M4
@@ -139,14 +139,5 @@ config	NVIC_NBR_IRQ
 config	CCI400
 	bool
 	depends on SMP
-
-comment "Generic Timer"
-config	GENERIC_TIMER
-	bool "Generic timer"
-	depends on ARMV7A
-
-config	CNTFRQ
-	int "Generic timer frequency"
-	depends on GENERIC_TIMER
 
 endmenu

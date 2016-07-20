@@ -5,8 +5,13 @@ source kernel/time/Kconfig
 
 config	ARM_GENERIC_TIMER
 	bool "ARM generic timer"
-	depends on GENERIC_TIMER
+	depends on ARMV7A || ARCH_ARM64
 	default y
+
+config	CNTFRQ
+	int "Generic timer frequency"
+	depends on ARM_GENERIC_TIMER
+
 
 config	MIPS_ARCH_TIMER
 	bool "MIPS architectural timer"
