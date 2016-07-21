@@ -1,0 +1,15 @@
+config	SOC
+	symbol
+	default bcm283x
+
+config	SOC_BCM2835_PARAMS
+	bool
+	default SOC_BCM2835
+	select ARM1176JZFS
+
+config PHYS_ADDR
+	hex
+	default 0x00000000
+config PHYS_SIZE
+	hex "RAM size"
+	default 0x0c000000
