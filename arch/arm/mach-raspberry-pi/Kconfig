@@ -1,0 +1,8 @@
+config MACH
+	symbol
+	default raspberry-pi if MACH_RASPBERRY_PI
+
+config	MACH_PARAMS
+	bool
+	default y
+	select SOC_BCM2835
