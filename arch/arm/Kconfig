@@ -20,6 +20,15 @@ config	ARM926EJS
 	select ARMV5
 	select ARMV5TE
 
+config	ARM1176JZS
+	bool
+	select ARMV6
+
+config	ARM1176JZFS
+	bool
+	select ARMV6
+	select VFPv2
+
 config	CORTEX_A7
 	bool
 	select ARMV7A
@@ -41,6 +50,10 @@ config	CORTEX_M4
 	bool
 	select ARMV7M
 	select HAS_DIV32
+
+## FP coprocessor
+config	VFPv2
+	bool
 
 config	ARM_TZ
 	bool
