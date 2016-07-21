@@ -28,6 +28,7 @@ subdirs-y			+= lib/
 subdirs-y			+= mm/
 subdirs-y			+= debug/
 subdirs-$(CONFIG_SOC_AM335X)	+= soc-am335x/
+subdirs-$(CONFIG_SOC_BCM283X)	+= soc-bcm283x/
 subdirs-$(CONFIG_SOC_IMX6)	+= soc-imx6/
 subdirs-$(CONFIG_SOC_STM32)	+= soc-stm32/
 subdirs-$(CONFIG_SOC_SUNXI_A80)	+= soc-sunxi-a80/
