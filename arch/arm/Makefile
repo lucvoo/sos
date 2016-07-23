@@ -11,6 +11,7 @@ objs-$(CONFIG_ARMVA)	+= startup.o
 objs-$(CONFIG_ARMVA)	+= switch_to.o
 objs-$(CONFIG_ARMV4)	+= irq-v4.o
 objs-$(CONFIG_ARMV4)	+= undef-v4.o
+objs-$(CONFIG_ARMV6)	+= cache-v6.o
 objs-$(CONFIG_ARMV6)	+= vector-v6.o
 objs-$(CONFIG_ARMV7A)	+= cache-v7.o
 objs-$(CONFIG_ARMV7A)	+= perf-v7.o
