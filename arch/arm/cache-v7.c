@@ -4,9 +4,7 @@
 
 static ulong cacheline_size(void)
 {
-	ulong ctr;
-
-	asm ("mrc " STRINGIFY(CTR(%0)) : "=r" (ctr));
+	ulong ctr = cp_read(CTR);
 
 	return ((ctr >> 16) & 0xf) * 4;
 }
@@ -20,7 +18,7 @@ void NAME(void *vaddr, uint size)				\
 								\
 	addr = addr & ~(line - 1);				\
 	do {							\
-		asm ("mcr " STRINGIFY(OP(%0)) :: "r" (addr));	\
+		cp_write(OP, addr);				\
 								\
 		addr += line;					\
 	} while (addr < end);					\
