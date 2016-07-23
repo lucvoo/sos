@@ -1,4 +1,5 @@
 #include <arch/cacheflush.h>
+#include <arch/barrier.h>
 #include <arch/cp15.h>
 
 
@@ -23,7 +24,7 @@ void NAME(void *vaddr, uint size)				\
 		addr += line;					\
 	} while (addr < end);					\
 								\
-	asm ("dsb	st");					\
+	dsb(st);						\
 }
 
 DCACHE_OP_RANGE(dcache_clean_range, DCCMVAC)
