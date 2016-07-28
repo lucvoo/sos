@@ -14,6 +14,8 @@ ARCHFLAGS-$(CONFIG_ARMV5TE)	+= -march=armv5te
 ARCHFLAGS-$(CONFIG_ARM926)	+= -mtune=arm926tdmi
 ARCHFLAGS-$(CONFIG_ARM926EJS)	+= -mtune=arm926ej-s
 
+ARCHFLAGS-$(CONFIG_ARM1176JZS)	+= -mcpu=arm1176jz-s
+
 ARCHFLAGS-$(CONFIG_CORTEX_A7)	+= -mcpu=cortex-a7 -mtune=cortex-a7
 ARCHFLAGS-$(CONFIG_CORTEX_A8)	+= -mcpu=cortex-a8 -mtune=cortex-a8
 ARCHFLAGS-$(CONFIG_CORTEX_A9)	+= -mcpu=cortex-a9 -mtune=cortex-a9
