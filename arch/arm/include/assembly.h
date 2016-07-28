@@ -9,6 +9,18 @@
 
 #include <generic/assembly.h>
 
+#ifdef	CONFIG_ARMV6K
+#include <arch/cp15.h>
+
+	.macro	isb
+#ifdef	CONFIG_SMP
+		mcr	CP15ISB(r0)
+#else
+		nop
+#endif
+	.endm
+#endif
+
 #else	// __ASSEMBLY__
 
 #ifdef	CONFIG_THUMB2
