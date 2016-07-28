@@ -72,6 +72,10 @@ config	ARMV6
 config	ARMV6K
 	bool
 	select ARMV6
+config	ARMV6KZ
+	bool
+	select ARMV6K
+	select ARM_TZ
 config	ARMV7A
 	bool
 	select ARM_TZ
