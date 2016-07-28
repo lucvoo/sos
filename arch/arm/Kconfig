@@ -26,7 +26,7 @@ config	ARM1176JZS
 
 config	ARM1176JZFS
 	bool
-	select ARMV6KZ
+	select ARM1176JZS
 	select VFPv2
 
 config	CORTEX_A7
@@ -141,7 +141,7 @@ config	THUMB2
 
 config	HAS_VBAR
 	bool "Has VBAR"
-	depends on ARMV6K || ARMV7
+	depends on ARMV6KZ || ARMV7
 	default ARM_TZ
 config	HIGH_VECTORS
 	bool "Use high vectors"
