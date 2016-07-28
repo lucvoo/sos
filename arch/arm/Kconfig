@@ -22,11 +22,11 @@ config	ARM926EJS
 
 config	ARM1176JZS
 	bool
-	select ARMV6
+	select ARMV6KZ
 
 config	ARM1176JZFS
 	bool
-	select ARMV6
+	select ARMV6KZ
 	select VFPv2
 
 config	CORTEX_A7
