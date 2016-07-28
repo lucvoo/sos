@@ -7,6 +7,7 @@
 #include <stringify.h>
 #include <errno.h>
 #include <stddef.h>
+#include <barrier.h>
 
 
 #if 0
@@ -100,7 +101,7 @@ int iomap_init(const struct iomap_desc *d, unsigned int nbr)
 	}
 
 	asm ("mcr " STRINGIFY(TLBIALL(r0)));
-	asm ("isb");
+	isb();
 
 	return err ? -EINVAL : 0;
 }
