@@ -13,6 +13,7 @@ config SOC_SUNXI_A80
 	bool
 	select SOC_SUNXI
 
+menu "SoC options"
 if SOC_IMX6
 source arch/arm/soc-imx6/Kconfig
 endif
@@ -22,3 +23,4 @@ endif
 if SOC_SUNXI_A80
 source arch/arm/soc-sunxi-a80/Kconfig
 endif
+endmenu
