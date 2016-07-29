@@ -32,7 +32,24 @@ static void dump_regs(const struct eframe *f)
 	}
 }
 
+static void dump_frames(const struct eframe *f)
+{
+	struct stack_frame {
+		struct stack_frame	*fp;
+		ulong			lr;
+	} *fp;
+
+	__printf("\nStack frames:\n");
+	__printf("lr: %016x\n", f->x[30]);
+
+	for (fp = (void *) f->x[29]; fp; fp = fp->fp) {
+		__printf("lr: %016x\n", fp->lr);
+	}
+}
+
+
 void __arch_dump_stack(const struct eframe *f)
 {
 	dump_regs(f);
+	dump_frames(f);
 }
