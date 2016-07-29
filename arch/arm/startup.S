@@ -211,18 +211,29 @@ LOCAL(create_early_pagetable):
 #if 0
 	@ 9) dump the table
 	mov	r5, r0
-	mov	r4, #PGD_NBR_ENT
-1:
-	sub	r4, r4, #1
-	adr	r0, fmt
-	mov	r1, r4
-	add	r2, r5, r4, lsl #2
-	ldr	r3, [r5, r4, lsl #2]
+	mov	r6, lr
+
+	// print table header
+	mov	r0, fmthdr
+	mov	r1, r5
 	bl	_os_diag_printf
-	cmp	r4, #0
+
+	// print table body
+	mov	r4, #0
+1:
+	adr	r0, fmt
+	lsl	r1, r4, #PGD_SECT_SHIFT
+	ldr	r2, [r5, r4, lsl #2]
+	cmp	r2, #0
+	blne	_os_diag_printf
+	add	r4, r4, #1
+	cmp	r4, #PGD_NBR_ENT
 	bne	1b
 
-fmt:	.asciz  "MMU[%x] @ %x = %x\n"
+	bx	r6
+
+fmthdr:	.asciz  "MMU table at @ %x\n"
+fmt:	.asciz  "MMU[%x] = %x\n"
 #endif
 
 	bx	lr
