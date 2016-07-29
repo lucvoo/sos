@@ -11,11 +11,6 @@ static struct timer timer;
 static volatile int counter;
 static volatile int lpj;
 
-#ifndef	HZ
-#define	HZ		(32*1024)
-#endif
-
-#define	NBR_JIFFIES	HZ
 
 static void expire(void *data)
 {
@@ -26,12 +21,12 @@ static void expire(void *data)
 
 static void loops_per_second(void* data)
 {
-	timer.exp = NBR_JIFFIES;
 	timer.action = expire;
 	timer.data = &timer;
 
 	counter = 0;
-	timer_add_abs(&timer);
+	printf("lpj = %d\n", lpj);
+	timer_add_rel(&timer, HZ);
 	while (--counter) {
 	}
 
