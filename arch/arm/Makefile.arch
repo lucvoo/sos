@@ -2,6 +2,8 @@ CROSS_COMPILE	?= arm-linux-
 
 AFLAGS-y	+= -include arch/assembly.h
 
+ARCHFLAGS-y			+= -masm-syntax-unified
+
 ARCHFLAGS-$(CONFIG_ARMV4T)	+= -march=armv4t
 ARCHFLAGS-$(CONFIG_ARM7TDMI)	+= -mtune=arm7tdmi
 ARCHFLAGS-$(CONFIG_ARM720T)	+= -mtune=arm7tdmi
