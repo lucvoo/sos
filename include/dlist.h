@@ -63,7 +63,7 @@ static inline struct dlist* dlist_peek(struct dlist_head *head)
 	struct dlist *h = &head->list;
 	struct dlist *item = h->next;
 
-	if (item == &head->list)
+	if (item == h)
 		return NULL;
 
 	return item;
