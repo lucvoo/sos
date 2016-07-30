@@ -80,6 +80,17 @@ static inline struct dlist* dlist_pop(struct dlist_head *head)
 }
 #define	dlist_pop_entry(head, type, member) dlist_entry_null(dlist_pop(head), type, member)
 
+static inline struct dlist* __dlist_pop(struct dlist_head *head)
+{
+	struct dlist *h = &head->list;
+	struct dlist *item = h->next;
+
+	__dlist_link(h, item->next);
+	return item;
+}
+#define	__dlist_pop_entry(head, type, member) dlist_entry(__dlist_pop(head), type, member)
+
+
 static inline void dlist_replace(struct dlist *old, struct dlist *new)
 {
 	__dlist_link(old->prev, new);
