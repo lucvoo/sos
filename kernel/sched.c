@@ -85,26 +85,39 @@ static void dequeue_thread_locked(struct thread* t, struct run_queue* rq)
 	dequeue_thread_adjust(t, rq, prio);
 }
 
-#if 0
-static void dump_rq(const char *ctxt)
+static void dump_rq(const char *ctxt, int locked)
 {
 	struct run_queue* rq = &runq;
 	struct thread* t;
+	uint n = 0;
 	int prio;
-	printf("dump rq @ %s:\n", ctxt);
+
+	if (!locked)
+		lock_acq_irq(&rq->lock);
+
+	printf("dump rq @ %s on cpu %d:\n", ctxt, __coreid());
 	printf("\tnr = %u\n", rq->nr_running);
-	printf("\tidle_thread= %p\n", rq->idle_thread[cpu]);
 	printf("\tbitmap= %08lX (%lb)\n", rq->bitmap, rq->bitmap);
 
 	for (prio=0; prio < CONFIG_NR_THREAD_PRIORITY; prio++) {
 		if (!dlist_is_empty(&rq->queues[prio])) {
 			printf("    rq[%d]:\n", prio);
-			dlist_foreach_entry(t, &rq->queues[prio], run_list)
+			dlist_foreach_entry(t, &rq->queues[prio], run_list) {
 				printf("\t%p\n", t);
+				n++;
+			}
 		}
 	}
+
+	if (n != rq->nr_running)
+		pr_err("rq integrity: nr %d != %d\n", rq->nr_running, n);
+	if ((n == 0) != (rq->bitmap == 0))
+		pr_err("rq integrity: nr %d, bitmap: %08x\n", n, rq->bitmap);
+	printf("-------- (%s)\n", ctxt);
+
+	if (!locked)
+		lock_rel_irq(&rq->lock);
 }
-#endif
 
 #ifdef CONFIG_SMP
 static void smp_set_idle(struct run_queue *rq, unsigned int cpu, int val)
