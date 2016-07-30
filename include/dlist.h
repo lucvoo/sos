@@ -10,6 +10,8 @@
 #define DLIST_HEAD(name)	struct dlist_head name = DLIST_HEAD_INIT(name)
 
 #define dlist_entry(ptr, type, member)	container_of(ptr, type, member)
+#define dlist_entry_null(ptr, type, member)	\
+	({ struct dlist *p = ptr; p ? container_of(p, type, member) : NULL; })
 
 
 static inline void __dlist_link(struct dlist *a, struct dlist *b)
@@ -66,7 +68,7 @@ static inline struct dlist* dlist_peek(struct dlist_head *head)
 
 	return item;
 }
-#define	dlist_peek_entry(head, type, member) dlist_entry(dlist_peek(head), type, member)
+#define	dlist_peek_entry(head, type, member) dlist_entry_null(dlist_peek(head), type, member)
 
 static inline struct dlist* dlist_pop(struct dlist_head *head)
 {
@@ -76,7 +78,7 @@ static inline struct dlist* dlist_pop(struct dlist_head *head)
 		dlist_del(item);
 	return item;
 }
-#define	dlist_pop_entry(head, type, member) dlist_entry(dlist_pop(head), type, member)
+#define	dlist_pop_entry(head, type, member) dlist_entry_null(dlist_pop(head), type, member)
 
 static inline void dlist_replace(struct dlist *old, struct dlist *new)
 {
