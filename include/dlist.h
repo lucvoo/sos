@@ -72,10 +72,13 @@ static inline struct dlist* dlist_peek(struct dlist_head *head)
 
 static inline struct dlist* dlist_pop(struct dlist_head *head)
 {
-	struct dlist *item = dlist_peek(head);
+	struct dlist *h = &head->list;
+	struct dlist *item = h->next;
 
-	if (item)
-		dlist_del(item);
+	if (item == h)
+		return NULL;
+
+	__dlist_link(h, item->next);
 	return item;
 }
 #define	dlist_pop_entry(head, type, member) dlist_entry_null(dlist_pop(head), type, member)
