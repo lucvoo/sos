@@ -15,7 +15,7 @@ void waitqueue_wake_one(struct waitqueue* wq)
 {
 	struct waiter* w;
 
-	w = dlist_peek_entry(&wq->waiters, struct waiter, node);
+	w = dlist_pop_entry(&wq->waiters, struct waiter, node);
 
 	// FIXME: w could be NULL or its thread already awake
 
