@@ -76,15 +76,6 @@ static void dequeue_thread_adjust(struct thread* t, struct run_queue* rq, unsign
 		rq->bitmap &= ~(1 << prio);
 }
 
-static void dequeue_thread_locked(struct thread* t, struct run_queue* rq)
-{
-	unsigned prio = t->priority;
-
-	dlist_del(&t->run_list);
-	rq->nr_running--;
-	dequeue_thread_adjust(t, rq, prio);
-}
-
 static void dump_rq(const char *ctxt, int locked)
 {
 	struct run_queue* rq = &runq;
