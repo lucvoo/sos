@@ -77,7 +77,7 @@ static struct thread *dequeue_thread_locked(struct run_queue* rq, uint prio)
 	t = dlist_pop_entry(q, struct thread, run_list);
 	rq->nr_running--;
 	t->run_list.next = NULL;
-	if (dlist_is_empty(&rq->queues[prio]))
+	if (dlist_is_empty(q))
 		rq->bitmap &= ~(1 << prio);
 
 	return t;
