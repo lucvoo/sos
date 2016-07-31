@@ -74,7 +74,7 @@ static struct thread *dequeue_thread_locked(struct run_queue* rq, uint prio)
 	struct dlist_head* q = &rq->queues[prio];
 	struct thread *t;
 
-	t = dlist_pop_entry(q, struct thread, run_list);
+	t = __dlist_pop_entry(q, struct thread, run_list);
 	rq->nr_running--;
 	t->run_list.next = NULL;
 	if (dlist_is_empty(q))
