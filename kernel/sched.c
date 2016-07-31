@@ -69,11 +69,18 @@ static void enqueue_thread(struct thread* t, struct run_queue* rq)
 	lock_rel_irq(&rq->lock);
 }
 
-static void dequeue_thread_adjust(struct thread* t, struct run_queue* rq, unsigned int prio)
+static struct thread *dequeue_thread_locked(struct run_queue* rq, uint prio)
 {
+	struct dlist_head* q = &rq->queues[prio];
+	struct thread *t;
+
+	t = dlist_pop_entry(q, struct thread, run_list);
+	rq->nr_running--;
 	t->run_list.next = NULL;
 	if (dlist_is_empty(&rq->queues[prio]))
 		rq->bitmap &= ~(1 << prio);
+
+	return t;
 }
 
 static void dump_rq(const char *ctxt, int locked)
@@ -196,10 +203,8 @@ need_resched:
 
 	if (rq->bitmap != 0) {
 		int prio = bitop_fmsb(rq->bitmap);
-		struct dlist_head* q = &rq->queues[prio];
-		next = dlist_pop_entry(q, struct thread, run_list);
-		rq->nr_running--;
-		dequeue_thread_adjust(next, rq, prio);
+
+		next = dequeue_thread_locked(rq, prio);
 		smp_set_idle(rq, cpu, 0);
 	} else if (prev->state == THREAD_STATE_READY) {
 		next = prev;
