@@ -28,12 +28,12 @@ void thread_load_context(struct thread* t, void (*func)(void*), void* data, void
 
 	ctxt->x[19] = (ulong) func;
 	ctxt->x[20] = (ulong) data;
-	ctxt->x[29] = 0;			// FP
 
 	// mark the end of the call stack
 	*--sp = 0;
-	*--sp = 0;
+	*--sp = (ulong) stack_top;
 	ctxt->sp = (ulong)sp;
 
+	ctxt->x[29] = (ulong) sp;		// FP
 	ctxt->x[30] = (ulong) thread_entry;
 }
