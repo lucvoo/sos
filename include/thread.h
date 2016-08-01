@@ -22,11 +22,11 @@
 
 
 struct thread {
-	struct cpu_context	cpu_context;
-	unsigned int		priority;
 	struct dlist		run_list;
 	unsigned long		flags;
+	unsigned int		priority;
 	int			state;
+	struct cpu_context	cpu_context;
 } __thread_align;
 
 
