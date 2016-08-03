@@ -173,7 +173,7 @@ static void gic_handle_irq(struct eframe *regs)
 			iowrite32(cpu_base + GICC_EOIR, iar);
 #ifdef	CONFIG_SMP
 			mbr_smp();	// pair with gic_ipi_send()'s write barrier
-			__smp_ipi_process(irq);
+			__smp_ipi_process(1 << irq);
 #endif
 		} else
 			return;
