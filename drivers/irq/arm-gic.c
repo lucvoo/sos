@@ -232,4 +232,14 @@ void __smp_ipi_send(uint cpu, uint msg)
 {
 	gic_ipi_send(cpu, msg);
 }
+
+#include <smp/initcall.h>
+
+static void gic_smp_init(uint cpu)
+{
+	struct gic_intctrl *gic = &gic_intctrl;
+
+	gic_init_private(gic, cpu);
+}
+core_smp_initcall(gic_smp_init);
 #endif
