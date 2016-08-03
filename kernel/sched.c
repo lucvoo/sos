@@ -145,21 +145,14 @@ static void smp_load_balancing(struct run_queue* rq)
 	unsigned int i;
 	unsigned int n;
 
-	if (NR_CPUS == 1)
-		return;
-
-	n = rq->nr_running;		// Quick test, with rq unlocked
+	n = rq->nr_running;
 	if (n == 0)
 		return;
-
-	lock_acq_irq(&rq->lock);
-	n = rq->nr_running;
-	if (n == 0)			// Test again with the lock hold.
-		goto end;
 
 	// Notify the first idle CPU.
 	// This will strongly favour the CPUs with the lowest ID,
 	// which is fine and will let the highest ones in low-power.
+	// FIXME: use a bitmap for rq->idle?
 	cpu = __coreid();
 	for (i = 0; i < NR_CPUS; i++) {
 		if (i == cpu)
@@ -172,11 +165,8 @@ static void smp_load_balancing(struct run_queue* rq)
 		// We could do this until nr_running == 0, but
 		// - the cpu just notified will take one thread
 		//   and itself try to balance
-		// - better to release the rq lock ASAP
 		break;
 	}
-end:
-	lock_rel_irq(&rq->lock);
 }
 #else
 static void smp_set_idle(struct run_queue *rq, unsigned int cpu, int val)
