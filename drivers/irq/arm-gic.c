@@ -187,7 +187,7 @@ strong_alias(gic_handle_irq, mach_irq_handler);
 // FIXME: msg is a bitmap of ipi numbers ...
 //	  API to be changed because not generic enough
 #define	foreach_ipi(ipi, msg)			\
-	for (ipi = 0; msg; ipi++)		\
+	for (ipi = 0; msg; msg &= ~(1 << ipi), ipi++)		\
 		if ((msg & (1 << ipi)) == 0)	\
 			continue;		\
 		else
