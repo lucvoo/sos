@@ -4,6 +4,7 @@
 #include <stdarg.h>
 
 void __printf(const char *fmt, ...);
+void __vprintf(const char *fmt, va_list ap);
 void printf(const char *fmt, ...);
 void vprintf(const char *fmt, va_list ap);
 

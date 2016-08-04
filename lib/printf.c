@@ -14,9 +14,18 @@ static struct xput printf_xput = {
 	.size = 0,
 };
 
-void vprintf(const char *fmt, va_list ap)
+void __vprintf(const char *fmt, va_list ap)
 {
 	xvprintf(&printf_xput, fmt, ap);
+}
+
+void vprintf(const char *fmt, va_list ap)
+{
+	unsigned long flags;
+
+	flags = lock_acq_save(&printf_lock);
+	xvprintf(&printf_xput, fmt, ap);
+	lock_rel_rest(&printf_lock, flags);
 }
 
 void printf(const char *fmt, ...)
