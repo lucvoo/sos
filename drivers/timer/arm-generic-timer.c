@@ -145,3 +145,10 @@ static void __init arm_generic_timer_init(void)
 	agt_init();
 }
 board_initcall(arm_generic_timer_init);
+
+#include <smp/initcall.h>
+static void arm_generic_timer_smp_init(uint cpu)
+{
+	agt_init_local(&arm_generic_timer, cpu);
+}
+core_smp_initcall(arm_generic_timer_smp_init);
