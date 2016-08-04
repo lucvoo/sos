@@ -277,10 +277,12 @@ void __thread_start(void (*fun)(void *data), void *data)
 
 void thread_start(struct thread* t)
 {
+	struct thread* curr = get_current_thread();
 	struct run_queue* rq = &runq;
 
-	thread_need_resched_set(t);
 	t->state = THREAD_STATE_READY;
+	if (t->priority >= curr->priority)
+		thread_need_resched_set(curr);
 	// FIXME: need to keep count of the level of suspendness
 
 	enqueue_thread(rq, t);
