@@ -222,20 +222,16 @@ static int wake_up(struct thread* t)
 {
 	struct run_queue *rq = &runq;
 	struct thread* curr = get_current_thread();
-	int rc = 1;
 
 	if (t->state == THREAD_STATE_READY)
-		goto out;		// FIXME: should never happen?
+		return 0;		// FIXME: should never happen?
 
 	t->state = THREAD_STATE_READY;
-	enqueue_thread(rq, t);
 	if (t->priority >= curr->priority)
 		thread_need_resched_set(curr);
 
-	rc = 0;
-
-out:
-	return rc;
+	enqueue_thread(rq, t);
+	return 1;
 }
 
 
