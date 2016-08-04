@@ -8,10 +8,6 @@ void semaphore_init(struct semaphore* sem, int val)
 	waitqueue_init(&sem->wq);
 }
 
-void __semaphore_post_slowpath(struct semaphore* sem)
-{
-	waitqueue_wake_one(&sem->wq);
-}
 
 void __semaphore_wait_slowpath(struct semaphore* sem)
 {

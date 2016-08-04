@@ -12,7 +12,6 @@ struct semaphore {
 
 
 extern void __semaphore_wait_slowpath(struct semaphore* sem);
-extern void __semaphore_post_slowpath(struct semaphore* sem);
 
 void semaphore_init(struct semaphore* sem, int val);
 
@@ -31,7 +30,7 @@ static inline void semaphore_post(struct semaphore* sem)
 
 	val = atomic_add_return(&sem->count, 1);
 	if (unlikely(val <= 0))
-		__semaphore_post_slowpath(sem);
+		waitqueue_wake_one(&sem->wq);
 }
 
 
