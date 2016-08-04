@@ -10,13 +10,7 @@ void semaphore_init(struct semaphore* sem, int val)
 
 void __semaphore_post_slowpath(struct semaphore* sem)
 {
-	unsigned long flags;
-
-	flags = lock_acq_save(&sem->wq.lock);
-	if (!waitqueue_empty(&sem->wq)) {
-		waitqueue_wake_one(&sem->wq);
-	}
-	lock_rel_rest(&sem->wq.lock, flags);
+	waitqueue_wake_one(&sem->wq);
 }
 
 void __semaphore_wait_slowpath(struct semaphore* sem)

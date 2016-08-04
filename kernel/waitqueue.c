@@ -2,6 +2,8 @@
 
 #include <dlist.h>
 #include <sched.h>
+#include <lock.h>
+#include <bug.h>
 
 
 static inline void dump_wq(struct waitqueue* wq)
@@ -24,10 +26,14 @@ void waitqueue_init(struct waitqueue* wq)
 void waitqueue_wake_one(struct waitqueue* wq)
 {
 	struct waiter* w;
+	ulong flags;
 
+	flags = lock_acq_save(&wq->lock);
 	w = dlist_pop_entry(&wq->waiters, struct waiter, node);
+	lock_rel_rest(&wq->lock, flags);
 
-	// FIXME: w could be NULL or its thread already awake
+	BUG_ON(!w);
 
+	// FIXME: could the thread be already awake?
 	thread_wakeup(w->thread);
 }
