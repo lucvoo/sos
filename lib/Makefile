@@ -8,6 +8,7 @@ objs-y	+= memset.o
 objs-y	+= memtest.o
 objs-y	+= memtester.o
 objs-y	+= printf.o
+objs-y	+= logging.o
 objs-y	+= prng.o
 objs-y	+= snprintf.o
 objs-y	+= sqrt.o
