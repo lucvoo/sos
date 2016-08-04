@@ -1,19 +1,20 @@
 #include <printk.h>
 #include <stdarg.h>
 #include <lock.h>
+#include <ansi.h>
 
 
 extern struct lock printf_lock;
 
 static const char *pref[] = {
-	[LOG_LEVEL_EMERG] =	 "EMERG",
-	[LOG_LEVEL_ALERT] =	 "ALERT",
-	[LOG_LEVEL_CRIT] =	 "CRIT",
-	[LOG_LEVEL_ERROR] =	 "ERROR",
-	[LOG_LEVEL_WARN] =	 "WARN",
-	[LOG_LEVEL_NOTE] =	 "NOTE",
-	[LOG_LEVEL_INFO] =	 "INFO",
-	[LOG_LEVEL_DEBUG] =	 "DEBUG",
+	[LOG_LEVEL_EMERG] =	 ANSI_RED "EMERG" ANSI_DEF,
+	[LOG_LEVEL_ALERT] =	 ANSI_RED "ALERT" ANSI_DEF,
+	[LOG_LEVEL_CRIT] =	 ANSI_RED "CRIT"  ANSI_DEF,
+	[LOG_LEVEL_ERROR] =	 ANSI_RED "ERROR" ANSI_DEF,
+	[LOG_LEVEL_WARN] =	 ANSI_ORA "WARN"  ANSI_DEF,
+	[LOG_LEVEL_NOTE] =	 ANSI_YEL "NOTE"  ANSI_DEF,
+	[LOG_LEVEL_INFO] =	 ANSI_YEL "INFO"  ANSI_DEF,
+	[LOG_LEVEL_DEBUG] =	 ANSI_YEL "DEBUG" ANSI_DEF,
 };
 
 static void vprintf_log(uint level, const char *file, const char *func, int line, const char *fmt, va_list ap)
