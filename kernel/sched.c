@@ -243,8 +243,7 @@ void _thread_scheduler_start(void)
 	runq.idle_thread[__coreid()] = t;
 	t->state = THREAD_STATE_IDLE;
 	t->priority   = 0;
-	t->flags      = 0;
-	thread_need_resched_set(t);
+	t->flags = TIF_NEED_RESCHED;
 }
 
 /**
