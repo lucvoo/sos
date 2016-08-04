@@ -60,6 +60,21 @@ struct thread *__smp_init_idle_thread(void)
 	return idle;
 }
 
+
+/******************************************************************************/
+#include <smp/initcall.h>
+
+static void smp_initcalls(uint cpu)
+{
+	extern struct smp_initcall __SMP_INITCALL_LIST__[];
+	struct smp_initcall *p;
+
+	for (p = &__SMP_INITCALL_LIST__[0]; p->fun; p++) {
+		p->fun(cpu);
+	}
+}
+/******************************************************************************/
+
 void __smp_start(void)
 {
 	uint cpu = __coreid();
@@ -67,6 +82,7 @@ void __smp_start(void)
 	if (smp_ops.init_cpu)
 		smp_ops.init_cpu(cpu);
 
+	smp_initcalls(cpu);
 	kapi_start_smp();
 	_thread_scheduler_start();
 	__cpu_idle();

@@ -27,6 +27,14 @@ SECTIONS
 #endif
 	} > ram
 
+#ifdef CONFIG_SMP
+	.smp_init : WORD_ALIGN {
+		PROVIDE(__SMP_INITCALL_LIST__ = .);
+			KEEP(*(SORT(.smp_initcall*)))
+			LONG(0);
+	} > ram
+#endif
+
 	.text TEXT_ALIGN : {
 			*(.text*)
 	} > ram

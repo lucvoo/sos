@@ -42,6 +42,14 @@ SECTIONS
 #endif
 	} > rom
 
+#ifdef CONFIG_SMP
+	.smp_init : WORD_ALIGN {
+		__SMP_INITCALL_LIST__ = .;
+			KEEP(*(SORT(.smp_initcall*)))
+			LONG(0);
+	} > rom
+#endif
+
 	.text : TEXT_ALIGN {
 			*(.vectors)
 			*(.text*)
