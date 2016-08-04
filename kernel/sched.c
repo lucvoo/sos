@@ -62,8 +62,15 @@ static void enqueue_thread_locked(struct run_queue* rq, struct thread* t)
 	rq->bitmap |= 1 << prio;
 }
 
-static void enqueue_thread(struct run_queue* rq, struct thread* t)
+static void enqueue_thread(struct thread* t)
 {
+	struct thread* curr = get_current_thread();
+	struct run_queue* rq = &runq;
+
+	t->state = THREAD_STATE_READY;
+	if (t->priority >= curr->priority)
+		thread_need_resched_set(curr);
+
 	lock_acq_irq(&rq->lock);
 	enqueue_thread_locked(rq, t);
 	lock_rel_irq(&rq->lock);
@@ -220,17 +227,10 @@ need_resched:
 
 static int wake_up(struct thread* t)
 {
-	struct run_queue *rq = &runq;
-	struct thread* curr = get_current_thread();
-
 	if (t->state == THREAD_STATE_READY)
 		return 0;		// FIXME: should never happen?
 
-	t->state = THREAD_STATE_READY;
-	if (t->priority >= curr->priority)
-		thread_need_resched_set(curr);
-
-	enqueue_thread(rq, t);
+	enqueue_thread(t);
 	return 1;
 }
 
@@ -277,15 +277,9 @@ void __thread_start(void (*fun)(void *data), void *data)
 
 void thread_start(struct thread* t)
 {
-	struct thread* curr = get_current_thread();
-	struct run_queue* rq = &runq;
-
-	t->state = THREAD_STATE_READY;
-	if (t->priority >= curr->priority)
-		thread_need_resched_set(curr);
 	// FIXME: need to keep count of the level of suspendness
 
-	enqueue_thread(rq, t);
+	enqueue_thread(t);
 }
 
 void thread_yield(void)
