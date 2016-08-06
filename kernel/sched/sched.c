@@ -67,7 +67,7 @@ static void enqueue_thread_locked(struct run_queue* rq, struct thread* t)
 	rq->bitmap |= 1 << prio;
 }
 
-static void enqueue_thread(struct thread* t)
+static void __thread_activate(struct thread* t)
 {
 	struct thread* curr = get_current_thread();
 	struct run_queue* rq = &runq;
@@ -245,7 +245,7 @@ static int wake_up(struct thread* t)
 	if (t->state == THREAD_STATE_READY)
 		return 0;		// FIXME: should never happen?
 
-	enqueue_thread(t);
+	__thread_activate(t);
 	return 1;
 }
 /******************************************************************************/
@@ -295,7 +295,7 @@ void thread_start(struct thread* t)
 {
 	// FIXME: need to keep count of the level of suspendness
 
-	enqueue_thread(t);
+	__thread_activate(t);
 }
 
 void thread_yield(void)
