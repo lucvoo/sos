@@ -281,7 +281,10 @@ void __thread_start(void (*fun)(void *data), void *data)
 
 	__sched_start_thread(t);
 
+	// this is where the thread will spend all its lifetime
 	fun(data);
+
+	// the thread has exited
 
 	t = get_current_thread();
 	t->state = THREAD_STATE_EXITED;
