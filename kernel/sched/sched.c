@@ -42,6 +42,11 @@ static void __init sched_init(void)
 }
 pure_initcall(sched_init);
 
+static void __sched_init_idle(uint cpu, struct thread *idle)
+{
+	runq.idle_thread[cpu] = idle;
+}
+
 
 struct thread* __switch_to(struct thread* prev, struct thread* next);
 static struct thread* context_switch(struct thread* prev, struct thread* next)
@@ -238,12 +243,13 @@ static int wake_up(struct thread* t)
 void __sched_start(uint cpu)
 {
 	struct thread* t = get_current_thread();
-
 	// t == init_thread
-	runq.idle_thread[cpu] = t;
+
 	t->state = THREAD_STATE_IDLE;
 	t->priority   = 0;
 	t->flags = TIF_NEED_RESCHED;
+
+	__sched_init_idle(cpu, t);
 }
 
 /**
