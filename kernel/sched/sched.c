@@ -190,14 +190,13 @@ static void smp_load_balancing(struct run_queue* rq)
 }
 #endif
 
-void thread_schedule(void)
+static void __schedule(void)
 {
 	struct thread* prev;
 	struct thread* next;
 	struct run_queue* rq = &runq;
 	unsigned int cpu;
 
-need_resched:
 	lock_acq_irq(&rq->lock);
 	cpu = __coreid();
 	prev = get_current_thread();
@@ -225,9 +224,6 @@ need_resched:
 	lock_rel_irq(&rq->lock);
 
 	smp_load_balancing(rq);
-
-	if (thread_need_resched_test(prev))
-		goto need_resched;
 }
 
 static int wake_up(struct thread* t)
@@ -237,6 +233,14 @@ static int wake_up(struct thread* t)
 
 	enqueue_thread(t);
 	return 1;
+}
+/******************************************************************************/
+
+void thread_schedule(void)
+{
+	do {
+		__schedule();
+	} while (need_resched());
 }
 
 
