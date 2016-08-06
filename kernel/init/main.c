@@ -55,7 +55,7 @@ void _os_start(void)
 	initcalls();
 	__free_initmem();
 
-	__sched_start();
+	__sched_start(0);
 	kapi_start();
 	__cpu_idle();
 }

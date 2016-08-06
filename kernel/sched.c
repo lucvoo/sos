@@ -235,12 +235,12 @@ static int wake_up(struct thread* t)
 }
 
 
-void __sched_start(void)
+void __sched_start(uint cpu)
 {
 	struct thread* t = get_current_thread();
 
 	// t == init_thread
-	runq.idle_thread[__coreid()] = t;
+	runq.idle_thread[cpu] = t;
 	t->state = THREAD_STATE_IDLE;
 	t->priority   = 0;
 	t->flags = TIF_NEED_RESCHED;
