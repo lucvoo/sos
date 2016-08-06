@@ -143,15 +143,19 @@ static inline int cpu_is_idle(struct run_queue *rq, unsigned int cpu)
 }
 
 /*
- * Stupid load balancing:
+ * Try to run queued thread on a idle CPU:
  *	if we have more than one thread on the queue
  *	and there is an idle cpu
  *	then ask this cpu the reschedule
+ *
+ * FIXME: This should be part of some sort of PM policy:
+ *	when is it worth to wake a CPU?
+ *
  * We acccess the run queue without locking it, it's fine.
  * At worst we wake up a cpu for nothing or we miss an opportunity
  * to run a process on another cpu but everything is still OK.
  */
-static void smp_load_balancing(struct run_queue* rq)
+static void activate_idle_cpu(struct run_queue* rq)
 {
 	unsigned int cpu;
 	unsigned int i;
@@ -176,7 +180,7 @@ static void smp_load_balancing(struct run_queue* rq)
 
 		// We could do this until nr_running == 0, but
 		// - the cpu just notified will take one thread
-		//   and itself try to balance
+		//   and itself try this again
 		break;
 	}
 }
@@ -185,7 +189,7 @@ static void smp_set_idle(struct run_queue *rq, unsigned int cpu, int val)
 {
 }
 
-static void smp_load_balancing(struct run_queue* rq)
+static void activate_idle_cpu(struct run_queue* rq)
 {
 }
 #endif
@@ -223,7 +227,7 @@ static void __schedule(void)
 	}
 	lock_rel_irq(&rq->lock);
 
-	smp_load_balancing(rq);
+	activate_idle_cpu(rq);
 }
 
 static void __sched_start_thread(struct thread *t)
