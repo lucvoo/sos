@@ -240,7 +240,7 @@ static void __sched_start_thread(struct thread *t)
 	lock_rel_irq(&rq->lock);
 }
 
-static int wake_up(struct thread* t)
+static int __sched_wakeup(struct thread* t)
 {
 	if (t->state == THREAD_STATE_READY)
 		return 0;		// FIXME: should never happen?
@@ -313,5 +313,5 @@ void thread_sleep(void)
 
 void thread_wakeup(struct thread* t)
 {
-	wake_up(t);
+	__sched_wakeup(t);
 }
