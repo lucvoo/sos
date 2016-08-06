@@ -82,7 +82,7 @@ void __smp_start(void)
 	if (smp_ops.init_cpu)
 		smp_ops.init_cpu(cpu);
 
-	_thread_scheduler_start();
+	__sched_start();
 
 	smp_initcalls(cpu);
 	kapi_start_smp();

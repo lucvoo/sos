@@ -235,7 +235,7 @@ static int wake_up(struct thread* t)
 }
 
 
-void _thread_scheduler_start(void)
+void __sched_start(void)
 {
 	struct thread* t = get_current_thread();
 
