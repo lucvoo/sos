@@ -226,6 +226,20 @@ static void __schedule(void)
 	smp_load_balancing(rq);
 }
 
+static void __sched_start_thread(struct thread *t)
+{
+	struct run_queue* rq = &runq;
+
+	// This release the lock taken by thread_schedule() the first time
+	// this thread is scheduled.
+	// This is needed because normally the context is saved & loaded by
+	// thread_schedule() but the first context is loaded with the starting
+	// function & data and thsu the first schedule make the thread to NOT
+	// returns from schedule() (only the previous thread call it) but
+	// instead executing its starting function.
+	lock_rel_irq(&rq->lock);
+}
+
 static int wake_up(struct thread* t)
 {
 	if (t->state == THREAD_STATE_READY)
@@ -263,17 +277,9 @@ void __sched_start(uint cpu)
 */
 void __thread_start(void (*fun)(void *data), void *data)
 {
-	struct run_queue* rq = &runq;
-	struct thread *t;
+	struct thread *t = get_current_thread();
 
-	// This release the lock taken by thread_schedule() the first time
-	// this thread is scheduled.
-	// This is needed because normally the context is saved & loaded by
-	// thread_schedule() but the first context is loaded with the starting
-	// function & data and thsu the first schedule make the thread to NOT
-	// returns from schedule() (only the previous thread call it) but
-	// instead executing its starting function.
-	lock_rel_irq(&rq->lock);
+	__sched_start_thread(t);
 
 	fun(data);
 
