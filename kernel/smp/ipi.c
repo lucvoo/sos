@@ -17,10 +17,14 @@ void smp_ipi_schedule_all(void)
 }
 
 
-void __smp_ipi_process(unsigned long msg)
+void __smp_ipi_process(uint ipi)
 {
-	if (msg & SMP_IPI_SCHEDULE)
+	switch (ipi) {
+	case SMP_IPI_SCHEDULE:
 		thread_need_resched_set(get_current_thread());
+		break;
 
-	// FIXME: process the other bits/messages
+	default:
+		pr_warn("unknow IPI (%d) received on CPU %d\n", ipi, __coreid());
+	}
 }
