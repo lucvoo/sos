@@ -159,11 +159,6 @@ static bool activate_idle_cpu(struct run_queue* rq)
 {
 	unsigned int cpu;
 	unsigned int i;
-	unsigned int n;
-
-	n = rq->nr_running;
-	if (n == 0)
-		return false;
 
 	// Notify the first idle CPU.
 	// This will strongly favour the CPUs with the lowest ID,
@@ -230,7 +225,8 @@ static void __schedule(void)
 	}
 	lock_rel_irq(&rq->lock);
 
-	activate_idle_cpu(rq);
+	if (rq->nr_running)
+		activate_idle_cpu(rq);
 }
 
 static void __sched_start_thread(struct thread *t)
