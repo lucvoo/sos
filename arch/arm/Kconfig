@@ -20,6 +20,15 @@ config	ARM926EJS
 	select ARMV5
 	select ARMV5TE
 
+config	ARM1176JZS
+	bool
+	select ARMV6KZ
+
+config	ARM1176JZFS
+	bool
+	select ARM1176JZS
+	select VFPv2
+
 config	CORTEX_A7
 	bool
 	select ARMV7A
@@ -42,6 +51,10 @@ config	CORTEX_M4
 	select ARMV7M
 	select HAS_DIV32
 
+## FP coprocessor
+config	VFPv2
+	bool
+
 config	ARM_TZ
 	bool
 config	ARMV4T
@@ -59,6 +72,10 @@ config	ARMV6
 config	ARMV6K
 	bool
 	select ARMV6
+config	ARMV6KZ
+	bool
+	select ARMV6K
+	select ARM_TZ
 config	ARMV7A
 	bool
 	select ARM_TZ
@@ -124,7 +141,7 @@ config	THUMB2
 
 config	HAS_VBAR
 	bool "Has VBAR"
-	depends on ARMV6K || ARMV7
+	depends on ARMV6KZ || ARMV7
 	default ARM_TZ
 config	HIGH_VECTORS
 	bool "Use high vectors"

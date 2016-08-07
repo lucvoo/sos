@@ -1,5 +1,10 @@
 config SOC_AM335X
 	bool
+config SOC_BCM2835
+	bool
+config SOC_BCM283X
+	bool
+	default SOC_BCM2835
 config SOC_IMX6
 	bool
 config SOC_STM32
@@ -13,6 +18,10 @@ config SOC_SUNXI_A80
 	bool
 	select SOC_SUNXI
 
+menu "SoC options"
+if SOC_BCM283X
+source arch/arm/soc-bcm283x/Kconfig
+endif
 if SOC_IMX6
 source arch/arm/soc-imx6/Kconfig
 endif
@@ -22,3 +31,4 @@ endif
 if SOC_SUNXI_A80
 source arch/arm/soc-sunxi-a80/Kconfig
 endif
+endmenu

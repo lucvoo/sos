@@ -10,6 +10,9 @@ config MACH_BEAGLEBONE
 config MACH_CUBIEBOARD4
 	bool "Cubieboard"
 
+config MACH_RASPBERRY_PI
+	bool "Raspberry-pi"
+
 config MACH_STM32
 	bool "STM32 family"
 
@@ -23,6 +26,9 @@ source arch/arm/mach-beaglebone/Kconfig
 endif
 if MACH_CUBIEBOARD4
 source arch/arm/mach-cubieboard4/Kconfig
+endif
+if MACH_RASPBERRY_PI
+source arch/arm/mach-raspberry-pi/Kconfig
 endif
 if MACH_STM32
 source arch/arm/mach-stm32/Kconfig

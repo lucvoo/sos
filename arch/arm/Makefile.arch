@@ -2,6 +2,8 @@ CROSS_COMPILE	?= arm-linux-
 
 AFLAGS-y	+= -include arch/assembly.h
 
+ARCHFLAGS-y			+= -masm-syntax-unified
+
 ARCHFLAGS-$(CONFIG_ARMV4T)	+= -march=armv4t
 ARCHFLAGS-$(CONFIG_ARM7TDMI)	+= -mtune=arm7tdmi
 ARCHFLAGS-$(CONFIG_ARM720T)	+= -mtune=arm7tdmi
@@ -11,6 +13,8 @@ ARCHFLAGS-$(CONFIG_ARMV5T)	+= -march=armv5t
 ARCHFLAGS-$(CONFIG_ARMV5TE)	+= -march=armv5te
 ARCHFLAGS-$(CONFIG_ARM926)	+= -mtune=arm926tdmi
 ARCHFLAGS-$(CONFIG_ARM926EJS)	+= -mtune=arm926ej-s
+
+ARCHFLAGS-$(CONFIG_ARM1176JZS)	+= -mcpu=arm1176jz-s
 
 ARCHFLAGS-$(CONFIG_CORTEX_A7)	+= -mcpu=cortex-a7 -mtune=cortex-a7
 ARCHFLAGS-$(CONFIG_CORTEX_A8)	+= -mcpu=cortex-a8 -mtune=cortex-a8

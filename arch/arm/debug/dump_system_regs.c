@@ -28,8 +28,10 @@ void dump_system_regs(void)
 
 	printf("\n");
 	dump_cp15(CTR);
+#if CONFIG_ARM_ARCH >= 7
 	dump_cp15(CCSIDR);
 	dump_cp15(CLIDR);
+#endif
 
 	printf("\n");
 	dump_reg("CPSR",  __irqflags_save("%0"));

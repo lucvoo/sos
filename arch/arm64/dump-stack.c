@@ -32,7 +32,43 @@ static void dump_regs(const struct eframe *f)
 	}
 }
 
+static void dump_frame(const ulong *top, const void *__end)
+{
+	const ulong *end = __end;
+
+#if 0
+	__printf("top = %p, end = %p\n", top, end);
+	__printf("\t%p: %016x\n", &top[0], top[0]);
+	__printf("\t%p: %016x\n", &top[1], top[1]);
+	top += 2;
+#endif
+	while (top < end) {
+		__printf("\t%p: %016x\n", top, *top);
+		top++;
+	}
+}
+
+static void dump_frames(const struct eframe *f)
+{
+	struct stack_frame {
+		struct stack_frame	*fp;
+		ulong			lr;
+	} *fp = (void *) f->x[29];
+	void *top;
+
+	__printf("\nStack frames:\n");
+	__printf("   @ %016x:\n", f->x[30]);
+
+	top = (void *) f->sp;
+	for (; (fp && fp->lr); top = fp = fp->fp) {
+		dump_frame(top, fp->fp);
+		__printf("   @ %016x:\n", fp->lr);
+	}
+}
+
+
 void __arch_dump_stack(const struct eframe *f)
 {
 	dump_regs(f);
+	dump_frames(f);
 }

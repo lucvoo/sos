@@ -3,11 +3,10 @@
 
 /*
  * task switching:
- *	x0 = previous thread_info,
- *	x1 = next thread_info
+ *	x0 = pointer to curr thread,
+ *	x1 = pointer to next thread.
  *   returns:
- *	x0 = previous thread_info
- * previous and next are guaranteed not to be the same.
+ *	x0 = pointer to previous thread
  */
 	.text
 

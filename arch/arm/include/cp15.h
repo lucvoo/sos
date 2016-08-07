@@ -87,6 +87,7 @@
 #define	CP15DSB(R)	p15, 0, R,  c7, c10, 4	// Data Synchronization Barrier operation
 #define	CP15DMB(R)	p15, 0, R,  c7, c10, 5	// Data Memory Barrier operation
 #define	DCCMVAU(R)	p15, 0, R,  c7, c11, 1	// Clean D/U cache line by MVA to PoU
+#define	DCCIALL(R)	p15, 0, R,  c7, c14, 0	// Clean and invalidate D/U entire cache (ARMv6)
 #define	DCCIMVAC(R)	p15, 0, R,  c7, c14, 1	// Clean and invalidate D/U cache line by MVA to PoC
 #define	DCCISW(R)	p15, 0, R,  c7, c14, 2	// Clean and invalidate D/U cache line by set/way
 						// ø: introduced as part of multiprocessor extension

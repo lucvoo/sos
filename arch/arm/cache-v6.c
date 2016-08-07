@@ -5,9 +5,7 @@
 
 static ulong cacheline_size(void)
 {
-	ulong ctr = cp_read(CTR);
-
-	return ((ctr >> 16) & 0xf) * 4;
+	return 32;
 }
 
 #define	DCACHE_OP_RANGE(NAME, OP)				\

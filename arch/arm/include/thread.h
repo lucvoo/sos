@@ -27,7 +27,7 @@ static inline void set_current_thread(struct thread *curr)
 {
 }
 
-#elif defined(CONFIG_ARMV7)
+#elif defined(CONFIG_ARMV7) ||  defined(CONFIG_ARMV6K)
 
 #include <stringify.h>
 #include <arch/cp15.h>
