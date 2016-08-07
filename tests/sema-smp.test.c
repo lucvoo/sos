@@ -5,6 +5,7 @@
 #include <smp/init.h>
 #include <smp.h>
 #include <semaphore.h>
+#include <delay.h>
 #include <hz.h>
 
 
@@ -23,6 +24,8 @@ static void do_loop_wait(struct semaphore *sem, const char *name, uint delay)
 		printf("%d: %s try ...\n", __coreid(), name);
 		semaphore_wait(sem);
 		printf("%d: %s got!\n", __coreid(), name);
+
+		mdelay((delay * 1024)/ HZ);
 
 		printf("%d: %s rel\n", __coreid(), name);
 		semaphore_post(sem);
@@ -89,7 +92,9 @@ static void fun0(void* data)
 		printf("%d: %s try %d ...\n", __coreid(), name, ++n);
 		semaphore_wait(sem);
 		printf("%d: %s got!\n", __coreid(), name);
-		thread_yield();
+
+		mdelay(50);
+
 		printf("%d: %s rel\n", __coreid(), name);
 		semaphore_post(sem);
 	};
