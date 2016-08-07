@@ -12,9 +12,9 @@ static struct timers {
 	.head = DLIST_HEAD_INIT(timers.head),
 };
 
-#if defined(DEBUG)
 static void timer_dbg(struct timer *t, int dump, const char *fmt, ...)
 {
+#if defined(DEBUG)
 	struct timer *cur;
 	va_list ap;
 
@@ -31,12 +31,8 @@ static void timer_dbg(struct timer *t, int dump, const char *fmt, ...)
 		}
 	} else
 		printf("\n");
-}
-#else
-static void timer_dbg(struct timer *t, int dump, const char *fmt, ...)
-{
-}
 #endif
+}
 
 static void timer_program(void)
 {
