@@ -144,14 +144,13 @@ static inline int cpu_is_idle(struct run_queue *rq, unsigned int cpu)
 static bool activate_idle_cpu(struct run_queue* rq)
 {
 	unsigned int cpu;
-	unsigned int i;
 
 	// Notify the first idle CPU.
 	// This will strongly favour the CPUs with the lowest ID,
 	// which is fine and will let the highest ones in low-power.
 	// FIXME: use a bitmap for rq->idle?
 	cpu = __cpuid();
-	for (i = 0; i < NR_CPUS; i++) {
+	foreach_cpu(i) {
 		if (i == cpu)
 			continue;
 		if (!cpu_is_idle(rq, i))

@@ -10,9 +10,7 @@ void smp_ipi_schedule_one(unsigned int cpu)
 
 void smp_ipi_schedule_all(void)
 {
-	unsigned int i;
-
-	for (i = 0; i < NR_CPUS; i++)
+	foreach_cpu(i)
 		smp_ipi_schedule_one(i);
 }
 
