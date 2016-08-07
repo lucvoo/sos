@@ -67,20 +67,6 @@ static void enqueue_thread_locked(struct run_queue* rq, struct thread* t)
 	rq->bitmap |= 1 << prio;
 }
 
-static void __thread_activate(struct thread* t)
-{
-	struct thread* curr = get_current_thread();
-	struct run_queue* rq = &runq;
-
-	t->state = THREAD_STATE_READY;
-	if (t->priority >= curr->priority)
-		thread_need_resched_set(curr);
-
-	lock_acq_irq(&rq->lock);
-	enqueue_thread_locked(rq, t);
-	lock_rel_irq(&rq->lock);
-}
-
 static struct thread *dequeue_thread_locked(struct run_queue* rq, uint prio)
 {
 	struct dlist_head* q = &rq->queues[prio];
@@ -191,6 +177,25 @@ static bool activate_idle_cpu(struct run_queue* rq)
 	return false;
 }
 #endif
+
+static void __thread_activate(struct thread* t)
+{
+	struct run_queue* rq = &runq;
+
+	t->state = THREAD_STATE_READY;
+
+	lock_acq_irq(&rq->lock);
+
+	enqueue_thread_locked(rq, t);
+	if (!activate_idle_cpu(rq)) {
+		struct thread* curr = get_current_thread();
+
+		if (t->priority >= curr->priority)
+			thread_need_resched_set(curr);
+	}
+
+	lock_rel_irq(&rq->lock);
+}
 
 static void __schedule(void)
 {
