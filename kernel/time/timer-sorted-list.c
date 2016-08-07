@@ -1,6 +1,8 @@
 #include <timer.h>
 #include <timerdev.h>
 #include <lock.h>
+#include <smp.h>
+#include <init.h>
 
 
 static struct timerdev *td;
@@ -8,9 +10,15 @@ static struct timerdev *td;
 static struct timers {
 	struct lock		lock;
 	struct dlist_head	head;
-} timers = {
-	.head = DLIST_HEAD_INIT(timers.head),
-};
+} timers[NR_CPUS];
+
+
+static void timers_init(void)
+{
+	foreach_cpu(cpu)
+		dlist_init(&timers[cpu].head);
+}
+pure_initcall(timers_init);
 
 static void timer_dbg(struct timers *ts, struct timer *t, int dump, const char *fmt, ...)
 {
@@ -36,7 +44,10 @@ static void timer_dbg(struct timers *ts, struct timer *t, int dump, const char *
 
 static struct timers *get_timers(void)
 {
-	return &timers;
+	// FIXME: this, like all per-cpu refs, need some protection
+	//	  against switching to another CPU
+
+	return &timers[__cpuid()];
 }
 
 
@@ -84,6 +95,8 @@ static void timer_add_locked(struct timers *ts, struct timer *t)
 	dlist_insert(cur->node.prev, &t->node, &cur->node);
 
 	timer_dbg(ts, t, 1, "add", t, t->exp);
+
+	// FIXME: we need to guarantee that this will done on ts' CPU
 	timer_program(ts);
 }
 
