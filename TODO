@@ -56,10 +56,10 @@
   ✓ scheduler SMP-awareness
     ✓ wakeup: need to choose a good CPU (same as last or idle)
     ✓ wakeup: may need to wakeup others CPUs (IPI)
+  ~ per-cpu timers
   ! need preempt support (lock_rel() -> do need_resched()/resched())
   * add per-cpu infrastructure ?
   ! need printf serialization
-  ! need per-cpu timers
 
 * RTC:
   * add basic support
@@ -86,7 +86,7 @@
   ✓ interrupts
   ✓ GIC
   ✓ timer
-    ! per-cpu timers
+    ~ per-cpu timers
   ~ SMP support
   * ioremap
 
