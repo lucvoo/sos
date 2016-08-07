@@ -7,13 +7,10 @@
 #include <sched.h>
 
 
-#define	foreach_cpu(cpu)	for (cpu = 0; cpu < NR_CPUS; cpu++)
-
 extern struct thread init_thread[];
 
 int __weak __smp_init(void)
 {
-	uint cpu;
 	int rc;
 
 	rc = smp_ops.init();
