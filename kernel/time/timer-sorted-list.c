@@ -34,6 +34,12 @@ static void timer_dbg(struct timer *t, int dump, const char *fmt, ...)
 #endif
 }
 
+static struct timers *get_timers(void)
+{
+	return &timers;
+}
+
+
 static void timer_program(void)
 {
 	struct timer *t;
