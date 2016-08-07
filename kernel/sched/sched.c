@@ -155,7 +155,7 @@ static inline int cpu_is_idle(struct run_queue *rq, unsigned int cpu)
  * At worst we wake up a cpu for nothing or we miss an opportunity
  * to run a process on another cpu but everything is still OK.
  */
-static void activate_idle_cpu(struct run_queue* rq)
+static bool activate_idle_cpu(struct run_queue* rq)
 {
 	unsigned int cpu;
 	unsigned int i;
@@ -163,7 +163,7 @@ static void activate_idle_cpu(struct run_queue* rq)
 
 	n = rq->nr_running;
 	if (n == 0)
-		return;
+		return false;
 
 	// Notify the first idle CPU.
 	// This will strongly favour the CPUs with the lowest ID,
@@ -181,16 +181,19 @@ static void activate_idle_cpu(struct run_queue* rq)
 		// We could do this until nr_running == 0, but
 		// - the cpu just notified will take one thread
 		//   and itself try this again
-		break;
+		return true;
 	}
+
+	return false;
 }
 #else
 static void smp_set_idle(struct run_queue *rq, unsigned int cpu, int val)
 {
 }
 
-static void activate_idle_cpu(struct run_queue* rq)
+static bool activate_idle_cpu(struct run_queue* rq)
 {
+	return false;
 }
 #endif
 
