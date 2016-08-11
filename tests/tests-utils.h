@@ -1,5 +1,9 @@
 /* tests/sprng.c */
 
 #include <stdint.h>
+#include <prng.h>
 
-uint32_t sprng(void);
+static inline uint sprng(void)
+{
+	return prng32();
+}
