@@ -78,7 +78,7 @@ cmd_cc_lds = $(CPP) -x assembler-with-cpp -P -D__ASSEMBLY__ $(cpp_flags)   -o $@
 %.a:
 	@echo "AR	$@"
 	@if [ -n "$(filter-out $^,$(deps_$@))" ]; then rm -f $@; fi	# rm the lib if it contains old members
-	$(Q)$(AR) crs $@ $^
+	$(Q)$(AR) crsT $@ $^
 	@echo "deps_$@ := $^" > $(depfile) #$(@D)/.$(@F).d
 # ---------------------------------------------------------------------------
 
