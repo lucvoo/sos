@@ -30,12 +30,11 @@ do_makefile()
 	echo "endif"
 	echo
 	echo "ifneq (\$(objs-y),)"
-	echo "objs := \$(objs-y:%=$dir/%)"
 	echo "-include \$(objs-y:%.o=$dir/.%.o.cmd)"
 	echo "-include \$(objs-y:%.o=$dir/.%.s.cmd)"
 	echo
 	echo "-include $dir/.lib.a.d"
-	echo "$dir/lib.a: \$(objs)"
+	echo "$dir/lib.a: \$(objs-y:%=$dir/%)"
 	echo "libs += $dir/lib.a"
 	echo "$dir/: $dir/lib.a"
 	echo "endif"
