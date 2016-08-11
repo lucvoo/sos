@@ -40,6 +40,9 @@ do_makefile()
 	echo "$dir/: $dir/lib.a"
 	echo "endif"
 	echo
+	echo "# For hierarchical libs:"
+	echo "# $dir/lib.a: \$(objs-y:%=$dir/%) \$(subdirs-y:%/=$dir/%/lib.a)"
+	echo
 	echo "ifneq (\$(deps-y),)"
 	echo "-include \$(deps-y:%=$dir/.%.cmd)"
 	echo "endif"
