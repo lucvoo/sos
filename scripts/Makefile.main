@@ -59,12 +59,12 @@ ifneq ($(filter config %config,$(MAKECMDGOALS)),)
 endif
 
 ##
-%/.make: %/Makefile scripts/gen-makefile
-	@scripts/gen-makefile $*
+%/.make: %/Makefile scripts/gen-dotmake
+	@scripts/gen-dotmake $*
 
 # avoid implicit rules
 _all:
-scripts/gen-makefile: ;
+scripts/gen-dotmake: ;
 scripts/Kbuild.include: ;
 scripts/Makefile.%: ;
 %.cmd: ;
