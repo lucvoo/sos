@@ -4,7 +4,6 @@
 do_makefile()
 {
 	dir="$1"
-	out="$2"
 
 	echo "objs-y	:="
 	echo "progs-y	:="
@@ -46,16 +45,12 @@ do_makefile()
 	echo "-include \$(deps-y:%=$dir/.%.cmd)"
 	echo "endif"
 	echo "ifneq (\$(subdirs-y),)"
-	echo "-include \$(subdirs-y:%=$dir/%$out)"
+	echo "-include \$(subdirs-y:%/=$dir/%/.make)"
 	echo "endif"
 
 }
 
-out="$1"
-shift
-
-for i in "$@"
+for dir in "$@"
 do
-	dir=${i%/Makefile}
-	do_makefile "$dir" "$out" > "$dir/$out"
+	do_makefile "$dir" > "$dir/.make"
 done

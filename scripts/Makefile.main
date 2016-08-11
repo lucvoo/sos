@@ -60,7 +60,7 @@ endif
 
 ##
 %/.make: %/Makefile scripts/gen-makefile
-	@scripts/gen-makefile .make $*
+	@scripts/gen-makefile $*
 
 # avoid implicit rules
 _all:
