@@ -177,14 +177,14 @@ progs :=
 pgms-deps := libtarget.a arch/$(CONFIG_ARCH)/target.lds
 tests := $(filter tests/%.test,$(progs))
 tests/: $(tests:%=%.bin)
-$(progs): %: %.o $(pgms-deps) $(libs) kernel/version.o
+$(progs): %: %.o $(pgms-deps) kernel/version.o
 	@echo "LINK	$@"
 	$(Q)$(CC) -Wl,--gc-sections					\
 		-Wl,-Map,$@.map,--cref					\
 		-Tarch/$(CONFIG_ARCH)/target.lds $(LDFLAGS) 		\
 		-Wl,--start-group -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive -Wl,--end-group	\
 		-lgcc							\
-		$< $(libs) kernel/version.o -o $@
+		$< kernel/version.o -o $@
 	@cp $@ kimage.elf
 
 LOADADDR:=$(shell printf 0x%08x $$((${CONFIG_PHYS_ADDR} + ${CONFIG_TEXT_OFFSET})))
