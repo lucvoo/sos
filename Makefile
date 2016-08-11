@@ -127,9 +127,10 @@ subdirs:=$(subdirs-y)
 libs :=
 -include $(subdirs:%=%/.make)
 
-libtarget.a: $(libs)
+libtarget.a: $(libs) FORCE
 	@echo 'AR	$@'
-	$(Q)echo "GROUP($^)" > $@
+	@rm -f $@	# avoid problems when removing some members
+	$(Q)$(AR) crsT $@ $(filter %.a,$^)
 
 
 _all: libtarget.a FORCE
