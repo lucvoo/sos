@@ -11,7 +11,6 @@
 #define	WORD_ALIGN	ALIGN(__SIZEOF_LONG__)
 
 ENTRY(_os_startup)
-GROUP(libtarget.a libgcc.a)
 
 MEMORY {
 	ram		: ORIGIN = VIRT_ADDR + TEXT_OFFSET, LENGTH = 0xFFFFFFFF
