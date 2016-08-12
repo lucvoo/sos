@@ -1,0 +1,21 @@
+menu "cXT200"
+
+config	SOC
+	symbol
+	default	cxt200
+
+config	SOC_PARAMS
+	bool
+	default y
+	select HAS_SMP
+	select ENDIAN_LITTLE
+	select CPU_INTERAPTIV
+
+config PHYS_ADDR
+	hex
+	default 0x00000000
+config PHYS_SIZE
+	hex
+	default 0x10000000
+
+endmenu
