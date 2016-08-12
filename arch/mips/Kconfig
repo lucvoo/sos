@@ -29,6 +29,10 @@ config	CPU_24KC
 	bool "24Kc"
 	select CPU_MIPS32R2
 
+config	CPU_INTERAPTIV
+	bool
+	select CPU_MIPS32R2
+
 config	BITS
 	int
 	default 32 if MIPS32
