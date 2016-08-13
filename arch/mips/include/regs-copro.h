@@ -94,6 +94,10 @@
 
 #define	c0_ebase	__COPRO_REG($15, 1)
 
+#define	c0_cdmmbase	__COPRO_REG($15, 2)
+
+#define	c0_cmgcrbase	__COPRO_REG($15, 3)
+
 #define	c0_config	__COPRO_REG($16, 0)
 #define		CFG0_K0		(1 << 0)
 #define		CFG0_VI		(1 << 3)
@@ -116,13 +120,23 @@
 #define		CFG2_M		(1 <<31)
 
 #define	c0_config3	__COPRO_REG($16, 3)
+#define		CFG3_MT		(1 << 2)
+#define		CFG3_CDMM	(1 << 3)
 #define		CFG3_VINT	(1 << 5)
 #define		CFG3_VEIC	(1 << 6)
+#define		CFG3_CMGCR	(1 <<29)
 #define		CFG3_M		(1 <<31)
+
+#define	c0_config4	__COPRO_REG($16, 4)
+
+#define	c0_config5	__COPRO_REG($16, 5)
+#define		CFG5_EVA	(1 <<28)
 
 #define	c0_config6	__COPRO_REG($16, 6)
 
 #define	c0_config7	__COPRO_REG($16, 7)
+#define		CFG7_HCI	(1 << 18)
+#define		CFG7_WII	(1 << 31)
 
 #define	c0_lladdr	__COPRO_REG($17, 0)
 
