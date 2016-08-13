@@ -7,7 +7,7 @@ static void abort_handler(struct eframe *regs, ulong far, ulong fsr, const char 
 {
 #ifdef	CONFIG_SMP
 #define	F_CPU	" (cpu %u)"
-#define	A_CPU	, __coreid()
+#define	A_CPU	, __cpuid()
 #else
 #define	F_CPU
 #define	A_CPU

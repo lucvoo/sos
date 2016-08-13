@@ -25,6 +25,6 @@ void __smp_ipi_process(uint ipi)
 		break;
 
 	default:
-		pr_warn("unknow IPI (%d) received on CPU %d\n", ipi, __coreid());
+		pr_warn("unknow IPI (%d) received on CPU %d\n", ipi, __cpuid());
 	}
 }

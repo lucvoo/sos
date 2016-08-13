@@ -9,7 +9,7 @@
 #include <hz.h>
 
 
-#define	started(name)	printf("%d: %s (%p) started\n", __coreid(), name, get_current_thread())
+#define	started(name)	printf("%d: %s (%p) started\n", __cpuid(), name, get_current_thread())
 
 
 
@@ -19,9 +19,9 @@ static void do_loop_wait(struct semaphore *sem, const char *name)
 	started(name);
 
 	while (1) {
-		printf("%d: %s try ...\n", __coreid(), name);
+		printf("%d: %s try ...\n", __cpuid(), name);
 		semaphore_wait(sem);
-		printf("%d: %s got!\n", __coreid(), name);
+		printf("%d: %s got!\n", __cpuid(), name);
 	}
 }
 
@@ -48,11 +48,11 @@ static void do_loop_post(struct semaphore *sem, const char *name)
 	int n = 0;
 
 	while (1) {
-		printf("%d: %s sleep ... %d\n", __coreid(), name, ++n);
+		printf("%d: %s sleep ... %d\n", __cpuid(), name, ++n);
 		mdelay(150);
-		printf("%d: %s awake!\n", __coreid(), name);
+		printf("%d: %s awake!\n", __cpuid(), name);
 
-		printf("%d: %s rel\n", __coreid(), name);
+		printf("%d: %s rel\n", __cpuid(), name);
 		semaphore_post(sem);
 	}
 }
@@ -79,7 +79,7 @@ static struct semaphore sema;
 
 void kapi_start(void)
 {
-	printf("%d: started (idle = %p)\n", __coreid(), get_current_thread());
+	printf("%d: started (idle = %p)\n", __cpuid(), get_current_thread());
 
 	semaphore_init(&sema, 0);
 
@@ -94,5 +94,5 @@ void kapi_start(void)
 
 void kapi_start_smp(void)
 {
-	printf("%d: started (idle = %p)\n", __coreid(), get_current_thread());
+	printf("%d: started (idle = %p)\n", __cpuid(), get_current_thread());
 }

@@ -91,7 +91,7 @@ static void dump_rq(const char *ctxt, int locked)
 	if (!locked)
 		lock_acq_irq(&rq->lock);
 
-	printf("dump rq @ %s on cpu %d:\n", ctxt, __coreid());
+	printf("dump rq @ %s on cpu %d:\n", ctxt, __cpuid());
 	printf("\tnr = %u\n", rq->nr_running);
 	printf("\tbitmap= %08lX (%lb)\n", rq->bitmap, rq->bitmap);
 
@@ -150,7 +150,7 @@ static bool activate_idle_cpu(struct run_queue* rq)
 	// This will strongly favour the CPUs with the lowest ID,
 	// which is fine and will let the highest ones in low-power.
 	// FIXME: use a bitmap for rq->idle?
-	cpu = __coreid();
+	cpu = __cpuid();
 	for (i = 0; i < NR_CPUS; i++) {
 		if (i == cpu)
 			continue;
@@ -205,7 +205,7 @@ static void __schedule(void)
 	unsigned int cpu;
 
 	lock_acq_irq(&rq->lock);
-	cpu = __coreid();
+	cpu = __cpuid();
 	prev = get_current_thread();
 	thread_need_resched_clear(prev);
 

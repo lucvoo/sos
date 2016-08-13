@@ -53,7 +53,7 @@ int __weak __smp_init(void)
 struct thread *__smp_init_idle_thread(void);		// called from asm
 struct thread *__smp_init_idle_thread(void)
 {
-	struct thread *idle = &init_thread[__coreid()];
+	struct thread *idle = &init_thread[__cpuid()];
 
 	set_current_thread(idle);
 
@@ -77,7 +77,7 @@ static void smp_initcalls(uint cpu)
 
 void __smp_start(void)
 {
-	uint cpu = __coreid();
+	uint cpu = __cpuid();
 
 	if (smp_ops.init_cpu)
 		smp_ops.init_cpu(cpu);

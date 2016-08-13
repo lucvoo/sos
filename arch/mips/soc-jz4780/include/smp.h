@@ -4,7 +4,7 @@
 #include <arch/copro.h>
 #include <arch/regs-copro.h>
 
-#define	__coreid()	(c0_getval(c0_ebase) & 0x00000007)
+#define	__cpuid()	(c0_getval(c0_ebase) & 0x00000007)
 
 #define	NR_CPUS		2
 

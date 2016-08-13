@@ -43,7 +43,7 @@ static int mbox_irq_handler(struct irqdesc *desc, void *data)
 	unsigned int msg;
 
 	lock_acq(&core_regs_lock);
-	switch (__coreid()) {
+	switch (__cpuid()) {
 	case 0:
 		msg = c0_getval(c0_mailbox0);
 		c0_setval(c0_mailbox0, 0);
