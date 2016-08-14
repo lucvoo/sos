@@ -59,4 +59,11 @@ SECTIONS
 
 	. = ALIGN(PAGE_SIZE);
 	PROVIDE(pagemap = .);
+
+
+    /DISCARD/ :
+	{
+		*(.MIPS.abiflags)
+		*(.rel.dyn)
+	}
 }
