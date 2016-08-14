@@ -1,7 +1,7 @@
 #include <diag.h>
 
 
-void _os_diag_hexval(unsigned long val)
+void _os_diag_hexval(unsigned long val, uint sep)
 {
 	int n;
 
@@ -15,4 +15,7 @@ void _os_diag_hexval(unsigned long val)
 
 		_os_diag_write_char(d);
 	}
+
+	if (sep)
+		_os_diag_write_char(sep);
 }
