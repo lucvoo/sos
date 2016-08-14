@@ -63,4 +63,8 @@ config	TEXT_OFFSET
 	hex "Start of kernel image relatively to the start of the RAM"
 	default 0x00008000
 
+config	LOAD_OFFSET
+	hex "kernel image's load offset"
+	default TEXT_OFFSET
+
 endmenu
