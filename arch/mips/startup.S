@@ -13,18 +13,17 @@
 
 _os_startup:
 
+	// end of PIC code
+	la	t0, 1f
+	jr	t0
+1:
+
 	// init the status register
 	mfc0	t0, c0_status
 	or	t0, t0, ST0_CLRMSK|ST0_SETMSK
 	xor	t0, t0, ST0_CLRMSK
 	mtc0	t0, c0_status
 	ehb
-
-
-	// end of PIC code
-	la	t0, 1f
-	jr	t0	
-1:
 
 	// clear cp0 context
 	mtc0	$0, c0_context
