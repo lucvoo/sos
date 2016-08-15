@@ -10,18 +10,25 @@
 
 /*
  * Kinda stupid, at least ultra-simple memory allocator.
- * It's backed, of course, by the page allocator.
- * Inside a page (possibly a compound one), no memory accounting
- * is done but the total size allocated.
- * In consequence, memory inside the page can't be reused: when a new page
- * is allocated: 2 counters inside the page structure are initialized:
- *	* free space, initialized to the size of the page
- *	* used space, initialized to 0.
+ * It's backed, of course, by the page allocator which give us an
+ * "allocation block".
+*¨
+ * Inside those block no accounting is done, its only used for
+ * allocation but each alloc is returned so that its size is
+ * stored in the preceding word so that the size can be easily retreived
+ * add free time..
+ *
+ * For the accounting, we hijack some fields in the block's struct page:
+ *     .order  for the free space
+ *     .count  for the used space.
  * At allocation time, the free space is decremented and the used space is
  * incremented by the size to be allocated.
  * If not enough free space remains a new page is allocated.
  * At freeing time the used space is decremented and the page is freed when this
  * counter reach zero.
+ *
+ * The simplicity has some drawbacks: space inside a block is never reused:
+ * because we only use the total free & used space and no positions.
  * This may not be cache friendly but is very simple.
  *
  * NOTE: an internal reference count is also taken for the page we're currently
