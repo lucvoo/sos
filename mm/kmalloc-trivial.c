@@ -31,6 +31,8 @@
 
 #define	KMALLOC_PAGE_ORDER	1
 #define	KMALLOC_PAGE_SIZE	(PAGE_SIZE << KMALLOC_PAGE_ORDER)
+#define	KMALLOC_PAGE_MASK	(KMALLOC_PAGE_SIZE - 1)
+#define	KMALLOC_BLOCK(ptr)	(((ulong) (ptr)) & ~KMALLOC_PAGE_MASK)
 
 struct kmalloc_ent {
 	u32		size;
@@ -106,7 +108,7 @@ end:
 void kfree(const void *ptr)
 {
 	const struct kmalloc_ent *ent = container_of(ptr, typeof(*ent), data[0]);
-	struct page *page = virt_to_page(ent);
+	struct page *page = virt_to_page(KMALLOC_BLOCK(ent));
 	uint size = ent->size;
 
 	if (!ptr)
