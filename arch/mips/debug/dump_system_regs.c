@@ -50,6 +50,14 @@ void dump_system_regs(void)
 	if (r & CONFIG_M)
 		dump_cp0(c0_config5);
 
+#if defined(CONFIG_CPU_INTERAPTIV)
+	dump_cp0(c0_config7);
+
+	printf("\n");
+	dump_cp0(c0_cdmmbase);
+	dump_cp0(c0_cmgcrbase);
+#endif
+
 #if defined(CONFIG_MT)
 	printf("\n");
 	dump_cp0(c0_mvpctrl);
