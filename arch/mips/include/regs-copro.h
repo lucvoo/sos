@@ -198,4 +198,34 @@
 
 #define	c0_errorepc	__COPRO_REG($30, 0)
 
+////////////////////////////////////////////////////////////////////////////////
+// MT extension
+#define	c0_mvpctrl	__COPRO_REG($0, 1)
+#define	c0_mvpcfg0	__COPRO_REG($0, 2)
+#define	c0_mvpcfg1	__COPRO_REG($0, 3)
+
+#define	c0_vpectrl	__COPRO_REG($1, 1)
+#define	c0_vpecfg0	__COPRO_REG($1, 2)
+#define	c0_vpecfg1	__COPRO_REG($1, 3)
+#define	c0_yqmask	__COPRO_REG($1, 4)
+#define	c0_vpesched	__COPRO_REG($1, 5)
+#define	c0_vpeschedfb	__COPRO_REG($1, 6)
+#define	c0_vpeopt	__COPRO_REG($1, 7)
+
+#define	c0_tcstatus	__COPRO_REG($2, 1)
+#define	c0_tcbind	__COPRO_REG($2, 2)
+#define	c0_tcrestart	__COPRO_REG($2, 3)
+#define	c0_tchalt	__COPRO_REG($2, 4)
+#define	c0_tccontext	__COPRO_REG($2, 4)
+#define	c0_tcsched	__COPRO_REG($2, 6)
+#define	c0_tcschedfb	__COPRO_REG($2, 7)
+
+#define	c0_tcopt	__COPRO_REG($3, 7)
+
+#define	c0_srscfg0	__COPRO_REG($6, 1)
+#define	c0_srscfg1	__COPRO_REG($6, 2)
+#define	c0_srscfg2	__COPRO_REG($6, 3)
+#define	c0_srscfg3	__COPRO_REG($6, 4)
+#define	c0_srscfg4	__COPRO_REG($6, 5)
+
 #endif
