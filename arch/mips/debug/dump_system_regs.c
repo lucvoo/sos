@@ -50,5 +50,31 @@ void dump_system_regs(void)
 	if (r & CONFIG_M)
 		dump_cp0(c0_config5);
 
+#if defined(CONFIG_MT)
+	printf("\n");
+	dump_cp0(c0_mvpctrl);
+	dump_cp0(c0_mvpcfg0);
+	if (r & CONFIG_M)
+		dump_cp0(c0_mvpcfg1);
+
+	dump_cp0(c0_vpectrl);
+	dump_cp0(c0_vpecfg0);
+	if (r & CONFIG_M)
+		dump_cp0(c0_vpecfg1);
+	dump_cp0(c0_vpesched);
+	dump_cp0(c0_vpeschedfb);
+	dump_cp0(c0_vpeopt);
+
+	dump_cp0(c0_srscfg0);
+	if (r & CONFIG_M)
+		dump_cp0(c0_srscfg1);
+	if (r & CONFIG_M)
+		dump_cp0(c0_srscfg2);
+	if (r & CONFIG_M)
+		dump_cp0(c0_srscfg3);
+	if (r & CONFIG_M)
+		dump_cp0(c0_srscfg4);
+#endif
+
 	dump_regs_soc();
 }
