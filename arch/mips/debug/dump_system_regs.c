@@ -45,6 +45,10 @@ void dump_system_regs(void)
 		dump_cp0(c0_config2);
 	if (r & CONFIG_M)
 		dump_cp0(c0_config3);
+	if (r & CONFIG_M)
+		dump_cp0(c0_config4);
+	if (r & CONFIG_M)
+		dump_cp0(c0_config5);
 
 	dump_regs_soc();
 }
