@@ -32,6 +32,7 @@ config	CPU_24KC
 config	CPU_INTERAPTIV
 	bool
 	select CPU_MIPS32R2
+	select MIPS_CM
 
 config	BITS
 	int
@@ -40,6 +41,10 @@ config	BITS
 config	C0_COUNTER_DISABLED
 	bool
 	default n
+
+config	MIPS_CM
+	bool "MIPS Coherence Manager" if n
+
 
 source arch/mips/Kconfig.mach
 source arch/mips/Kconfig.socs
