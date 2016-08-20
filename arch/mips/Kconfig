@@ -32,6 +32,7 @@ config	CPU_24KC
 config	CPU_INTERAPTIV
 	bool
 	select CPU_MIPS32R2
+	select MIPS_GIC
 	select MIPS_CM
 
 config	BITS
