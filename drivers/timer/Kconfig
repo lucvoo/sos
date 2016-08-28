@@ -6,7 +6,7 @@ source kernel/time/Kconfig
 config	ARM_GENERIC_TIMER
 	bool "ARM generic timer"
 	depends on ARMV7A || ARCH_ARM64
-	default y
+	default n
 
 config	CNTFRQ
 	int "Generic timer frequency"
