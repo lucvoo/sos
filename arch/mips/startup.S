@@ -3,7 +3,7 @@
 
 
 // FIXME: this is cpu/subarch specific
-#define	ST0_CLRMSK	(ST0_KSU|ST0_BEV|ST0_ERL|ST0_EXL|ST0_IE)
+#define	ST0_CLRMSK	(ST0_KSU|ST0_BEV|ST0_ERL|ST0_EXL|ST0_IE|ST0_IMASK)
 #define	ST0_SETMSK	0
 
 	.section	".startup.text","ax"
