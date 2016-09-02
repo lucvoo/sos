@@ -2,7 +2,7 @@
 #include <arch/asm-offsets.h>
 
 #ifdef	CONFIG_SMP
-#include <soc/smp.h>
+#include <arch/smp.h>
 #else
 #define	__cpuid()	0
 #endif
