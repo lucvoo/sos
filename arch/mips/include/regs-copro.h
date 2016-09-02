@@ -49,6 +49,8 @@
 #define		ST0_IM5		(1 <<13)
 #define		ST0_IM6		(1 <<14)
 #define		ST0_IM7		(1 <<15)
+#define		ST0_IM(X)	(1 << (8 + (X)))
+#define		ST0_IMASK	(0xff << 8)
 #define		ST0_NMI		(1 <<19)
 #define		ST0_SR		(1 <<20)
 #define		ST0_TS		(1 <<21)
