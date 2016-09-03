@@ -67,4 +67,10 @@ static inline u64 ioread2x32(void __iomem *addrh, void __iomem *addrl)
 	return (((u64) hi0) << 32) + low;
 }
 
+static inline void iowrite2x32(void __iomem *addrh, void __iomem *addrl, u64 val)
+{
+	iowrite32(addrh, val >> 32);
+	iowrite32(addrl, val & 0xffffffff);
+}
+
 #endif
