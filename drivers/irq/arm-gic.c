@@ -146,7 +146,7 @@ static void __init gic_init(void)
 	gic_init_shared(gic, irq_nbr);
 	gic_init_private(gic, 0);
 
-	irqchip_init(NULL, chip);
+	irqchip_register(chip);
 }
 board_irq_initcall(gic_init);
 

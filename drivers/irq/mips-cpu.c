@@ -45,7 +45,7 @@ static void mips_irq_init(void)
 	chip->mask_ack	= mips_irq_mask;
 	chip->unmask	= mips_irq_unmask;
 
-	irqchip_init(NULL, chip);
+	irqchip_register(chip);
 }
 pure_initcall(mips_irq_init);
 

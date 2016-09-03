@@ -17,7 +17,6 @@
 #include <soc/irqs.h>
 #include <bitops/findbit.h>
 #include <init.h>
-#include <irq.h>
 #include <io.h>
 
 
@@ -100,7 +99,6 @@ static void __init ath79_misc_irq_init(void)
 
 
 	parent = irq_get_desc("cpuintc", IRQ_CPU_MISC);
-	parent->handler = ath79_misc_irq_handler;
 
 	iobase	= ioremap(AR71XX_RESET_BASE, AR71XX_RESET_SIZE);
 
@@ -116,7 +114,6 @@ static void __init ath79_misc_irq_init(void)
 	iowrite32(iobase + AR71XX_RESET_REG_MISC_INT_ENABLE, 0);
 	iowrite32(iobase + AR71XX_RESET_REG_MISC_INT_STATUS, 0);
 
-	irqchip_init(parent, chip);
-	irq_unmask(parent);
+	irqchip_chain(parent, ath79_misc_irq_handler, chip);
 }
 board_irq_initcall(ath79_misc_irq_init);

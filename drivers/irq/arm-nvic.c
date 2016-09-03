@@ -53,7 +53,7 @@ static void nvic_irq_init(void)
 		iowrite32(chip->iobase + NVIC_ICER(i * 32), ~0);
 	}
 
-	irqchip_init(NULL, chip);
+	irqchip_register(chip);
 }
 board_irq_initcall(nvic_irq_init);
 

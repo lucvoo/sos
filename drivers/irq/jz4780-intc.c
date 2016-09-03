@@ -3,7 +3,6 @@
 #include <soc/intc.h>
 #include <soc/irq.h>
 #include <io.h>
-#include <irq.h>
 #include <init.h>
 
 
@@ -77,7 +76,6 @@ static void jz4780_intc_irq_init(void)
 	void __iomem *iobase;
 
 	parent = irq_get_desc("cpuintc", IRQ_CPU_INTC);
-	parent->handler = jz4780_intc_irq_handler;
 
 	iobase = ioremap(INTC_BASE, INTC_SIZE);
 
@@ -93,7 +91,6 @@ static void jz4780_intc_irq_init(void)
 	iowrite32(chip->iobase + INTC_ICMSR(0), 0xffffffff);
 	iowrite32(chip->iobase + INTC_ICMSR(1), 0xffffffff);
 
-	irqchip_init(parent, chip);
-	irq_unmask(parent);
+	irqchip_chain(parent, jz4780_intc_irq_handler, chip);
 }
 board_irq_initcall(jz4780_intc_irq_init);
