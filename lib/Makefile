@@ -1,6 +1,7 @@
 objs-y	+= bitmap.o
 objs-y	+= div0.o
 objs-y	+= hexdump.o
+objs-y	+= libgcc-shdi3.o
 objs-y	+= memchr.o
 objs-y	+= memcmp.o
 objs-y	+= memcpy.o
