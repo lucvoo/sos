@@ -70,14 +70,6 @@ static int timer_isr(struct irqdesc *desc, void* data)
 	return IRQ_HANDLED | IRQ_CALL_DSR;
 }
 
-static int timer_dsr(struct irqdesc *desc, unsigned int count, void* data)
-{
-	struct timerdev *td = data;
-
-	td->handler(td);
-	return 0;
-}
-
 
 static unsigned long timer_am335x_now(struct timerdev *td)
 {
@@ -120,7 +112,7 @@ static void __init timer_init(void)
 
 	timerdev_am335x.base = base;
 
-	irq_create(&irq_timer, timer_isr, timer_dsr, &timerdev_am335x, 0);
+	irq_create(&irq_timer, timer_isr, timerdev_dsr, &timerdev_am335x, 0);
 	irq_attach(desc, &irq_timer);
 	timer_write(base, TMAR, 1, -1);			// match register: a full cycle by default
 	timer_write(base, TLDR, 1, 0);			// reload value

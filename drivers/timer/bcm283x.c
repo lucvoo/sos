@@ -31,14 +31,6 @@ static int bcm2835_timer_isr(struct irqdesc *desc, void* data)
 	return IRQ_HANDLED | IRQ_CALL_DSR;
 }
 
-static int bcm2835_timer_dsr(struct irqdesc* desc, uint count, void* data)
-{
-	struct timerdev *td = data;
-
-	td->handler(td);
-	return 0;
-}
-
 
 static ulong bcm2835_timer_now(struct timerdev *td)
 {
@@ -77,7 +69,7 @@ static void __init bcm2835_timer_init(void)
 
 	desc = irq_get_desc("intc", IRQ_TIMER);
 
-	irq_create(&irq_timer, bcm2835_timer_isr, bcm2835_timer_dsr, &bcm2835_timerdev, 0);
+	irq_create(&irq_timer, bcm2835_timer_isr, timerdev_dsr, &bcm2835_timerdev, 0);
 	irq_attach(desc, &irq_timer);
 
 	timerdev_register(&bcm2835_timerdev);

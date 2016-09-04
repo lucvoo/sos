@@ -35,14 +35,6 @@ static int ostimer_isr(struct irqdesc *desc, void *data)
 	return IRQ_HANDLED | IRQ_CALL_DSR;
 }
 
-static int ostimer_dsr(struct irqdesc *desc, unsigned int count, void *data)
-{
-	struct timerdev *td = data;
-
-	td->handler(td);
-	return 0;
-}
-
 static unsigned long ostimer_now(struct timerdev *td)
 {
 	unsigned long now = ioread32(td->base + OST_CNTL);
@@ -81,7 +73,7 @@ static int __init ostimer_init(void __iomem *base)
 
 	ostimer.base = base;
 
-	irq_create(&ostimer_irq, ostimer_isr, ostimer_dsr, &ostimer, 0);
+	irq_create(&ostimer_irq, ostimer_isr, timerdev_dsr, &ostimer, 0);
 	irq_attach(desc, &ostimer_irq);
 
 	iowrite32(base + OST_CNTL, 0);
@@ -100,21 +92,12 @@ static int __init ostimer_init(void __iomem *base)
 /**********************************************************************/
 static int timer_isr(struct irqdesc * desc, void* data)
 {
-	struct jztimer *jzt = data;
-	struct timerdev *td = &jzt->td;
+	struct timerdev *td = data;
+	struct jztimer *jzt = container_of(td, struct jztimer, td);
 
 	iowrite32(td->base + TCU_TFCR, 1 << jzt->channel);
 
 	return IRQ_HANDLED | IRQ_CALL_DSR;
-}
-
-static int timer_dsr(struct irqdesc *desc, unsigned int count, void* data)
-{
-	struct jztimer *jzt = data;
-	struct timerdev *td = &jzt->td;
-
-	td->handler(td);
-	return 0;
 }
 
 static int timer_next_abs(struct timerdev *td, unsigned long val)
@@ -154,7 +137,7 @@ static int __init timer0_init(void __iomem *base)
 	timer0.td.base = base;
 	timer0.channel = channel;
 
-	irq_create(&timer0_irq, timer_isr, timer_dsr, &timer0, 0);
+	irq_create(&timer0_irq, timer_isr, timerdev_dsr, &timer0.td, 0);
 	irq_attach(desc, &timer0_irq);
 
 	iowrite32(base + TCU_TDHR(channel), 0xffff);	// not used, must not be reached

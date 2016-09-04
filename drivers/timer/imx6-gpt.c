@@ -89,14 +89,6 @@ static int gpt_isr(struct irqdesc *desc, void *data)
 	return IRQ_HANDLED | IRQ_CALL_DSR;
 }
 
-static int gpt_dsr(struct irqdesc *desc, unsigned int count, void *data)
-{
-	struct timerdev *td = data;
-
-	td->handler(td);
-	return 0;
-}
-
 static ulong gpt_now(struct timerdev *td)
 {
 	ulong now;
@@ -156,7 +148,7 @@ static int __init gpt_init_timer(void)
 	iowrite32(base + GPT_PR, GPT_PR_PRESCALER(rate/HZ));
 	iowrite32(base + GPT_CR, GPT_CR_FRR|GPT_CR_WAITEN|GPT_CR_EN |GPT_CR_CLKSRC_LFREF);
 
-	irq_create(&gpt_irq, gpt_isr, gpt_dsr, &gpt, 0);
+	irq_create(&gpt_irq, gpt_isr, timerdev_dsr, &gpt, 0);
 	irq_attach(desc, &gpt_irq);
 	irq_unmask(desc);
 
