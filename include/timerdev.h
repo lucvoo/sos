@@ -20,4 +20,9 @@ struct timerdev {
 int timerdev_register(struct timerdev *td);
 unsigned long timerdev_read(void);
 
+
+// standard DSR method to use for timers
+struct irqdesc;
+int timerdev_dsr(struct irqdesc *desc, uint count, void *data);
+
 #endif
