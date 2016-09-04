@@ -6,3 +6,4 @@ objs-$(CONFIG_SOC_JZ4780)	+= jz47xx-timer.o
 objs-$(CONFIG_SOC_STM32)	+= stm32-timer.o
 objs-$(CONFIG_SOC_SUNXI)	+= sunxi-timer.o
 objs-$(CONFIG_MIPS_ARCH_TIMER)	+= mips-arch-timer.o
+objs-$(CONFIG_MIPS_GIC_TIMER)	+= mips-gic.o
