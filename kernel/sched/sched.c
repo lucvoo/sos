@@ -156,7 +156,7 @@ static bool activate_idle_cpu(struct run_queue* rq)
 		if (!cpu_is_idle(rq, i))
 			continue;
 
-		smp_ipi_schedule_one(i);
+		smp_ipi_resched_cpu(i);
 
 		// We could do this until nr_running == 0, but
 		// - the cpu just notified will take one thread
