@@ -8,7 +8,7 @@
 
 #define	SMP_IPI_SCHEDULE 0
 
-void __smp_ipi_send(uint cpu, uint msg);
+void __smp_ipi_send(uint cpu, uint ipi);
 void __smp_ipi_process(uint ipi);
 
 #endif
