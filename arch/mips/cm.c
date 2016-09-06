@@ -5,9 +5,30 @@
 #include <io.h>
 
 
+static void __iomem *gcrbase;
+
+ulong mips_gcr_read(uint reg)
+{
+	return ioread32(gcrbase + reg);
+}
+
+void mips_gcr_write(uint reg, ulong val)
+{
+	iowrite32(gcrbase + reg, val);
+}
+
+void mips_gcr_clr(uint reg, ulong bits)
+{
+	ioclr32(gcrbase + reg, bits);
+}
+
+void mips_gcr_set(uint reg, ulong bits)
+{
+	ioset32(gcrbase + reg, bits);
+}
+
 static void gcrbase_init(void)
 {
-	void __iomem *gcrbase;
 	ulong pbase;
 	u32 cfg3;
 

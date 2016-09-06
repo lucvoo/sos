@@ -6,6 +6,23 @@
 #define	GCR_GL_OFFSET	0x0000		// Global
 #define	GCR_CL_OFFSET	0x2000		// Core Local
 #define	GCR_CO_OFFSET	0x4000		// Core Other
+#define	GCR_CL(R)	(GCR_CL_OFFSET + (R))
+#define	GCR_CO(R)	(GCR_CO_OFFSET + (R))
+
+#ifndef __ASSEMBLY__
+ulong mips_gcr_read(uint reg);
+void mips_gcr_write(uint reg, ulong val);
+void mips_gcr_set(uint reg, ulong bits);
+void mips_gcr_clr(uint reg, ulong bits);
+
+#define	mips_gcr_cl_read(R)	mips_gcr_read(GCR_CL(R))
+#define	mips_gcr_cl_write(R, V)	mips_gcr_write(GCR_CL(R), V)
+
+#define	mips_gcr_co_read(R)	mips_gcr_read(GCR_CO(R))
+#define	mips_gcr_co_write(R, V)	mips_gcr_write(GCR_CO(R), V)
+
+#endif
+
 
 #define GCR_CONFIG	0x0000
 #define GCR_BASE	0x0008
