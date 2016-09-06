@@ -45,6 +45,8 @@ config	C0_COUNTER_DISABLED
 
 config	MIPS_CM
 	bool "MIPS Coherence Manager" if n
+config	MIPS_CPC
+	bool "MIPS Cluster Power Control" if n
 
 
 source arch/mips/Kconfig.mach

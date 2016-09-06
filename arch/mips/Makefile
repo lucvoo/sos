@@ -12,6 +12,7 @@ objs-y	+= 	traps.o
 objs-y	+= 	vectors.o
 
 objs-$(CONFIG_MIPS_CM)	+= cm.o
+objs-$(CONFIG_MIPS_CPC)	+= cpc.o
 objs-$(CONFIG_SMP)	+= smp-entry.o
 
 deps-y	:= \
