@@ -33,6 +33,7 @@ config	CPU_INTERAPTIV
 	bool
 	select CPU_MIPS32R2
 	select MIPS_GIC
+	select MIPS_CPS
 	select MIPS_CM
 
 config	BITS
@@ -47,6 +48,16 @@ config	MIPS_CM
 	bool "MIPS Coherence Manager" if n
 config	MIPS_CPC
 	bool "MIPS Cluster Power Control" if n
+config	MIPS_CPS
+	bool "MIPS Coherent Processing System" if n
+	select MIPS_CPC
+	select MIPS_CM
+
+config	SMP_CPS
+	bool
+	depends on MIPS_CPS
+	depends on SMP
+	default y
 
 
 source arch/mips/Kconfig.mach
