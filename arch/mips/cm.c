@@ -27,6 +27,33 @@ void mips_gcr_set(uint reg, ulong bits)
 	ioset32(gcrbase + reg, bits);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+#include <barrier.h>
+#include <lock.h>
+
+static struct cm_lock {
+	struct lock	lock;
+	ulong		flags;
+} cm_lock;
+
+void mips_cm_get(uint core)
+{
+	// take the lock first
+	cm_lock.flags = lock_acq_save(&cm_lock.lock);
+
+	// give access to the given core
+	mips_gcr_cl_write(GCR_CX_OTHER, GCR_CX_OTHER_CORE(core));
+	mb();
+}
+
+void mips_cm_put(void)
+{
+	// OK, we can release the lock now
+	lock_rel_rest(&cm_lock.lock, cm_lock.flags);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 static void gcrbase_init(void)
 {
 	ulong pbase;

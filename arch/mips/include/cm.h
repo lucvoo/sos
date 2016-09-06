@@ -10,4 +10,13 @@
 #define CPC_BASE	0x1bde0000
 #define CPC_SIZE	    0x6000
 
+
+#ifndef __ASSEMBLY__
+/**
+ * Give the current cpu access to @core CM's registers
+ */
+void mips_cm_get(uint core);
+void mips_cm_put(void);
+#endif
+
 #endif
