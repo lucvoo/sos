@@ -3,6 +3,9 @@
 
 //#define GRC_BASE	0x1fbf8000	// unneeded: see c0_cmgcrbase
 
+#define	GCR_GL_OFFSET	0x0000		// Global
+#define	GCR_CL_OFFSET	0x2000		// Core Local
+#define	GCR_CO_OFFSET	0x4000		// Core Other
 
 #define GCR_CONFIG	0x0000
 #define GCR_BASE	0x0008
@@ -41,5 +44,30 @@
 
 #define GCR_CPC_STATUS	0x00F0
 #define GCR_CPC_STATUS_EX	(1 << 0)
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Core local & core other
+#define GCR_CX_RESET_RELEASE	0x0000
+#define GCR_CX_COHERENCE	0x0008
+#define		GCR_CX_COHERENCE_ALL	0x000000ff
+#define GCR_CX_CFG		0x0010
+#define GCR_CX_OTHER		0x0018
+#define		GCR_CX_OTHER_CORE(X)	((X) << 16)
+
+#define GCR_CX_RESET_BASE	0x0020
+#define GCR_CX_ID		0x0028
+#define GCR_CX_RESET_EXT	0x0030
+#define		GCR_CX_RESET_EXT_UEB	(1 << 30)
+
+#define GCR_CX_TCID0_PRIO	0x0040
+#define GCR_CX_TCID1_PRIO	0x0048
+#define GCR_CX_TCID2_PRIO	0x0050
+#define GCR_CX_TCID3_PRIO	0x0058
+#define GCR_CX_TCID4_PRIO	0x0060
+#define GCR_CX_TCID5_PRIO	0x0068
+#define GCR_CX_TCID6_PRIO	0x0070
+#define GCR_CX_TCID7_PRIO	0x0078
+#define GCR_CX_TCID8_PRIO	0x0080
 
 #endif
