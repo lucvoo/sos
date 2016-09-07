@@ -20,6 +20,12 @@ void mips_cpc_clr(uint reg, ulong bits);
 
 #define	mips_cpc_co_read(R)	mips_cpc_read(CPC_CO(R))
 #define	mips_cpc_co_write(R, V)	mips_cpc_write(CPC_CO(R), V)
+
+/**
+ * Give the current cpu access to @core CPC's registers
+ */
+void mips_cpc_get(uint core);
+void mips_cpc_put(void);
 #endif
 
 
