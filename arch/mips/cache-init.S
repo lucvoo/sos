@@ -19,7 +19,7 @@ ENTRY(__cache_l1_init, global)
 
 
 	li	t1, KSEG0_BASE
-	ori	t2, t1, DCACHE_SIZE
+	li	t2, KSEG0_BASE | DCACHE_SIZE
 	mtc0	$0, c0_taglo
 1:	cache	CACHEOP_D_IDX_STA, 0(t1)
 	cache	CACHEOP_I_IDX_STA, 0(t1)
