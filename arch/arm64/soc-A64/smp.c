@@ -51,7 +51,7 @@ static void power_switch_off(void __iomem *prcm_base, uint cpu)
 
 static void smp_secondary_entry(void __iomem *cpucfg_base, uint cpu)
 {
-	ulong phys_entry = virt_to_phys(__smp_startup);
+	ulong phys_entry = virt_to_phys(__smp_entry);
 
 	// 0) set entry point / reset vector
 	//	this is like writing into RVBAR
