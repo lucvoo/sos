@@ -101,7 +101,12 @@
 #define	c0_cmgcrbase	__COPRO_REG($15, 3)
 
 #define	c0_config	__COPRO_REG($16, 0)
-#define		CFG0_K0		(1 << 0)
+#define		CFG0_K0_MASK	(7 << 0)
+#define		CFG0_K0_UC	(2 << 0)	// non-coherent, UnCached
+#define		CFG0_K0_WB	(3 << 0)	// non-coherent, WBWA
+#define		CFG0_K0_CWBE	(4 << 0)	// Coherent, WBWA, read misses -> exclusive
+#define		CFG0_K0_CWB	(5 << 0)	// Coherent, WBWA, read misses -> shared
+#define		CFG0_K0_UCA	(7 << 0)	// non-coherent, UnCached Accelerated
 #define		CFG0_VI		(1 << 3)
 #define		CFG0_MT		(1 << 7)
 #define		CFG0_AR		(1 <<10)
