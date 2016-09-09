@@ -208,7 +208,20 @@
 ////////////////////////////////////////////////////////////////////////////////
 // MT extension
 #define	c0_mvpctrl	__COPRO_REG($0, 1)
+#define		MVPCTRL_EVP	(1 << 0)
+#define		MVPCTRL_VPC	(1 << 1)
+#define		MVPCTRL_STLB	(1 << 2)
+#define		MVPCTRL_CPA	(1 << 3)
+
 #define	c0_mvpcfg0	__COPRO_REG($0, 2)
+#define		MVPCFG0_M	(1 << 31)
+#define		MVPCFG0_TLBS	(1 << 29)
+#define		MVPCFG0_GS	(1 << 28)
+#define		MVPCFG0_PCP	(1 << 27)
+#define		MVPCFG0_TCA	(1 << 15)
+#define		MVPCFG0_PVPE	BITS(10, 4)
+#define		MVPCFG0_PTC	BITS(0, 8)
+
 #define	c0_mvpcfg1	__COPRO_REG($0, 3)
 
 #define	c0_vpectrl	__COPRO_REG($1, 1)
