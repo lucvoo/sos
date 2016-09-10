@@ -4,6 +4,11 @@
 #include <soc/smp.h>
 
 
+#ifdef CONFIG_MIPS_CM
+#define	CFG0_K0_SMP	CFG0_K0_CWB
+#else
+#define	CFG0_K0_SMP	CFG0_K0_WB
+#endif
 
 .section .init.text.smp_entry,"ax",@progbits
 .balign	SMP_ENTRY_ALIGN
@@ -20,8 +25,10 @@ ENTRY(__smp_entry, global)
 
 	// KSEG0 cache coherency attribute
 	mfc0	t3, c0_config
-	ori	t3, t3, CACHE_COHERENCY_CACHEABLE
+	ori	t3, t3, CFG0_K0_MASK
+	xori	t3, t3, CFG0_K0_MASK ^ CFG0_K0_SMP
 	mtc0	t3, c0_config
+	ehb
 
 	// pagemask
 	mtc0	$0, c0_pagemask
