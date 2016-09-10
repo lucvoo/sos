@@ -35,6 +35,11 @@ config	CPU_INTERAPTIV
 	select MIPS_GIC
 	select MIPS_CPS
 	select MIPS_CM
+	select MIPS_MT
+	select ASE_MT
+
+config	ASE_MT
+	bool
 
 config	BITS
 	int
@@ -44,6 +49,8 @@ config	C0_COUNTER_DISABLED
 	bool
 	default n
 
+config	MIPS_MT
+	bool "MIPS MultiThreading (2 vpes/core)" if n
 config	MIPS_CM
 	bool "MIPS Coherence Manager" if n
 config	MIPS_CPC
