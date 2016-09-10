@@ -114,7 +114,6 @@ static int jz4780_smp_boot_cpu(struct thread *idle, uint cpu)
 	extern void __smp_entry(void);
 
 	void __iomem *cgu = ioremap(CGU_BASE, CGU_SIZE);
-	unsigned long entry;
 	unsigned int gated;
 	unsigned int lpcr;
 
@@ -133,8 +132,7 @@ static int jz4780_smp_boot_cpu(struct thread *idle, uint cpu)
 		;
 
 	// setup the address of the entry point
-	entry = (unsigned long) &__smp_entry;
-	c0_chgbits(c0_core_reim, CORE_REIM_ENTRY_MSK, entry - KSEG0_BASE + KSEG1_BASE);
+	c0_chgbits(c0_core_reim, CORE_REIM_ENTRY_MSK, virt_to_kseg1(&__smp_entry));
 
 	// un-reset the core
 	c0_chgbits(c0_core_ctrl, CORE_CTRL_SW_RST1|CORE_CTRL_RPC1, CORE_CTRL_RPC1);
