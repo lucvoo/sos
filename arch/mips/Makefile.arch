@@ -18,6 +18,7 @@ ARCHFLAGS-$(CONFIG_CPU_MIPS32R2)	+= -march=mips32r2
 ARCHFLAGS-$(CONFIG_CPU_24KC)		+= -mtune=24kc
 ARCHFLAGS-$(CONFIG_CPU_INTERAPTIV)	:= $(filter-out -march=mips32r2,$(ARCHFLAGS-y))
 ARCHFLAGS-$(CONFIG_CPU_INTERAPTIV)	+= -march=interaptiv
+ARCHFLAGS-$(CONFIG_ASE_MT)		+= -Wa,-mmt
 ARCHFLAGS-y				+= -mno-abicalls
 ARCHFLAGS-y				+= -G 0  -mno-gpopt
 ARCHFLAGS-y				+= -fno-pic
