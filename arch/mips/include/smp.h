@@ -5,6 +5,8 @@
 #include <arch/copro.h>
 
 
-#define	__cpuid()	(c0_getval(c0_ebase) & 0x000003ff)
+#define	__corenum()	(c0_getval(c0_ebase) & 0x000003ff)
+
+#define	__cpuid()	__corenum()
 
 #endif
