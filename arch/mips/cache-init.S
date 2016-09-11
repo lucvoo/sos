@@ -17,10 +17,13 @@
 ENTRY(__cache_l1_init, global)
 	.set noreorder
 
+	mtc0	$0, c0_taglo
+	mtc0	$0, c0_taglo1
+	mtc0	$0, c0_taghi
+	mtc0	$0, c0_taghi1
 
 	li	t1, KSEG0_BASE
 	li	t2, KSEG0_BASE | DCACHE_SIZE
-	mtc0	$0, c0_taglo
 1:	cache	CACHEOP_D_IDX_STA, 0(t1)
 	cache	CACHEOP_I_IDX_STA, 0(t1)
 	bne	t1, t2, 1b
