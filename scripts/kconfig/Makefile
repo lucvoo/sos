@@ -31,9 +31,6 @@ allyesconfig: conf
 allnoconfig: conf
 	$(Q)$< -n Kconfig
 
-defconfig: conf
-	$(Q)$< -D arch/$(CFG_ARCH)/configs/defconfig Kconfig
-
 %_config: conf
 	$(Q)$< -D arch/$(CFG_ARCH)/configs/$@ Kconfig
 
