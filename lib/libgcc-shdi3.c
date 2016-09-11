@@ -21,6 +21,7 @@ s64 __weak __ashldi3(s64 v, uint n)
 
 	return r.hl;
 }
+strong_alias(__ashldi3, __aeabi_llsl);
 
 s64 __weak __ashrdi3(s64 v, uint n)
 {
@@ -40,6 +41,7 @@ s64 __weak __ashrdi3(s64 v, uint n)
 
 	return r.hl;
 }
+strong_alias(__ashrdi3, __aeabi_lasr);
 
 u64 __weak __lshrdi3(u64 v, uint n)
 {
@@ -59,3 +61,4 @@ u64 __weak __lshrdi3(u64 v, uint n)
 
 	return r.hl;
 }
+strong_alias(__lshrdi3, __aeabi_llsr);
