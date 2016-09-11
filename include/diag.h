@@ -7,6 +7,7 @@ void _os_diag_write_buf(const char* str, unsigned int n);
 
 void _os_diag_hexval(unsigned long val, uint sep);
 void _os_diag_hexdump(const char *msg, const void *buff, unsigned int len, int ascii);
+void _os_diag_hexdump32(const char *msg, const void *buff, unsigned int len);
 
 void _os_diag_printf(const char *fmt, ...);
 
