@@ -143,6 +143,8 @@ static int jz4780_smp_boot_cpu(struct thread *idle, uint cpu)
 
 static int jz4780_smp_init_cpu(uint cpu)
 {
+	c0_setbits(c0_status, ST0_IM0 << IRQ_MBOX);
+	ehb();
 	return 0;
 }
 

@@ -53,10 +53,6 @@ ENTRY(__smp_entry, global)
 	move	gp, v0
 	lw	sp, THR_CPU_SP(v0)
 
-	// enable MBOX interrupt
-	ori	t0, ST0_IM3
-	mtc0	t0, c0_status
-
 	la	t6, __smp_start
 	jr.hb	t6
 ENDFUN(__smp_entry)
