@@ -38,6 +38,14 @@ ENTRY(__smp_entry, global)
 	mtc0	t3, c0_config
 	ehb
 
+	// now that the cache is initialized and
+	// coherency is configured
+	// we can jump back to kseg0
+	la	t0, 1f
+	jr	t0
+	 nop
+1:
+
 	// pagemask
 	mtc0	$0, c0_pagemask
 
