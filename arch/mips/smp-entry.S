@@ -23,6 +23,14 @@ ENTRY(__smp_entry, global)
 	jal	__cache_l1_init
 	 nop
 
+#ifdef	CONFIG_MIPS_CM
+	// enable coherency
+	li	t0, 0xff
+	li	t1, 0xbfbfa008	// GCR_CL_COHERENCE
+	sw	t0, 0(t1)
+	ehb
+#endif
+
 	// KSEG0 cache coherency attribute
 	mfc0	t3, c0_config
 	ori	t3, t3, CFG0_K0_MASK
