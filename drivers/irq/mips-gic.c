@@ -1,4 +1,5 @@
 #include <bitops/findbit.h>
+#include <smp/initcall.h>
 #include <interrupt.h>
 #include <arch/gic.h>
 #include <arch/cm.h>
@@ -10,6 +11,7 @@
 #include <types.h>
 #include <init.h>
 #include <irq.h>
+#include <smp.h>
 #include <io.h>
 
 #if BITS_PER_LONG != 32
@@ -247,3 +249,61 @@ static void __init gic_init(void)
 	gic_vp_init(gic, gic_base);
 }
 board_irq_initcall(gic_init);
+
+////////////////////////////////////////////////////////////////////////////////
+// SMP
+
+#define	ipi_irq(cpu, ipi)	(GIC_OFF_IP_IRQS + (cpu) * 2 + (ipi))
+#define	irq_ipi(ipi)		((ipi) % 2)
+
+void __smp_ipi_send(uint cpu, uint ipi)
+{
+	struct gic_intctrl *gic = &gic_intctrl;
+	void __iomem *base = gic->sh.chip.iobase;
+	uint irq = ipi_irq(cpu, ipi);
+
+	iowrite32(base + GIC_SH_WEDGE, GIC_SH_WEDGE_SET | irq);
+}
+
+static void gic_ipi_handler(struct irqdesc *desc)
+{
+	gic_sh_irq_ack(desc);
+	__smp_ipi_process(irq_ipi(desc->irq));
+}
+
+
+static void gic_init_ipi_irq(struct gic_intctrl *gic, uint vpe, uint irq)
+{
+	struct irqchip *chip = &gic->sh.chip;
+	void __iomem *base = chip->iobase;
+	struct irqdesc *desc = &chip->descs[irq];
+
+	desc->handler = gic_ipi_handler;
+	ioset32(base + GIC_SH_EDGE(irq/32),  1 << (irq % 32));
+	gic_map_irq_to_vpe(gic, irq, vpe);
+
+	irq_unmask(desc);
+}
+
+static void gic_init_ipi(struct gic_intctrl *gic, uint cpu)
+{
+	uint vpe = __hwcpu(cpu);
+
+	gic_init_ipi_irq(gic, vpe, ipi_irq(cpu, 0));
+	gic_init_ipi_irq(gic, vpe, ipi_irq(cpu, 1));
+}
+
+static void gic_smp_init(uint cpu)
+{
+	struct gic_intctrl *gic = &gic_intctrl;
+
+	gic_init_local(gic, cpu);
+	irq_unmask(gic->sh.chip.parent);
+	irq_unmask(gic->vp.chip.parent);
+
+	if (cpu == 1)
+		gic_init_ipi(gic, 0);
+
+	gic_init_ipi(gic, cpu);
+}
+core_smp_initcall(gic_smp_init);
