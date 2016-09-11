@@ -12,10 +12,8 @@ static void dump_tbl(const u32 *tbl, uint idx)
 	_os_diag_write_char(':');
 	_os_diag_write_char('\n');
 	for (i = 0; i < 4096; i ++) {
-		_os_diag_hexval(i);
-		_os_diag_write_char(':');
-		_os_diag_hexval(tbl[i]);
-		_os_diag_write_char('\n');
+		_os_diag_hexval(i, ':');
+		_os_diag_hexval(tbl[i], '\n');
 	}
 }
 
@@ -29,8 +27,7 @@ void early_tlb_dump(void)
 	_os_diag_write_char('T');
 	_os_diag_write_char('C');
 	_os_diag_write_char(':');
-	_os_diag_hexval(ttbcr);
-	_os_diag_write_char('\n');
+	_os_diag_hexval(ttbcr, '\n');
 
 	asm volatile ("mrc " STRINGIFY(TTBR0(%0)): "=r" (tbl) :: "memory");
 	dump_tbl(tbl, '0');
