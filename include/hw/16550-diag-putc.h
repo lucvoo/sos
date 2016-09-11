@@ -10,7 +10,7 @@
 
 static inline_always void __diag_putc(unsigned char c)
 {
-	volatile void *base = (volatile void*) UART_BASE;
+	void __iomem *base = UART_BASE;
 	int timeout = 8192;
 
 	if (!rd_16550(base, UART_LCR))
