@@ -1,8 +1,9 @@
+#include <symbols.h>
 #include <libgcc.h>
 #include <64bit.h>
 
 
-s64 __ashldi3(s64 v, uint n)
+s64 __weak __ashldi3(s64 v, uint n)
 {
 	u2x32_t w = { .hl = v, };
 	u2x32_t r;
@@ -21,7 +22,7 @@ s64 __ashldi3(s64 v, uint n)
 	return r.hl;
 }
 
-s64 __ashrdi3(s64 v, uint n)
+s64 __weak __ashrdi3(s64 v, uint n)
 {
 	u2x32_t w = { .hl = v, };
 	u2x32_t r;
@@ -40,7 +41,7 @@ s64 __ashrdi3(s64 v, uint n)
 	return r.hl;
 }
 
-u64 __lshrdi3(u64 v, uint n)
+u64 __weak __lshrdi3(u64 v, uint n)
 {
 	u2x32_t w = { .hl = v, };
 	u2x32_t r;
