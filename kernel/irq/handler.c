@@ -128,7 +128,7 @@ void irq_handle_percpu(struct irqdesc *desc)
 		chip->ack(desc);
 
 	action = desc->action;		// assume action is never NULL
-	ret = handle_irq_locked(desc, action);
+	ret = handle_IRQ_event(desc, action);
 
 	if (chip->eoi)
 		chip->eoi(desc);
