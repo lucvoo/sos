@@ -55,6 +55,7 @@ ENTRY(__smp_entry, global)
 
 	// get the idle thread
 	jal	__smp_init_idle_thread
+	 nop
 
 	// load gp & sp
 	move	gp, v0
