@@ -6,7 +6,7 @@
 
 
 static struct thread a __uninit;
-static char stack[1024];
+static char stack[1024] __stack;
 
 static void fun(void* data)
 {
