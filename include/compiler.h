@@ -20,4 +20,7 @@
 #define	__aligned(N)		__attribute__((aligned(N)))
 #define	__packed		__attribute__((__packed__))
 
+
+#define	__aligned_stack		__aligned(CONFIG_STACK_ALIGNMENT)
+
 #endif
