@@ -2,9 +2,9 @@
 #include <arch/asm-offsets.h>
 
 #ifdef	CONFIG_SMP
-#include <soc/smp.h>
+#include <arch/smp.h>
 #else
-#define	__coreid()	0
+#define	__cpuid()	0
 #endif
 
 
@@ -21,7 +21,7 @@ void __arch_dump_stack(const struct eframe *f)
 	       "s4 %08lx, s5 %08lx, s6 %08lx, s7 %08lx\n"
 	       "t8 %08lx, t9 %08lx, k0 %08lx, k1 %08lx\n"
 	       "gp %08lx, sp %08lx, fp %08lx, ra %08lx\n"
-		, f->epc, f->status, f->cause, __coreid()
+		, f->epc, f->status, f->cause, __cpuid()
 		, f->r[0], f->r[1], f->r[2], f->r[3]
 		, f->r[4], f->r[5], f->r[6], f->r[7]
 		, f->r[8], f->r[9], f->r[10], f->r[11]

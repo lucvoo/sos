@@ -11,7 +11,7 @@ void dump_stack(const struct eframe *f, uint flags)
 	__printf("\nSTACK DUMP:");
 
 #ifdef	CONFIG_SMP
-	__printf(" (CPU %d)", __coreid());
+	__printf(" (CPU %d)", __cpuid());
 #endif
 	__printf("\n");
 

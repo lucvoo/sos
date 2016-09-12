@@ -7,13 +7,10 @@
 #include <sched.h>
 
 
-#define	foreach_cpu(cpu)	for (cpu = 0; cpu < NR_CPUS; cpu++)
-
 extern struct thread init_thread[];
 
 int __weak __smp_init(void)
 {
-	uint cpu;
 	int rc;
 
 	rc = smp_ops.init();
@@ -53,7 +50,7 @@ int __weak __smp_init(void)
 struct thread *__smp_init_idle_thread(void);		// called from asm
 struct thread *__smp_init_idle_thread(void)
 {
-	struct thread *idle = &init_thread[__coreid()];
+	struct thread *idle = &init_thread[__cpuid()];
 
 	set_current_thread(idle);
 
@@ -77,12 +74,12 @@ static void smp_initcalls(uint cpu)
 
 void __smp_start(void)
 {
-	uint cpu = __coreid();
+	uint cpu = __cpuid();
 
 	if (smp_ops.init_cpu)
 		smp_ops.init_cpu(cpu);
 
-	_thread_scheduler_start();
+	__sched_start(cpu);
 
 	smp_initcalls(cpu);
 	kapi_start_smp();

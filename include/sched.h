@@ -26,7 +26,7 @@ static inline int need_resched(void)
 
 void	thread_schedule(void);
 long	thread_schedule_timeout(unsigned long ticks);
-void	_thread_scheduler_start(void);
 
+void	__sched_start(uint cpu);
 
 #endif

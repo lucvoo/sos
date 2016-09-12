@@ -32,7 +32,7 @@ void kapi_start(void)
 
 void kapi_start_smp(void)
 {
-	uint cpu = __coreid();
+	uint cpu = __cpuid();
 
 	printf("cpu %d: OK?\n", cpu);
 
