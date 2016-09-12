@@ -32,7 +32,7 @@ static void fun(void* data)
 		thread_yield();
 	} while (n--);
 
-	pr_info("\n");
+	printf("test %d: finished\n", arr->nbr);
 }
 
 
