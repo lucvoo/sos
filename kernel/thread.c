@@ -8,6 +8,7 @@
 #include <page.h>
 #include <memory.h>
 #include <page-alloc.h>
+#include <bug.h>
 
 
 #define	DEFAULT_STACK_PAGE_ORDER	1
@@ -24,6 +25,10 @@ static void* thread_stack_top(struct thread* t, void *stack, unsigned int size)
 		if (!p)
 			return NULL;	// FIXME: need ERR_PTR(ENOMEM)
 		stack = page_to_virt(p);
+	} else {
+		ulong base = (ulong) stack;
+
+		BUG_ON((base | size) % CONFIG_STACK_ALIGNMENT);
 	}
 
 	return stack + size;
