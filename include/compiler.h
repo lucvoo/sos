@@ -22,5 +22,6 @@
 
 
 #define	__aligned_stack		__aligned(CONFIG_STACK_ALIGNMENT)
+#define	__stack			__aligned_stack __section(".uninit.stack")
 
 #endif
