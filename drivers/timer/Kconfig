@@ -11,6 +11,7 @@ config	ARM_GENERIC_TIMER
 config	CNTFRQ
 	int "Generic timer frequency"
 	depends on ARM_GENERIC_TIMER
+	default 0
 
 
 config	MIPS_ARCH_TIMER
