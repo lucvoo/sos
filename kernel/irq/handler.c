@@ -11,7 +11,7 @@ static struct irqdesc bad_irqdesc = {
 };
 
 
-static int handle_IRQ_event(struct irqdesc *desc, struct irqaction *action)
+static int handle_action_unlocked(struct irqdesc *desc, struct irqaction *action)
 {
 	int ret;
 
@@ -25,12 +25,12 @@ static int handle_IRQ_event(struct irqdesc *desc, struct irqaction *action)
 	return ret;
 }
 
-static int handle_irq_locked(struct irqdesc *desc, struct irqaction *action)
+static int handle_action_locked(struct irqdesc *desc, struct irqaction *action)
 {
 	int ret;
 
 	lock_rel(&desc->lock);
-	ret = handle_IRQ_event(desc, action);
+	ret = handle_action_unlocked(desc, action);
 	lock_acq(&desc->lock);
 
 	return ret;
@@ -54,7 +54,7 @@ void irq_handle_level(struct irqdesc *desc)
 	if (unlikely(!action))		// leave it unmasked!
 		goto out_unlock;
 
-	ret = handle_irq_locked(desc, action);
+	ret = handle_action_locked(desc, action);
 
 	irq_unmask(desc);
 
@@ -80,7 +80,7 @@ void irq_handle_eoi(struct irqdesc *desc)
 		goto out_unlock;
 	}
 
-	ret = handle_irq_locked(desc, action);
+	ret = handle_action_locked(desc, action);
 	desc->chip->eoi(desc);
 
 out_unlock:
@@ -106,7 +106,7 @@ void irq_handle_simple(struct irqdesc *desc)
 		goto out_unlock;
 	}
 
-	ret = handle_irq_locked(desc, action);
+	ret = handle_action_locked(desc, action);
 
 out_unlock:
 	lock_rel(&desc->lock);
@@ -128,7 +128,7 @@ void irq_handle_percpu(struct irqdesc *desc)
 		chip->ack(desc);
 
 	action = desc->action;		// assume action is never NULL
-	ret = handle_irq_locked(desc, action);
+	ret = handle_action_unlocked(desc, action);
 
 	if (chip->eoi)
 		chip->eoi(desc);

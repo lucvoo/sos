@@ -537,6 +537,8 @@ int memtester(void *buff, ulong size, int loops, uint testmask)
 	int rc;
 	uint i;
 
+	printf("Memtester: %p - %p, loops: %d, tests: %x\n", buff, buff + size -1, loops, testmask);
+
 	// split the buffer into two parts, each of <count> words.
 	size /= 2;
 	bufa = buff;
@@ -544,6 +546,8 @@ int memtester(void *buff, ulong size, int loops, uint testmask)
 	count = size / sizeof(ulong);
 
 	do {
+		printf("  Loop %d:\n", loops);
+
 		for (i = 0; i < MEMTESTER_LAST_BIT; i++) {
 			if ((testmask & (1 << i)) == 0)
 				continue;
@@ -557,5 +561,6 @@ int memtester(void *buff, ulong size, int loops, uint testmask)
 		}
 	} while (--loops > 0);
 
+	printf("Memtester: errors: %d\n", err);
 	return !!err;
 }

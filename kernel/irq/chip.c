@@ -60,7 +60,7 @@ struct irqdesc *irq_get_desc(const char *name, unsigned int irq)
 }
 
 
-void irqchip_init(struct irqdesc *parent, struct irqchip *chip)
+static void irqchip_init(struct irqdesc *parent, struct irqchip *chip)
 {
 	unsigned int i;
 
@@ -78,4 +78,19 @@ void irqchip_init(struct irqdesc *parent, struct irqchip *chip)
 		desc->handler = chip->default_handler;
 		lock_init(&desc->lock);
 	}
+}
+
+void irqchip_register(struct irqchip *chip)
+{
+	irqchip_init(NULL, chip);
+}
+
+#include <irq.h>
+void irqchip_chain(struct irqdesc *parent, void (*handler)(struct irqdesc *), struct irqchip *chip)
+{
+	parent->handler = handler;
+	chip->parent = parent;
+
+	irqchip_init(parent, chip);
+	irq_unmask(parent);
 }

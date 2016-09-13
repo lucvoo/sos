@@ -45,7 +45,7 @@ static void bcm283x_irq_init(void)
 	chip->mask	= bcm283x_irq_mask;
 	chip->unmask	= bcm283x_irq_unmask;
 
-	irqchip_init(NULL, chip);
+	irqchip_register(chip);
 }
 board_irq_initcall(bcm283x_irq_init);
 

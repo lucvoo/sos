@@ -41,14 +41,6 @@ static int timer_isr(struct irqdesc *desc, void* data)
 	return IRQ_HANDLED | IRQ_CALL_DSR;
 }
 
-static int timer_dsr(struct irqdesc *desc, uint count, void* data)
-{
-	struct timerdev *td = data;
-
-	td->handler(td);
-	return 0;
-}
-
 
 static void sunxi_timer_stop(struct timerdev *td)
 {
@@ -108,7 +100,7 @@ static void __init sunxi_timer_init(void)
 	iowrite32(td->base + TIMER_CTRL(TIMER_FREERUNNING), ctrl);
 
 	// setup the (real) timer
-	irq_create(&irq_timer, timer_isr, timer_dsr, &sunxi_timerdev, 0);
+	irq_create(&irq_timer, timer_isr, timerdev_dsr, &sunxi_timerdev, 0);
 	irq_attach(desc, &irq_timer);
 
 	ctrl = CTRL_OSC32K|CTRL_ONESHOT;

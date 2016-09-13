@@ -36,14 +36,6 @@ static int agt_isr(struct irqdesc *desc, void *data)
 	return IRQ_HANDLED | IRQ_CALL_DSR;
 }
 
-static int agt_dsr(struct irqdesc *desc, unsigned int count, void *data)
-{
-	struct timerdev *td = data;
-
-	td->handler(td);
-	return 0;
-}
-
 // FIXME: - 32bit but HW allow 64bit
 //	  - freq is quite high (20-50MHz)
 //	    => rollover < 3 minutes
@@ -128,7 +120,7 @@ static int __init agt_init(void)
 	td->now      = agt_now;
 	td->next_rel = agt_next_rel;
 
-	irq_create(&agt_irq, agt_isr, agt_dsr, td, 0);
+	irq_create(&agt_irq, agt_isr, timerdev_dsr, td, 0);
 	irq_attach(desc, &agt_irq);
 
 	agt_init_local(td, 0);

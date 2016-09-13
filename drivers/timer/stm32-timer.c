@@ -24,21 +24,11 @@ struct stm32_timer {
 /**********************************************************************/
 static int stm32_timer_isr(struct irqdesc * desc, void* data)
 {
-	struct stm32_timer *stt = data;
-	struct timerdev *td = &stt->td;
+	struct timerdev *td = data;
 
 	iowrite32(td->base + TIM_SR, 0);
 
 	return IRQ_HANDLED | IRQ_CALL_DSR;
-}
-
-static int stm32_timer_dsr(struct irqdesc *desc, unsigned int count, void* data)
-{
-	struct stm32_timer *stt = data;
-	struct timerdev *td = &stt->td;
-
-	td->handler(td);
-	return 0;
 }
 
 static unsigned long stm32_timer_now(struct timerdev *td)
@@ -107,7 +97,7 @@ static int __init stm32_init_timer(struct stm32_timer *stt, const struct stm32_t
 	iowrite32(base + TIM_DIER, TIM_DIER_UIE);
 	iowrite32(base + TIM_SR, 0);
 
-	irq_create(&stt->irq, stm32_timer_isr, stm32_timer_dsr, stt, 0);
+	irq_create(&stt->irq, stm32_timer_isr, timerdev_dsr, &stt->td, 0);
 	irq_attach(desc, &stt->irq);
 	// FIXME: trigger as soon as we : irq_unmask(desc);
 

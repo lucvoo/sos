@@ -136,7 +136,10 @@ libtarget.a: $(libs) FORCE
 _all: libtarget.a FORCE
 
 symlinks := include/arch
-ifdef CONFIG_MACH
+
+mach-include := arch/$(CONFIG_ARCH)/mach-$(CONFIG_MACH)/include
+has-mach-include := $(shell test -d $(mach-include) && echo y)
+ifeq '$(has-mach-include)' 'y'
 symlinks += include/mach
 endif
 ifdef CONFIG_SOC

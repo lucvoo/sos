@@ -55,7 +55,7 @@ static void am335x_irq_init(void)
 	chip->mask	= am33xx_irq_mask;
 	chip->unmask	= am33xx_irq_unmask;
 
-	irqchip_init(NULL, chip);
+	irqchip_register(chip);
 }
 board_irq_initcall(am335x_irq_init);
 

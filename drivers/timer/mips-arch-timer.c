@@ -13,6 +13,10 @@ struct mips_timer {
 };
 
 /**********************************************************************/
+#ifdef CONFIG_SMP
+#error "FIXME: need support for per-cpu timers"
+#endif
+
 static int mips_timer_isr(struct irqdesc *desc, void* data)
 {
 	u32 comp;
@@ -24,19 +28,6 @@ static int mips_timer_isr(struct irqdesc *desc, void* data)
 	c0_setval(c0_compare, comp);
 
 	return IRQ_HANDLED | IRQ_CALL_DSR;
-}
-
-static int mips_timer_dsr(struct irqdesc *desc, unsigned int count, void* data)
-{
-	struct mips_timer *mt = data;
-	struct timerdev *td = &mt->td;
-
-#ifdef CONFIG_SMP
-#error "FIXME: need support for per-cpu timers"
-#endif
-
-	td->handler(td);
-	return 0;
 }
 
 static unsigned long mips_timer_now(struct timerdev *td)
@@ -94,7 +85,7 @@ static int __init mips_timer_probe(struct mips_timer *mt)
 	mt->td.next_rel = mips_timer_next_rel;
 	mt->td.now = mips_timer_now;
 
-	irq_create(&mt->irq, mips_timer_isr, mips_timer_dsr, mt, 0);
+	irq_create(&mt->irq, mips_timer_isr, timerdev_dsr, &mt->td, 0);
 	irq_attach(desc, &mt->irq);
 
 	c0_setval(c0_count, 0);

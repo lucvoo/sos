@@ -23,6 +23,7 @@ struct irqchip {
 	struct irqdesc		descs[];
 };
 
-void irqchip_init(struct irqdesc *parent, struct irqchip *chip);
+void irqchip_register(struct irqchip *chip);
+void irqchip_chain(struct irqdesc *parent, void (*handler)(struct irqdesc *), struct irqchip *chip);
 
 #endif

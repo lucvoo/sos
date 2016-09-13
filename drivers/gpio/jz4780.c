@@ -3,7 +3,6 @@
 #include <soc/gpio.h>
 #include <soc/baseaddr.h>
 #include <io.h>
-#include <irq.h>
 #include <init.h>
 
 
@@ -210,7 +209,6 @@ static void jz4780_gpio_init_one(struct jz4780_gpio *chip, int port, const char 
 	void __iomem *iobase;
 
 	parent = irq_get_desc("intc", parent_irqn);
-	parent->handler = jz4780_gpio_irq_handler;
 
 	iobase = ioremap(GPIO_BASE + 0x100 * port, 0x100);
 
@@ -238,8 +236,7 @@ static void jz4780_gpio_init_one(struct jz4780_gpio *chip, int port, const char 
 	// mask all interrupt (and only the ones configured as such)
 	iowrite32(iobase + GPIO_MSKS(0), ioread32(iobase + GPIO_INT(0)));
 
-	irqchip_init(parent, irqchip);
-	irq_unmask(parent);
+	irqchip_chain(parent, jz4780_gpio_irq_handler, irqchip);
 }
 
 static void jz4780_gpio_init(void)

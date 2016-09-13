@@ -172,3 +172,11 @@ int timerdev_register(struct timerdev *newtd)
 	return 0;
 }
 
+
+int timerdev_dsr(struct irqdesc *desc, uint count, void *data)
+{
+	struct timerdev *td = data;
+
+	td->handler(td);
+	return 0;
+}
