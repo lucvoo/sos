@@ -1,5 +1,4 @@
 objs-y	+= 	cache.o
-objs-y	+= 	context.o
 objs-y	+= 	dma-alloc.o
 objs-y	+= 	dma-mapping.o
 objs-y	+= 	dump-stack.o
@@ -7,6 +6,7 @@ objs-y	+= 	init.o
 objs-y	+= 	iomap.o
 objs-y	+= 	startup.o
 objs-y	+= 	switch_to.o
+objs-y	+= 	thread.o
 objs-y	+= 	traps.o
 objs-y	+= 	vectors.o
 

@@ -1,6 +1,6 @@
-objs-y	+= 	context.o
 objs-y	+= 	dump-stack.o
 objs-y	+= 	init.o
+objs-y	+= 	thread.o
 objs-y	+= 	traps.o
 
 objs-$(CONFIG_CCI400)	+= cci-400.o
