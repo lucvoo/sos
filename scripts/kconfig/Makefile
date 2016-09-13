@@ -32,6 +32,9 @@ allnoconfig: conf
 	$(Q)$< -n Kconfig
 
 %_config: conf
+	$(Q)rm -f include/mach include/soc
+	$(Q)rm -f include/config/auto.conf include/config/auto.conf.cmd
+	$(Q)rm -f include/autoconf.h
 	$(Q)$< -D arch/$(CFG_ARCH)/configs/$@ Kconfig
 
 %_defconfig: conf
