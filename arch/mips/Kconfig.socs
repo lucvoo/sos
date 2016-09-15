@@ -7,8 +7,13 @@ endif
 
 config SOC_JZ4780
 	bool
+config SOC_CXT200
+	bool
 
 
 if SOC_JZ4780
 source arch/mips/soc-jz4780/Kconfig
+endif
+if SOC_CXT200
+source arch/mips/soc-cxt200/Kconfig
 endif

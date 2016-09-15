@@ -3,23 +3,26 @@
 
 
 #ifdef CONFIG_CPU_HAS_SYNC
-#define	__mips_sync()	asm volatile ("sync" : : : "memory")
-#define	__arch_mb() asm volatile ("sync" : : : "memory")
+#define	__mips_sync(type)	asm volatile ("sync " #type : : : "memory")
+#define	__arch_sync()		__mips_sync(0x00)
+#define	__arch_mb()		__mips_sync(0x10)
+#define	__arch_mbw()		__mips_sync(0x04)
+#define	__arch_mbr()		__mips_sync(0x13)
+#define	__arch_mb_acq()		__mips_sync(0x11)
+#define	__arch_mb_rel()		__mips_sync(0x12)
 #else
 #error FIXME
 #endif
 
 
-#ifdef	CONFIG_SMP
-#define	mb()		__arch_mb();
-#define	mbr()		__arch_mb();
-#define	mbw()		__arch_mb();
-#endif
+#define	mb()		__arch_sync();
+#define	mbr()		__arch_sync();
+#define	mbw()		__arch_sync();
 
 #ifdef	CONFIG_SMP
-#define	mb_smp()	barrier();
-#define	mbr_smp()	barrier();
-#define	mbw_smp()	barrier();
+#define	mb_smp()	__arch_mb();
+#define	mbr_smp()	__arch_mbr();
+#define	mbw_smp()	__arch_mbw();
 #endif
 
 #include <generic/barrier.h>

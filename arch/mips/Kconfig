@@ -29,6 +29,18 @@ config	CPU_24KC
 	bool "24Kc"
 	select CPU_MIPS32R2
 
+config	CPU_INTERAPTIV
+	bool
+	select CPU_MIPS32R2
+	select MIPS_GIC
+	select MIPS_CPS
+	select MIPS_CM
+	select MIPS_MT
+	select ASE_MT
+
+config	ASE_MT
+	bool
+
 config	BITS
 	int
 	default 32 if MIPS32
@@ -36,6 +48,24 @@ config	BITS
 config	C0_COUNTER_DISABLED
 	bool
 	default n
+
+config	MIPS_MT
+	bool "MIPS MultiThreading (2 vpes/core)" if n
+config	MIPS_CM
+	bool "MIPS Coherence Manager" if n
+config	MIPS_CPC
+	bool "MIPS Cluster Power Control" if n
+config	MIPS_CPS
+	bool "MIPS Coherent Processing System" if n
+	select MIPS_CPC
+	select MIPS_CM
+
+config	SMP_CPS
+	bool
+	depends on MIPS_CPS
+	depends on SMP
+	default y
+
 
 source arch/mips/Kconfig.mach
 source arch/mips/Kconfig.socs
@@ -58,5 +88,9 @@ config	VIRT_ADDR
 config	TEXT_OFFSET
 	hex "Start of kernel image relatively to the start of the RAM"
 	default 0x00008000
+
+config	LOAD_OFFSET
+	hex "kernel image's load offset"
+	default TEXT_OFFSET
 
 endmenu

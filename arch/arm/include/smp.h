@@ -5,7 +5,7 @@
 #include <soc/smp.h>
 
 
-static inline uint __coreid(void)
+static inline uint __cpuid(void)
 {
 	u32 mpidr = cp_read(MPIDR);
 	uint cluster = MPIDR_CLUSTER(mpidr);

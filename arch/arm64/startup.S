@@ -116,7 +116,7 @@ post_mmu:
 	.text
 
 // entry point for secondary CPUs
-GLOBAL(__smp_startup):
+GLOBAL(__smp_entry):
 
 	// load the (virtual!) address to jump when MMU is set
 	ldr	xpm, =post_mmu_smp
@@ -133,7 +133,7 @@ post_mmu_smp:
 	ldr	x1, [x0, THR_CTXT_SP]
 	mov	sp, x1
 	b	__smp_start
-ENDFUN(__smp_startup)
+ENDFUN(__smp_entry)
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////

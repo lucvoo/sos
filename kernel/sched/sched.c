@@ -42,6 +42,11 @@ static void __init sched_init(void)
 }
 pure_initcall(sched_init);
 
+static void __sched_init_idle(uint cpu, struct thread *idle)
+{
+	runq.idle_thread[cpu] = idle;
+}
+
 
 struct thread* __switch_to(struct thread* prev, struct thread* next);
 static struct thread* context_switch(struct thread* prev, struct thread* next)
@@ -60,20 +65,6 @@ static void enqueue_thread_locked(struct run_queue* rq, struct thread* t)
 		rq->nr_running++;
 	}
 	rq->bitmap |= 1 << prio;
-}
-
-static void enqueue_thread(struct thread* t)
-{
-	struct thread* curr = get_current_thread();
-	struct run_queue* rq = &runq;
-
-	t->state = THREAD_STATE_READY;
-	if (t->priority >= curr->priority)
-		thread_need_resched_set(curr);
-
-	lock_acq_irq(&rq->lock);
-	enqueue_thread_locked(rq, t);
-	lock_rel_irq(&rq->lock);
 }
 
 static struct thread *dequeue_thread_locked(struct run_queue* rq, uint prio)
@@ -100,7 +91,7 @@ static void dump_rq(const char *ctxt, int locked)
 	if (!locked)
 		lock_acq_irq(&rq->lock);
 
-	printf("dump rq @ %s on cpu %d:\n", ctxt, __coreid());
+	printf("dump rq @ %s on cpu %d:\n", ctxt, __cpuid());
 	printf("\tnr = %u\n", rq->nr_running);
 	printf("\tbitmap= %08lX (%lb)\n", rq->bitmap, rq->bitmap);
 
@@ -138,63 +129,82 @@ static inline int cpu_is_idle(struct run_queue *rq, unsigned int cpu)
 }
 
 /*
- * Stupid load balancing:
+ * Try to run queued thread on a idle CPU:
  *	if we have more than one thread on the queue
  *	and there is an idle cpu
  *	then ask this cpu the reschedule
+ *
+ * FIXME: This should be part of some sort of PM policy:
+ *	when is it worth to wake a CPU?
+ *
  * We acccess the run queue without locking it, it's fine.
  * At worst we wake up a cpu for nothing or we miss an opportunity
  * to run a process on another cpu but everything is still OK.
  */
-static void smp_load_balancing(struct run_queue* rq)
+static bool activate_idle_cpu(struct run_queue* rq)
 {
 	unsigned int cpu;
-	unsigned int i;
-	unsigned int n;
-
-	n = rq->nr_running;
-	if (n == 0)
-		return;
 
 	// Notify the first idle CPU.
 	// This will strongly favour the CPUs with the lowest ID,
 	// which is fine and will let the highest ones in low-power.
 	// FIXME: use a bitmap for rq->idle?
-	cpu = __coreid();
-	for (i = 0; i < NR_CPUS; i++) {
+	cpu = __cpuid();
+	foreach_cpu(i) {
 		if (i == cpu)
 			continue;
 		if (!cpu_is_idle(rq, i))
 			continue;
 
-		smp_ipi_schedule_one(i);
+		smp_ipi_resched_cpu(i);
 
 		// We could do this until nr_running == 0, but
 		// - the cpu just notified will take one thread
-		//   and itself try to balance
-		break;
+		//   and itself try this again
+		return true;
 	}
+
+	return false;
 }
 #else
 static void smp_set_idle(struct run_queue *rq, unsigned int cpu, int val)
 {
 }
 
-static void smp_load_balancing(struct run_queue* rq)
+static bool activate_idle_cpu(struct run_queue* rq)
 {
+	return false;
 }
 #endif
 
-void thread_schedule(void)
+static void __thread_activate(struct thread* t)
+{
+	struct run_queue* rq = &runq;
+
+	t->state = THREAD_STATE_READY;
+
+	lock_acq_irq(&rq->lock);
+
+	enqueue_thread_locked(rq, t);
+	if (!activate_idle_cpu(rq)) {
+		struct thread* curr = get_current_thread();
+
+		if (t->priority >= curr->priority)
+			thread_need_resched_set(curr);
+	}
+
+	lock_rel_irq(&rq->lock);
+}
+
+static void __schedule(void)
 {
 	struct thread* prev;
 	struct thread* next;
 	struct run_queue* rq = &runq;
 	unsigned int cpu;
 
-need_resched:
 	lock_acq_irq(&rq->lock);
-	cpu = __coreid();
+	cpu = __cpuid();
 	prev = get_current_thread();
 	thread_need_resched_clear(prev);
 
@@ -219,42 +229,13 @@ need_resched:
 	}
 	lock_rel_irq(&rq->lock);
 
-	smp_load_balancing(rq);
-
-	if (thread_need_resched_test(prev))
-		goto need_resched;
+	if (rq->nr_running)
+		activate_idle_cpu(rq);
 }
 
-static int wake_up(struct thread* t)
-{
-	if (t->state == THREAD_STATE_READY)
-		return 0;		// FIXME: should never happen?
-
-	enqueue_thread(t);
-	return 1;
-}
-
-
-void _thread_scheduler_start(void)
-{
-	struct thread* t = get_current_thread();
-
-	// t == init_thread
-	runq.idle_thread[__coreid()] = t;
-	t->state = THREAD_STATE_IDLE;
-	t->priority   = 0;
-	t->flags = TIF_NEED_RESCHED;
-}
-
-/**
-* Thread entry point.
-*
-* Called by thread_entry() which do the arch specific part.
-*/
-void __thread_start(void (*fun)(void *data), void *data)
+static void __sched_start_thread(struct thread *t)
 {
 	struct run_queue* rq = &runq;
-	struct thread *t;
 
 	// This release the lock taken by thread_schedule() the first time
 	// this thread is scheduled.
@@ -264,8 +245,53 @@ void __thread_start(void (*fun)(void *data), void *data)
 	// returns from schedule() (only the previous thread call it) but
 	// instead executing its starting function.
 	lock_rel_irq(&rq->lock);
+}
 
+static int __sched_wakeup(struct thread* t)
+{
+	if (t->state == THREAD_STATE_READY)
+		return 0;		// FIXME: should never happen?
+
+	__thread_activate(t);
+	return 1;
+}
+/******************************************************************************/
+
+void thread_schedule(void)
+{
+	do {
+		__schedule();
+	} while (need_resched());
+}
+
+
+void __sched_start(uint cpu)
+{
+	struct thread* t = get_current_thread();
+	// t == init_thread
+
+	t->state = THREAD_STATE_IDLE;
+	t->priority   = 0;
+	t->flags = TIF_NEED_RESCHED;
+
+	__sched_init_idle(cpu, t);
+}
+
+/**
+* Thread entry point.
+*
+* Called by thread_entry() which do the arch specific part.
+*/
+void __thread_start(void (*fun)(void *data), void *data)
+{
+	struct thread *t = get_current_thread();
+
+	__sched_start_thread(t);
+
+	// this is where the thread will spend all its lifetime
 	fun(data);
+
+	// the thread has exited
 
 	t = get_current_thread();
 	t->state = THREAD_STATE_EXITED;
@@ -279,7 +305,7 @@ void thread_start(struct thread* t)
 {
 	// FIXME: need to keep count of the level of suspendness
 
-	enqueue_thread(t);
+	__thread_activate(t);
 }
 
 void thread_yield(void)
@@ -297,5 +323,5 @@ void thread_sleep(void)
 
 void thread_wakeup(struct thread* t)
 {
-	wake_up(t);
+	__sched_wakeup(t);
 }

@@ -54,4 +54,23 @@ static inline void ioclrset32(void __iomem *addr, u32 clr, u32 set, uint off)
 	iowrite32(addr, val);
 }
 
+static inline u64 ioread2x32(void __iomem *addrh, void __iomem *addrl)
+{
+	u32 hi0, hi1, low;
+
+	do {
+		hi0 = ioread32(addrh);
+		low = ioread32(addrl);
+		hi1 = ioread32(addrh);
+	} while (hi1 != hi0);
+
+	return (((u64) hi0) << 32) + low;
+}
+
+static inline void iowrite2x32(void __iomem *addrh, void __iomem *addrl, u64 val)
+{
+	iowrite32(addrh, val >> 32);
+	iowrite32(addrl, val & 0xffffffff);
+}
+
 #endif

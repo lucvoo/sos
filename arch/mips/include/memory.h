@@ -23,6 +23,11 @@ static inline void *phys_to_kseg1(paddr_t phys)
 	return (void *) phys + (KSEG1_BASE - PHYS_ADDR);
 }
 
+static inline ulong virt_to_kseg1(const void *virt)
+{
+	return ((ulong) virt) + (KSEG1_BASE - VIRT_ADDR);
+}
+
 #endif
 
 #endif

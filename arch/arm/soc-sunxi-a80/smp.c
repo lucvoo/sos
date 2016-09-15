@@ -44,7 +44,7 @@ static int a80_smp_init(void)
 {
 	void __iomem *prcm_base = ioremap(PRCM_BASE, PRCM_SIZE);
 
-	iowrite32(prcm_base + PRCM_CPU_SOFT_ENTRY, virt_to_phys(__smp_startup));
+	iowrite32(prcm_base + PRCM_CPU_SOFT_ENTRY, virt_to_phys(__smp_entry));
 
 	return 0;
 }

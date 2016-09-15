@@ -1,19 +1,14 @@
 #include <arch/asm-offsets.h>
 #include <arch/regs-copro.h>
 #include <arch/assembly.h>
-#include <arch/memory.h>
-#include <arch/cacheop.h>
-#include <arch/cachesize.h>
 #include <soc/smp.h>
 
 
-#if ICACHE_SIZE != DCACHE_SIZE
-#error	"icache & dcache must have the same size"
+#ifdef CONFIG_MIPS_CM
+#define	CFG0_K0_SMP	CFG0_K0_CWB
+#else
+#define	CFG0_K0_SMP	CFG0_K0_WB
 #endif
-#if CACHE_LI_LINESIZE != CACHE_LD_LINESIZE
-#error	"icache & dcache must have the same linesize"
-#endif
-
 
 .section .init.text.smp_entry,"ax",@progbits
 .balign	SMP_ENTRY_ALIGN
@@ -25,19 +20,31 @@ ENTRY(__smp_entry, global)
 	li	t0, ST0_CU0
 	mtc0	t0, c0_status
 
-	// Cache setup
-	li	t1, KSEG0_BASE
-	ori	t2, t1, DCACHE_SIZE
-	mtc0	$0, c0_taglo
-1:	cache	CACHEOP_I_IDX_STA, 0(t1)
-	cache	CACHEOP_D_IDX_STA, 0(t1)
-	bne	t1, t2, 1b
-	addiu	t1, t1, CACHE_LD_LINESIZE
+	jal	__cache_l1_init
+	 nop
+
+#ifdef	CONFIG_MIPS_CM
+	// enable coherency
+	li	t0, 0xff
+	li	t1, 0xbfbfa008	// GCR_CL_COHERENCE
+	sw	t0, 0(t1)
+	ehb
+#endif
 
 	// KSEG0 cache coherency attribute
 	mfc0	t3, c0_config
-	ori	t3, t3, CACHE_COHERENCY_CACHEABLE
+	ori	t3, t3, CFG0_K0_MASK
+	xori	t3, t3, CFG0_K0_MASK ^ CFG0_K0_SMP
 	mtc0	t3, c0_config
+	ehb
+
+	// now that the cache is initialized and
+	// coherency is configured
+	// we can jump back to kseg0
+	la	t0, 1f
+	jr	t0
+	 nop
+1:
 
 	// pagemask
 	mtc0	$0, c0_pagemask
@@ -48,14 +55,11 @@ ENTRY(__smp_entry, global)
 
 	// get the idle thread
 	jal	__smp_init_idle_thread
+	 nop
 
 	// load gp & sp
 	move	gp, v0
 	lw	sp, THR_CPU_SP(v0)
-
-	// enable MBOX interrupt
-	ori	t0, ST0_IM3
-	mtc0	t0, c0_status
 
 	la	t6, __smp_start
 	jr.hb	t6

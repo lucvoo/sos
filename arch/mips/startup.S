@@ -3,7 +3,7 @@
 
 
 // FIXME: this is cpu/subarch specific
-#define	ST0_CLRMSK	(ST0_KSU|ST0_BEV|ST0_ERL|ST0_EXL|ST0_IE)
+#define	ST0_CLRMSK	(ST0_KSU|ST0_BEV|ST0_ERL|ST0_EXL|ST0_IE|ST0_IMASK)
 #define	ST0_SETMSK	0
 
 	.section	".startup.text","ax"
@@ -12,6 +12,26 @@
 	.ent	_os_startup
 
 _os_startup:
+#if (CONFIG_TEXT_OFFSET != CONFIG_LOAD_OFFSET)
+	la	s0, _os_startup - CONFIG_TEXT_OFFSET + CONFIG_LOAD_OFFSET
+	la	s2, _os_startup
+	la	s4, __data_end
+
+1:
+	lw	s1, 0(s0)
+	sw	s1, 0(s2)
+	synci	    0(s2)
+
+	addiu	s0,s0,4
+	addiu	s2,s2,4
+	bne	s2,s4,1b
+	 nop
+#endif
+
+	// end of PIC code
+	la	t0, 1f
+	jr	t0
+1:
 
 	// init the status register
 	mfc0	t0, c0_status
@@ -19,12 +39,6 @@ _os_startup:
 	xor	t0, t0, ST0_CLRMSK
 	mtc0	t0, c0_status
 	ehb
-
-
-	// end of PIC code
-	la	t0, 1f
-	jr	t0	
-1:
 
 	// clear cp0 context
 	mtc0	$0, c0_context

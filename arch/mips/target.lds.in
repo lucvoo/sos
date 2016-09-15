@@ -7,6 +7,8 @@
 #define	TEXT_ALIGN	
 #endif
 
+#define WORD_ALIGN      ALIGN(__SIZEOF_LONG__)
+
 ENTRY(_os_startup)
 
 MEMORY {
@@ -43,7 +45,10 @@ SECTIONS
 	} > ram
 
 	.data : {
+		PROVIDE(__data_start = .);
 			*(.data*)
+		. = WORD_ALIGN;
+		PROVIDE(__data_end = .);
 	} > ram
 
 	.bss : {
@@ -59,4 +64,11 @@ SECTIONS
 
 	. = ALIGN(PAGE_SIZE);
 	PROVIDE(pagemap = .);
+
+
+    /DISCARD/ :
+	{
+		*(.MIPS.abiflags)
+		*(.rel.dyn)
+	}
 }

@@ -1,2 +1,5 @@
 config ARM_GIC
 	bool
+
+config MIPS_GIC
+	bool

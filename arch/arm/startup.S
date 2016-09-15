@@ -244,7 +244,7 @@ ENDFUN(create_early_pagetable)
 	.text
 
 // entry point for secondary CPUs
-GLOBAL(__smp_startup):
+GLOBAL(__smp_entry):
 	// insure that we're in supervisor mode with interrupts disabled
 	msr	cpsr_c, #(PSR_I|PSR_F|PSR_MODE_SVC)
 
@@ -283,7 +283,7 @@ post_mmu_smp:
 	bl	__smp_init_idle_thread
 	ldr	sp, [r0, THR_CTXT_SP]
 	b	__smp_start
-ENDFUN(__smp_startup)
+ENDFUN(__smp_entry)
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -12,6 +12,7 @@
 /******************************************************************************/
 /******** IPI ********/
 
+#include <bitops/findbit.h>
 #include <arch/hazard.h>
 #include <interrupt.h>
 #include <irqdesc.h>
@@ -32,13 +33,17 @@ static struct lock core_regs_lock;
 /* The JZ4780's mailboxes are for sending short messages (a single word)
  * between the cores.
  * They are (used to implement) the Inter-Process Interrupts.
+ *
+ * Here we convert IPIs number into bitfields forth & back
+ * since it seems to be normal thing to do with those mailboxes
+ * (it guarantee us that IPIs are never lost).
  */
 static int mbox_irq_handler(struct irqdesc *desc, void *data)
 {
 	unsigned int msg;
 
 	lock_acq(&core_regs_lock);
-	switch (__coreid()) {
+	switch (__cpuid()) {
 	case 0:
 		msg = c0_getval(c0_mailbox0);
 		c0_setval(c0_mailbox0, 0);
@@ -56,20 +61,25 @@ static int mbox_irq_handler(struct irqdesc *desc, void *data)
 	}
 	lock_rel(&core_regs_lock);
 
-	__smp_ipi_process(msg);
+	while (msg) {
+		uint ipi = bitop_clz(msg);
+
+		msg &= ~(1 << ipi);
+		__smp_ipi_process(ipi);
+	}
 
 	return IRQ_HANDLED;
 }
 
-void __smp_ipi_send(unsigned int cpu, unsigned int msg)
+void __smp_ipi_send(uint cpu, uint ipi)
 {
 	lock_acq(&core_regs_lock);
 	switch (cpu) {
 	case 0:
-		c0_setbits(c0_mailbox0, msg);
+		c0_setbits(c0_mailbox0, 1 << ipi);
 		break;
 	case 1:
-		c0_setbits(c0_mailbox1, msg);
+		c0_setbits(c0_mailbox1, 1 << ipi);
 		break;
 	default:
 		// FIXME
@@ -104,7 +114,6 @@ static int jz4780_smp_boot_cpu(struct thread *idle, uint cpu)
 	extern void __smp_entry(void);
 
 	void __iomem *cgu = ioremap(CGU_BASE, CGU_SIZE);
-	unsigned long entry;
 	unsigned int gated;
 	unsigned int lpcr;
 
@@ -123,8 +132,7 @@ static int jz4780_smp_boot_cpu(struct thread *idle, uint cpu)
 		;
 
 	// setup the address of the entry point
-	entry = (unsigned long) &__smp_entry;
-	c0_chgbits(c0_core_reim, CORE_REIM_ENTRY_MSK, entry - KSEG0_BASE + KSEG1_BASE);
+	c0_chgbits(c0_core_reim, CORE_REIM_ENTRY_MSK, virt_to_kseg1(&__smp_entry));
 
 	// un-reset the core
 	c0_chgbits(c0_core_ctrl, CORE_CTRL_SW_RST1|CORE_CTRL_RPC1, CORE_CTRL_RPC1);
@@ -135,6 +143,8 @@ static int jz4780_smp_boot_cpu(struct thread *idle, uint cpu)
 
 static int jz4780_smp_init_cpu(uint cpu)
 {
+	c0_setbits(c0_status, ST0_IM0 << IRQ_MBOX);
+	ehb();
 	return 0;
 }
 

@@ -1,0 +1,8 @@
+config MACH
+	symbol
+	default ci40
+
+config	MACH_PARAMS
+	bool
+	default y
+	select SOC_CXT200

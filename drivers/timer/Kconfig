@@ -20,4 +20,9 @@ config	MIPS_ARCH_TIMER
 	depends on !C0_COUNTER_DISABLED
 	default y
 
+config	MIPS_GIC_TIMER
+	bool "MIPS GIC's timer"
+	depends on MIPS_GIC
+	default y
+
 endmenu

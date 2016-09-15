@@ -1,9 +1,10 @@
 #include <diag.h>
 #include <soc/baseaddr.h>
+#include <arch/iomap.h>
 #include <init.h>
 
 
-#define	UART_BASE	(0xa0000000 + (UART4_BASE))
+#define	UART_BASE	__ioremap(UART4_BASE)
 #include <hw/16550-diag-putc.h>
 
 

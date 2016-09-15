@@ -49,6 +49,8 @@
 #define		ST0_IM5		(1 <<13)
 #define		ST0_IM6		(1 <<14)
 #define		ST0_IM7		(1 <<15)
+#define		ST0_IM(X)	(1 << (8 + (X)))
+#define		ST0_IMASK	(0xff << 8)
 #define		ST0_NMI		(1 <<19)
 #define		ST0_SR		(1 <<20)
 #define		ST0_TS		(1 <<21)
@@ -94,8 +96,17 @@
 
 #define	c0_ebase	__COPRO_REG($15, 1)
 
+#define	c0_cdmmbase	__COPRO_REG($15, 2)
+
+#define	c0_cmgcrbase	__COPRO_REG($15, 3)
+
 #define	c0_config	__COPRO_REG($16, 0)
-#define		CFG0_K0		(1 << 0)
+#define		CFG0_K0_MASK	(7 << 0)
+#define		CFG0_K0_UC	(2 << 0)	// non-coherent, UnCached
+#define		CFG0_K0_WB	(3 << 0)	// non-coherent, WBWA
+#define		CFG0_K0_CWBE	(4 << 0)	// Coherent, WBWA, read misses -> exclusive
+#define		CFG0_K0_CWB	(5 << 0)	// Coherent, WBWA, read misses -> shared
+#define		CFG0_K0_UCA	(7 << 0)	// non-coherent, UnCached Accelerated
 #define		CFG0_VI		(1 << 3)
 #define		CFG0_MT		(1 << 7)
 #define		CFG0_AR		(1 <<10)
@@ -116,13 +127,23 @@
 #define		CFG2_M		(1 <<31)
 
 #define	c0_config3	__COPRO_REG($16, 3)
+#define		CFG3_MT		(1 << 2)
+#define		CFG3_CDMM	(1 << 3)
 #define		CFG3_VINT	(1 << 5)
 #define		CFG3_VEIC	(1 << 6)
+#define		CFG3_CMGCR	(1 <<29)
 #define		CFG3_M		(1 <<31)
+
+#define	c0_config4	__COPRO_REG($16, 4)
+
+#define	c0_config5	__COPRO_REG($16, 5)
+#define		CFG5_EVA	(1 <<28)
 
 #define	c0_config6	__COPRO_REG($16, 6)
 
 #define	c0_config7	__COPRO_REG($16, 7)
+#define		CFG7_HCI	(1 << 18)
+#define		CFG7_WII	(1 << 31)
 
 #define	c0_lladdr	__COPRO_REG($17, 0)
 
@@ -183,5 +204,48 @@
 #define	c0_datahi3	__COPRO_REG($29, 7)
 
 #define	c0_errorepc	__COPRO_REG($30, 0)
+
+////////////////////////////////////////////////////////////////////////////////
+// MT extension
+#define	c0_mvpctrl	__COPRO_REG($0, 1)
+#define		MVPCTRL_EVP	(1 << 0)
+#define		MVPCTRL_VPC	(1 << 1)
+#define		MVPCTRL_STLB	(1 << 2)
+#define		MVPCTRL_CPA	(1 << 3)
+
+#define	c0_mvpcfg0	__COPRO_REG($0, 2)
+#define		MVPCFG0_M	(1 << 31)
+#define		MVPCFG0_TLBS	(1 << 29)
+#define		MVPCFG0_GS	(1 << 28)
+#define		MVPCFG0_PCP	(1 << 27)
+#define		MVPCFG0_TCA	(1 << 15)
+#define		MVPCFG0_PVPE	BITS(10, 4)
+#define		MVPCFG0_PTC	BITS(0, 8)
+
+#define	c0_mvpcfg1	__COPRO_REG($0, 3)
+
+#define	c0_vpectrl	__COPRO_REG($1, 1)
+#define	c0_vpecfg0	__COPRO_REG($1, 2)
+#define	c0_vpecfg1	__COPRO_REG($1, 3)
+#define	c0_yqmask	__COPRO_REG($1, 4)
+#define	c0_vpesched	__COPRO_REG($1, 5)
+#define	c0_vpeschedfb	__COPRO_REG($1, 6)
+#define	c0_vpeopt	__COPRO_REG($1, 7)
+
+#define	c0_tcstatus	__COPRO_REG($2, 1)
+#define	c0_tcbind	__COPRO_REG($2, 2)
+#define	c0_tcrestart	__COPRO_REG($2, 3)
+#define	c0_tchalt	__COPRO_REG($2, 4)
+#define	c0_tccontext	__COPRO_REG($2, 4)
+#define	c0_tcsched	__COPRO_REG($2, 6)
+#define	c0_tcschedfb	__COPRO_REG($2, 7)
+
+#define	c0_tcopt	__COPRO_REG($3, 7)
+
+#define	c0_srscfg0	__COPRO_REG($6, 1)
+#define	c0_srscfg1	__COPRO_REG($6, 2)
+#define	c0_srscfg2	__COPRO_REG($6, 3)
+#define	c0_srscfg3	__COPRO_REG($6, 4)
+#define	c0_srscfg4	__COPRO_REG($6, 5)
 
 #endif

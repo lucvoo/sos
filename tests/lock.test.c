@@ -11,7 +11,7 @@ static struct lock lock;
 
 static void do_loop(void)
 {
-	uint cpu = __coreid();
+	uint cpu = __cpuid();
 	int n = 0;
 
 	printf("cpu%d started\n", cpu);

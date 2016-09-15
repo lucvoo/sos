@@ -8,7 +8,7 @@
 #include <soc/smp.h>
 
 
-static inline uint __coreid(void)
+static inline uint __cpuid(void)
 {
 	u32 mpidr = msr_getval(mpidr_el1);
 	uint cluster = MPIDR_CLUSTER(mpidr);

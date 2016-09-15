@@ -173,7 +173,7 @@ static void gic_handle_irq(struct eframe *regs)
 			iowrite32(cpu_base + GICC_EOIR, iar);
 #ifdef	CONFIG_SMP
 			mbr_smp();	// pair with gic_ipi_send()'s write barrier
-			__smp_ipi_process(1 << irq);
+			__smp_ipi_process(irq);
 #endif
 		} else
 			return;
@@ -184,22 +184,13 @@ strong_alias(gic_handle_irq, mach_irq_handler);
 /******************************************************************************/
 #ifdef	CONFIG_SMP
 
-// FIXME: msg is a bitmap of ipi numbers ...
-//	  API to be changed because not generic enough
-#define	foreach_ipi(ipi, msg)			\
-	for (ipi = 0; msg; msg &= ~(1 << ipi), ipi++)		\
-		if ((msg & (1 << ipi)) == 0)	\
-			continue;		\
-		else
-
-static int gic_ipi_send(uint cpu, uint msg)
+static int gic_ipi_send(uint cpu, uint ipi)
 {
 	struct gic_intctrl *gic = &gic_intctrl;
 	void __iomem *dist_base = gic->chip.iobase;
 	u32 val;
-	uint ipi;
 
-	if (msg & ~0xffff)
+	if (ipi >= 16)
 		return -EINVAL;	// support only IPI 0-15
 
 	switch (cpu) {
@@ -222,15 +213,13 @@ static int gic_ipi_send(uint cpu, uint msg)
 	// we're publishing something here
 	mbw_smp();		// pair with gic_handle_irq()'s read barrier
 
-	foreach_ipi(ipi, msg)
-		iowrite32(dist_base + GICD_SGIR, val | GICD_SGIR_IPI(ipi));
-
+	iowrite32(dist_base + GICD_SGIR, val | GICD_SGIR_IPI(ipi));
 	return 0;
 }
 
-void __smp_ipi_send(uint cpu, uint msg)
+void __smp_ipi_send(uint cpu, uint ipi)
 {
-	gic_ipi_send(cpu, msg);
+	gic_ipi_send(cpu, ipi);
 }
 
 #include <smp/initcall.h>
