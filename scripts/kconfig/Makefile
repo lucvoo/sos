@@ -31,7 +31,7 @@ allyesconfig: conf
 allnoconfig: conf
 	$(Q)$< -n Kconfig
 
-%_config: conf
+%_config: conf			## won't work without include/config/auto.conf
 	$(Q)rm -f include/mach include/soc
 	$(Q)rm -f include/config/auto.conf include/config/auto.conf.cmd
 	$(Q)rm -f include/autoconf.h
@@ -42,6 +42,7 @@ allnoconfig: conf
 	$(Q)rm -f include/config/auto.conf include/config/auto.conf.cmd
 	$(Q)rm -f include/autoconf.h
 	$(Q)$< -D arch/$*/configs/defconfig Kconfig
+	$(Q)$< -s Kconfig	## regenerate include/config/auto.conf
 
 # Help text used by make help
 help:
