@@ -35,5 +35,6 @@ subdirs-$(CONFIG_SOC_SUNXI)	+= soc-sunxi/
 
 subdirs-$(CONFIG_MACH_BEAGLEBONE)	+= mach-beaglebone/
 subdirs-$(CONFIG_MACH_CUBIEBOARD4)	+= mach-cubieboard4/
+subdirs-$(CONFIG_MACH_ORANGEPI_ZERO)	+= mach-orangepi-zero/
 subdirs-$(CONFIG_MACH_STM32)	+= mach-stm32/
 subdirs-$(CONFIG_MACH_UDOO_NEO)	+= mach-udoo-neo/

@@ -10,6 +10,9 @@ config MACH_BEAGLEBONE
 config MACH_CUBIEBOARD4
 	bool "Cubieboard"
 
+config MACH_ORANGEPI_ZERO
+	bool "Orange Pi Zero"
+
 config MACH_RASPBERRY_PI
 	bool "Raspberry-pi"
 
@@ -35,4 +38,7 @@ source arch/arm/mach-stm32/Kconfig
 endif
 if MACH_UDOO_NEO
 source arch/arm/mach-udoo-neo/Kconfig
+endif
+if MACH_ORANGEPI_ZERO
+source arch/arm/mach-orangepi-zero/Kconfig
 endif
