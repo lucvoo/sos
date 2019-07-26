@@ -55,8 +55,11 @@
 #define EHCI0_IRQ		SPI(72)
 #define OHCI0_IRQ		SPI(73)
 #define EHCI1_IRQ		SPI(74)
+#define OHCI1_IRQ		SPI(75)
 #define EHCI2_IRQ		SPI(76)
 #define OHCI2_IRQ		SPI(77)
+#define EHCI3_IRQ		SPI(78)
+#define OHCI3_IRQ		SPI(79)
 #define SS_IRQ			SPI(80)
 #define TS_IRQ			SPI(81)
 #define EMAC_IRQ		SPI(82)
@@ -85,5 +88,6 @@
 #define CSI0_CCI_IRQ		SPI(122)
 #define CSI1_CCI_IRQ		SPI(123)
 #define CCI_400_IRQ		SPI(124)
+#define AXI_ERROR_IRQ		SPI(124)
 
 #endif

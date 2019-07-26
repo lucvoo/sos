@@ -13,3 +13,9 @@ config	SOC_PARAMS_A80
 	select HAS_SMP
 	select CCI400 if SMP
 	select SMP_SUNXI_MC if SMP
+
+config	SOC_PARAMS_H3
+	bool
+	default SOC_SUNXI_H3
+	select CORTEX_A7
+	select ARM_GIC

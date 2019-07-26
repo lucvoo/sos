@@ -14,6 +14,9 @@ config SOC_SUNXI
 config SOC_SUNXI_A80
 	bool
 	select SOC_SUNXI
+config SOC_SUNXI_H3
+	bool
+	select SOC_SUNXI
 
 menu "SoC options"
 if SOC_BCM283X

@@ -1,7 +1,7 @@
 #ifndef	_SOC_PRCM_H_
 #define	_SOC_PRCM_H_
 
-#define	PRCM_BASE	0x08001400
+#include <soc/iobase.h>
 #define	PRCM_SIZE	0x00000400
 
 #define PRCM_CPUS_RST			0x000	// CPUS Reset

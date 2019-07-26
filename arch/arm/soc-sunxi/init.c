@@ -61,6 +61,39 @@ static struct iomap_desc iomap_tbl[] = {
 	},
 #endif
 #endif
+
+#ifdef CONFIG_SOC_SUNXI_H3
+	{	// SRAM A1
+		.phys = 0x00000000,
+		.size = 0x00010000,
+		.virt = 0xFE000000,
+	},
+	{	// SRAM A1
+		.phys = 0x00044000,
+		.size = 0x0000C000,
+		.virt = 0xFE100000,
+	},
+	{	// SRAM C
+		.phys = 0x01000000,
+		.size = 0x0000B000,
+		.virt = 0xFE200000,
+	},
+	{	// IO
+		.phys = 0x01C00000,
+		.size = 0x00300000,
+		.virt = 0xFF000000,
+	},
+	{	// APB0
+		.phys = 0x01F00000,
+		.size = 0x00100000,
+		.virt = 0xFF100000,
+	},
+	{	// CoreSight & TSGEN
+		.phys = 0x3F000000,
+		.size = 0x00100000,
+		.virt = 0x3F000000,
+	},
+#endif
 };
 
 
