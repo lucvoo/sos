@@ -7,13 +7,13 @@ CPPFLAGS	:= $(CPPFLAGS) $(CPPFLAGS-y)
 CFLAGS		:= $(CFLAGS)   $(CFLAGS-y)
 AFLAGS		:= $(AFLAGS)   $(AFLAGS-y)
 
-c_flags        = -Wp,-MD,$(dir $@).$(notdir $@).d $(NOSTDINC_FLAGS) $(CPPFLAGS) \
+c_flags        = -Wp,-MMD,$(dir $@).$(notdir $@).d $(NOSTDINC_FLAGS) $(CPPFLAGS) \
 		 $(CFLAGS) $($(@D)/EXTRA_CFLAGS) $($(basename $@)-cflags)
 
-a_flags        = -Wp,-MD,$(dir $@).$(notdir $@).d $(NOSTDINC_FLAGS) $(CPPFLAGS) \
+a_flags        = -Wp,-MMD,$(dir $@).$(notdir $@).d $(NOSTDINC_FLAGS) $(CPPFLAGS) \
 		 $(AFLAGS) $($(@D)/EXTRA_AFLAGS) $($(basename $@)-aflags)
 
-cpp_flags      = -Wp,-MD,$(dir $@).$(notdir $@).d $(NOSTDINC_FLAGS) $(CPPFLAGS) \
+cpp_flags      = -Wp,-MMD,$(dir $@).$(notdir $@).d $(NOSTDINC_FLAGS) $(CPPFLAGS) \
 		           $($(@D)/EXTRA_CPPFLAGS) $($(basename $@)-cppflags)
 
 # sparse stuff
