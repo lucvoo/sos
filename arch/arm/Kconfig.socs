@@ -25,7 +25,7 @@ endif
 if SOC_STM32
 source arch/arm/soc-stm32/Kconfig
 endif
-if SOC_SUNXI_A80
-source arch/arm/soc-sunxi-a80/Kconfig
+if SOC_SUNXI
+source arch/arm/soc-sunxi/Kconfig
 endif
 endmenu

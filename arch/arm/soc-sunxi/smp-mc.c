@@ -1,7 +1,9 @@
+// SMP ops for multi-cluster SoCs
+
 #include <smp.h>
 #include <arch/asm-offsets.h>
 #include <arch/memory.h>
-#include <soc/cpucfg.h>
+#include <soc/cpucfg-mc.h>
 #include <soc/prcm.h>
 #include <soc/smp.h>
 #include <smp/init.h>

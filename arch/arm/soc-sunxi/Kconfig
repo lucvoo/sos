@@ -1,0 +1,15 @@
+config	SOC
+	symbol
+	default sunxi
+
+config SMP_SUNXI_MC
+	bool
+
+config	SOC_PARAMS_A80
+	bool
+	default SOC_SUNXI_A80
+	select CORTEX_A7
+	select ARM_GIC
+	select HAS_SMP
+	select CCI400 if SMP
+	select SMP_SUNXI_MC if SMP

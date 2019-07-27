@@ -3,6 +3,7 @@
 
 
 static struct iomap_desc iomap_tbl[] = {
+#ifdef CONFIG_SOC_SUNXI_A80
 #if 0
 	{	// BROM & SRAM: needed finer grained prot
 		.phys = 0x00000000,
@@ -59,11 +60,12 @@ static struct iomap_desc iomap_tbl[] = {
 		.virt = 0xFFD00000,
 	},
 #endif
+#endif
 };
 
 
-static void sunxi_a80_init(void)
+static void sunxi_init(void)
 {
 	iomap_init(iomap_tbl, ARRAY_SIZE(iomap_tbl));
 }
-core_initcall(sunxi_a80_init);
+core_initcall(sunxi_init);

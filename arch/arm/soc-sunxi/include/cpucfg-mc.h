@@ -1,9 +1,11 @@
 #ifndef _SOC_CPUCFG_H_
 #define _SOC_CPUCFG_H_
 
-#define	CPUCFG_BASE	0x01700000
+#include <soc/iobase.h>
+
 #define	CPUCFG_SIZE	0x00000400
 
+// A80
 #define CPUCFG_CX_CTRL0(CL)	(0x00+(CL)*16)	// Cluster Control
 #define CPUCFG_CX_CTRL1(CL)	(0x04+(CL)*16)	// Cluster Control
 #define CPUCFG_CX_ADB400(CL)	(0x08+(CL)*16)	// ADB400 powerdown
