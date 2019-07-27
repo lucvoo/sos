@@ -16,7 +16,6 @@ static void fun(void* data)
 	for (d = 178; ; d += 1) {
 		u64 ref, now;
 		u32 hi, lo;
-		u32 s, f, fns;
 
 		ref = arch_timer_get_counter();
 		thread_schedule_timeout(d * HZ);
@@ -24,11 +23,7 @@ static void fun(void* data)
 		now -= ref;
 		hi = now >> 32;
 		lo = now & 0xffffffff;
-		s = now / HZ;
-		f = (now % HZ);
-		fns = ((now % HZ) * 1000000000)/HZ;
-
-		printf("t = %06ld @ (%08lx %08lx) %06ld.%09ld (%08lx)\n\n", d, hi, lo, s, fns, f);
+		printf("t = %06ld @ (%08lx %08lx)\n\n", d, hi, lo);
 	}
 }
 
