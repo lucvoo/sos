@@ -3,7 +3,7 @@
 #include <soc/baseaddr.h>
 
 
-#define	UART_BASE	__ioremap(UART1_BASE)
+#define	DIAG_BASE	__ioremap(UART1_BASE)
 #include <arch/iomap.h>
 #include <soc/16550.h>
 #include <hw/16550-diag-putc.h>

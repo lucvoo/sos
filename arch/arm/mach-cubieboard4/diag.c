@@ -4,7 +4,7 @@
 #include <io.h>
 
 
-#define	UART_BASE	((void __iomem *) UARTX_BASE(0))
+#define	DIAG_BASE	((void __iomem *) UARTX_BASE(0))
 
 #include <soc/16550.h>
 #include <hw/16550-diag-putc.h>

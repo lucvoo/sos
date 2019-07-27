@@ -4,7 +4,7 @@
 #include <init.h>
 
 
-#define	UART_BASE	__ioremap(UART4_BASE)
+#define	DIAG_BASE	__ioremap(UART4_BASE)
 #include <hw/16550-diag-putc.h>
 
 
