@@ -31,7 +31,7 @@ endif
 # ---------------------------------------------------------------------------
 
 cmd_cc_s_c = $(CC) $(c_flags) -fverbose-asm -S -o $@ $<
-%.s: %.c scripts/basic/fixdep
+%.s: %.c
 	@echo "CC	$@"
 	$(Q)$(cmd_cc_s_c)
 	@scripts/basic/fixdep.sh $(depfile) $@ '$(cmd_cc_s_c)' $(dot-target).cmd
@@ -43,7 +43,7 @@ cmd_cc_i_c = $(CPP) $(c_flags) -dD -o $@ $<
 	$(Q)less $@
 
 cmd_cc_o_c = $(CC) $(c_flags) -c -o $@ $<
-%.o: %.c scripts/basic/fixdep
+%.o: %.c
 	$(prt_checker)
 	$(cmd_checker)
 	@echo "CC	$@"
@@ -59,14 +59,14 @@ cmd_cc_s_S = $(CPP) $(a_flags) -dD -o $@ $<
 	$(Q)$(cmd_cc_s_S)
 
 cmd_cc_o_S = $(CC) $(a_flags) -c -o $@ $<
-%.o: %.S scripts/basic/fixdep
+%.o: %.S
 	@echo "AS	$@"
 	$(Q)$(cmd_cc_o_S)
 	@scripts/basic/fixdep.sh $(depfile) $@ '$(cmd_cc_o_S)' $(dot-target).cmd
 
 # ---------------------------------------------------------------------------
 cmd_cc_lds = $(CPP) -x assembler-with-cpp -P -D__ASSEMBLY__ $(cpp_flags)   -o $@ $<
-%.lds: %.lds.in scripts/basic/fixdep
+%.lds: %.lds.in
 	@echo "LDS	$@"
 	$(Q)$(cmd_cc_lds) 
 	@scripts/basic/fixdep.sh $(depfile) $@ '$(cmd_cc_o_c)' $(dot-target).cmd
