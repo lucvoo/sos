@@ -5,25 +5,23 @@
 #include <sched.h>
 
 
+#define	SECS	10
+
 static struct thread a __uninit;
 
 static void fun(void* data)
 {
-	ulong d;
-
 	printf("t = ...\n");
 
-	for (d = 178; ; d += 1) {
-		u64 ref, now;
-		u32 hi, lo;
+	while (1) {
+		u64 t0, t1;
+		ulong d;
 
-		ref = arch_timer_get_counter();
-		thread_schedule_timeout(d * HZ);
-		now = arch_timer_get_counter();
-		now -= ref;
-		hi = now >> 32;
-		lo = now & 0xffffffff;
-		printf("t = %06ld @ (%08lx %08lx)\n\n", d, hi, lo);
+		t0 = arch_timer_get_counter();
+		thread_schedule_timeout(SECS * HZ);
+		t1 = arch_timer_get_counter();
+		d = t1 - t0;
+		printf("d = %06ld\n", d);
 	}
 }
 

@@ -16,19 +16,14 @@ static void timer_action(void *data)
 
 void kapi_start(void)
 {
-	ulong t0;
-
 	printf(os_version);
 
-	timer.exp = 10 * HZ;
 	timer.action = timer_action;
-	timer.data = &t0;
 
 	while (1) {
 		int n;
 
 		next = 0;
-		t0 = timerdev_read();
 
 #define	SECS	10
 		timer_add_rel(&timer, SECS * HZ);
