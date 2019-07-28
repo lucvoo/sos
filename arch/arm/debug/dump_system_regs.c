@@ -55,7 +55,7 @@ void dump_system_regs(void)
 	//dump_cp15(SCR);
 
 
-#ifdef	CONFIG_GENERIC_TIMER
+#ifdef CONFIG_ARM_GENERIC_TIMER
 	printf("\n");
 	dump_cp15(CNTFRQ);
 #endif
