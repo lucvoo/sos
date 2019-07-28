@@ -30,5 +30,6 @@ void early_tlb_dump(void)
 	_os_diag_hexval(ttbcr, '\n');
 
 	asm volatile ("mrc " STRINGIFY(TTBR0(%0)): "=r" (tbl) :: "memory");
+	tbl = (u32*) (0xFFFFC000 & ((unsigned long) tbl));
 	dump_tbl(tbl, '0');
 }
