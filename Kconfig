@@ -95,6 +95,8 @@ config	THREAD_STACK
 config	THREAD_STACK_SHIFT
 	int "Size of the stacks, in power of 2"
 	depends on THREAD_STACK
+	range 6 14 if NOMMU
+	default 8 if NOMMU
 	range 12 14
 	default 14
 
