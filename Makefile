@@ -191,7 +191,7 @@ $(progs): %: %.o $(pgms-deps) kernel/version.o
 		$< kernel/version.o -o $@
 	@cp $@ kimage.elf
 
-CONFIG_LOAD_OFFSET ?= CONFIG_TEXT_OFFSET
+CONFIG_LOAD_OFFSET ?= ${CONFIG_TEXT_OFFSET}
 LOADADDR:=$(shell printf 0x%08x $$((${CONFIG_PHYS_ADDR} + ${CONFIG_LOAD_OFFSET})))
 
 tests/%.tftp: tests/%.$(CONFIG_IMG_FORMAT)
