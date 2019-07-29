@@ -1,0 +1,16 @@
+Call order
+==========
+
+__smp_init()
+	smp_ops.init()
+	for each cpu
+		smp_ops.boot_cpu(idle_thread, cpu)
+
+on each CPU:
+	__smp_entry()	// kernel entry point for secondary CPUs
+		__smp_start()
+			smp_ops.init_cpu(cpu)
+			__sched_start(cpu)
+			smp_initcalls(cpu)
+			kapi_start_smp()	// weak, nothing by default
+			__cpu_idle()
