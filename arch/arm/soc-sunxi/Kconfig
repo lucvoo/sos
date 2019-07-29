@@ -4,6 +4,8 @@ config	SOC
 
 config SMP_SUNXI_MC
 	bool
+config SMP_SUNXI
+	bool
 
 config	SOC_PARAMS_A80
 	bool
@@ -19,3 +21,5 @@ config	SOC_PARAMS_H3
 	default SOC_SUNXI_H3
 	select CORTEX_A7
 	select ARM_GIC
+	select HAS_SMP
+	select SMP_SUNXI if SMP
