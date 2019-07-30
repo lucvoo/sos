@@ -45,8 +45,10 @@ void dump_system_regs(void)
 	dump_cp15(TTBCR);
 	dump_cp15(TTBR0);
 	dump_cp15(TTBR1);
+#if 0
 	dump_cp15(PRRR);
 	dump_cp15(NMRR);
+#endif
 
 	printf("\n");
 	dump_cp15(NSACR);
