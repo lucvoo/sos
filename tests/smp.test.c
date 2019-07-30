@@ -30,6 +30,7 @@ void kapi_start(void)
 }
 
 
+// This is the CPU's idle thread. It must not sleep!
 void kapi_start_smp(void)
 {
 	uint cpu = __cpuid();
@@ -38,7 +39,8 @@ void kapi_start_smp(void)
 
 	dump_system_regs();
 
+	printf("cpu %d: test undef exception (should dump & halt)\n", cpu);
         undef_instruction();
 
-	printf("cpu %d: OK!\n", cpu);
+	printf("cpu %d: still running? Doh!\n", cpu);
 }
