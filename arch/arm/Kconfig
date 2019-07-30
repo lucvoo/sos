@@ -35,6 +35,7 @@ config	CORTEX_A7
 	select ARM_GENERIC_TIMER
 	select HAS_DIV32
 	select HAS_ACTLR
+	select HAS_CBAR
 config	CORTEX_A8
 	bool
 	select ARMV7A
@@ -109,6 +110,8 @@ config	BITS
 
 # features
 config	HAS_ACTLR
+	bool
+config	HAS_CBAR
 	bool
 
 ##

@@ -58,5 +58,8 @@ void dump_system_regs(void)
 	dump_cp15(CNTFRQ);
 #endif
 
+#ifdef CONFIG_ARM_GIC
+	dump_cp15(CBAR);
+#endif
 	lock_rel_rest(&printf_lock, flags);
 }

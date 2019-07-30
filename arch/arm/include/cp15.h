@@ -160,3 +160,6 @@
 #define	CNTP_CVAL(Q,R)	p15, 2, Q, R, c14	// Physical Timer Compare Value register
 #define	CNTVCNT(Q,R)	p15, 1, Q, R, c14	// PL1 Virtual Counter register
 #define	CNTV_CVAL(Q,R)	p15, 3, Q, R, c14	// Virtual Timer Compare Value register
+
+// System Control
+#define	CBAR(R)		p15, 4, R, c15,  c0, 0	// Configuration Base Address Register
