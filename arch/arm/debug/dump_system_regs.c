@@ -52,7 +52,10 @@ void dump_system_regs(void)
 
 	printf("\n");
 	dump_cp15(NSACR);
-	//dump_cp15(SCR);
+#ifdef CONFIG_SECURE_MODE_BOOT
+	dump_cp15(SCR);
+	dump_cp15(MVBAR);
+#endif
 
 
 #ifdef CONFIG_ARM_GENERIC_TIMER

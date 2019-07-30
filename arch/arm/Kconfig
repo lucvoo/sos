@@ -166,6 +166,10 @@ config	NVIC_NBR_IRQ
 	depends on ARMV7M
 	default 96
 
+config	SECURE_MODE_BOOT
+	bool "Started in secure mode"
+	depends on ARM_TZ
+
 config	CCI400
 	bool
 	depends on SMP
