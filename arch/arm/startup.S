@@ -88,6 +88,14 @@ mmu_enable:
 	orr	r4, r4, r6
 	// r4 = value to load into SCTLR
 
+#ifdef CONFIG_SMP
+#if defined(CONFIG_CORTEX_A7)
+	mrc	ACTLR(r0)
+	orr	r0, r0, ACTLR_SMP
+	mcr	ACTLR(r0)
+#endif
+#endif
+
 	mov	r0, #0			// often need a register with 0x00000000
 
 	MMU_SETUP

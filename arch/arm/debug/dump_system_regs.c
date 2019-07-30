@@ -36,6 +36,9 @@ void dump_system_regs(void)
 	printf("\n");
 	dump_reg("CPSR",  __irqflags_save("%0"));
 	dump_cp15(SCTLR);
+#ifdef CONFIG_HAS_ACTLR
+	dump_cp15(ACTLR);
+#endif
 	dump_cp15(VBAR);
 
 	printf("\n");

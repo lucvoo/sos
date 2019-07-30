@@ -34,6 +34,7 @@ config	CORTEX_A7
 	select ARMV7A
 	select ARM_GENERIC_TIMER
 	select HAS_DIV32
+	select HAS_ACTLR
 config	CORTEX_A8
 	bool
 	select ARMV7A
@@ -106,6 +107,11 @@ config	BITS
 	int
 	default 32
 
+# features
+config	HAS_ACTLR
+	bool
+
+##
 source arch/arm/Kconfig.mach
 source arch/arm/Kconfig.socs
 

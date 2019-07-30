@@ -43,6 +43,7 @@
 // system control registers
 #define	SCTLR(R)	p15, 0, R,  c1,  c0, 0	// System Control Register
 #define	ACTLR(R)	p15, 0, R,  c1,  c0, 1	// Auxiliary Control Register IMPLEMENTATION DEFINED
+#define  ACTLR_SMP	(1 << 6)
 #define	CPACR(R)	p15, 0, R,  c1,  c0, 2	// Coprocessor Access Control Register
 #define	SCR(R)		p15, 0, R,  c1,  c1, 0	// Secure Configuration Register †
 #define	SDER(R)		p15, 0, R,  c1,  c1, 1	// Secure Debug Enable Register †
