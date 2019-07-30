@@ -281,6 +281,11 @@ post_mmu_smp:
 	ldr	r0, =__exception_handlers
 	mcr	VBAR(r0)
 
+#if defined(CONFIG_CNTFRQ) && defined(CONFIG_SECURE_MODE_BOOT)
+	ldr	r0, =CONFIG_CNTFRQ
+	mcr	CNTFRQ(r0)
+#endif
+
 #if CONFIG_ARM_ARCH < 6
 #error "ARMv7 is required for SMP"
 #endif
