@@ -6,3 +6,12 @@ config	MACH_PARAMS
 	bool
 	default y
 	select SOC_STM32F4
+
+choice
+	prompt "Boards selection"
+
+	config STM32F429_DISCO
+	bool "stm32f429-disco"
+	select STM32F429
+
+endchoice

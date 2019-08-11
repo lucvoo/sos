@@ -19,6 +19,12 @@ config LOWPOWER_DEBUG
 	bool "Allow debugging while in low-power mode"
 	default y
 
+# models
+config	STM32F407
+	bool
+config	STM32F429
+	bool
+
 choice
 	prompt "Clocks configuration"
 
