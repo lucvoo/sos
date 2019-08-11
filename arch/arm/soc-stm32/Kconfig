@@ -25,13 +25,24 @@ config	STM32F407
 config	STM32F429
 	bool
 
-choice
-	prompt "Clocks configuration"
+# clock configuration
 
-config	STM32_CLK_12_168
-	bool "12MHz -> 168MHz"
+config	STM32_HSE_8MHZ
+	bool
+config	STM32_HSE_12MHZ
+	bool
 
-config	STM32_CLK_8_180
-	bool "8MHz -> 180MHz"
+config	STM32_HSE_FREQ
+	int
+	default 8 if STM32_HSE_8MHZ
+	default 12 if STM32_HSE_12MHZ
+	default 0
 
-endchoice
+config	STM32_PLL_MAX
+	int
+	default 168 if STM32F407
+	default 180 if STM32F429
+config	STM32_CLK_MAX
+	int
+	default 168 if STM32F407
+	default 180 if STM32F429
