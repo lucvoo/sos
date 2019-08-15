@@ -2,6 +2,7 @@ progs-$(CONFIG_ARM_GENERIC_TIMER)	+= arm-generic-timer.test
 progs-y	+= bug.test
 progs-y	+= bug_on.test
 progs-y	+= delay.test
+progs-y	+= diag.test
 progs-$(CONFIG_DMA_STREAMING)	+= dma-streaming.test
 progs-y	+= fastmod10.test
 progs-$(CONFIG_FATFS)	+= fatfs.test
