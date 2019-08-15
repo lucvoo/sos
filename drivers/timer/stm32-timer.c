@@ -36,7 +36,7 @@ static unsigned long stm32_timer_now(struct timerdev *td)
 	// FIXME 
 	unsigned long reload = ioread32(td->base + TIM_ARR);
 	unsigned long now    = ioread32(td->base + TIM_CNT);
-	long delta = reload - now;
+	long delta = now - reload;
 
 	return delta;
 }
