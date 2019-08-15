@@ -76,4 +76,7 @@
 #define	RCC_APB1EN_TIMER2	(1 <<  RCC_APB1EN_TIMER2_BIT)
 #define	RCC_APB1EN_USART3EN	(1 << 18)
 
+#define	RCC_APB2ENR	0x44
+#define	RCC_APB2EN_USART1EN	(1 << 4)
+
 #endif

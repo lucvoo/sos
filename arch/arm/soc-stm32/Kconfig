@@ -46,3 +46,15 @@ config	STM32_CLK_MAX
 	int
 	default 168 if STM32F407
 	default 180 if STM32F429
+
+
+choice
+	prompt "Diagnostic port"
+
+config	STM32_DIAG_USART1_PA9_PA10
+	bool "USART1 on PA9 & PA10"
+
+config	STM32_DIAG_USART3_PB10_PB11
+	bool "USART3 on PB10 & PB11"
+
+endchoice

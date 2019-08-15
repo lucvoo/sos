@@ -8,6 +8,18 @@
 #include <soc/clock-config.h>
 
 
+#ifdef CONFIG_STM32_DIAG_USART1_PA9_PA10
+	// USART1 on PA9  & PA10 => AF 7
+#define	USART_BASE	USART1_BASE
+#define	RCC_USARTENR	RCC_APB2ENR
+#define	RCC_USARTEN	RCC_APB2EN_USART1EN
+#define	APBCLK		APB2CLK
+#define	PORT 0				// GPIO A
+#define	PINX 9
+#define	PINY 10
+#define	FUN  7
+#endif
+#ifdef CONFIG_STM32_DIAG_USART3_PB10_PB11
 	// PB10 & PB11 => AF 7
 #define	USART_BASE	USART3_BASE
 #define	RCC_USARTENR	RCC_APB1ENR
@@ -17,6 +29,7 @@
 #define	PINX 10
 #define	PINY 11
 #define	FUN  7
+#endif
 
 
 static void stm32_putc(void __iomem *base, unsigned int c)
