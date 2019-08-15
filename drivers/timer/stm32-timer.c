@@ -95,6 +95,8 @@ static int __init stm32_init_timer(struct stm32_timer *stt, const struct stm32_t
 	iowrite32(base + TIM_PSC, clk_get_rate(clk)/HZ);
 	iowrite32(base + TIM_EGR, TIM_EGR_UG);
 	iowrite32(base + TIM_DIER, TIM_DIER_UIE);
+	iowrite32(base + TIM_ARR, ~0);
+	iowrite32(base + TIM_CR1, TIM_CR1_CEN);
 	iowrite32(base + TIM_SR, 0);
 
 	irq_create(&stt->irq, stm32_timer_isr, timerdev_dsr, &stt->td, 0);
