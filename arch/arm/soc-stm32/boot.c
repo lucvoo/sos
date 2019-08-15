@@ -8,6 +8,19 @@
 #include <io.h>
 
 
+/*
+ * To reflash, on openocd:
+ *	reset halt
+ *	flash write_image erase <filename.elf>
+ *
+ * Note: it may be needed to first unlock the board, for example:
+ *	reset halt
+ *	stm32f2x unlock 0
+ *	mww 0x40023C08 0x08192A3B; mww 0x40023C08 0x4C5D6E7F; mww 0x40023C14 0x0fffaaed
+ *	flash write_image erase <filename.elf>
+ */
+
+
 #define	CLOCK_WARMING_TIMEOUT	0x8000		// FIXME
 
 
