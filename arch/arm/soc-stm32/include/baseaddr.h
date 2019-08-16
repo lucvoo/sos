@@ -46,8 +46,10 @@
 #define	EXTI_SIZE	     0x400
 #define	FLASH_BASE	0x40023C00
 #define	FLASH_SIZE	     0x400
-#define	FSMC_BASE	0xA0000000
+#define	FSMC_BASE	0xA0000000	// on 405xx, 407xx
 #define	FSMC_SIZE	    0x1000
+#define	FMC_BASE	0xA0000000	// on 415xx, 417xx, 42xxx, 43xxx
+#define	FMC_SIZE	    0x1000
 #define	GPIO_SIZE	     0x400
 #define	GPIO_BASE(PORT)	(0x40020000 + (PORT) * GPIO_SIZE)
 #define	GPIOA_BASE	GPIO_BASE(0)
