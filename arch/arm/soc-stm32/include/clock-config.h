@@ -48,8 +48,9 @@
 #define	HCLK		(SYSCLK/AHBDIV)
 #define	APB1CLK		(HCLK/APB1DIV)
 #define	APB2CLK		(HCLK/APB2DIV)
-#define	TIM1CLK		(APB1CLK*2)
-#define	TIM2CLK		(APB2CLK*2)
 #define	SYSTICKCLK	(HCLK/8)
+
+#define	APB1TIM_MUL	((APB1DIV == 1) ? 1 : 2)
+#define	APB2TIM_MUL	((APB2DIV == 1) ? 1 : 2)
 
 #endif
