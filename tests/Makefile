@@ -21,6 +21,7 @@ progs-y	+= sema.test
 progs-y	+= shdi3.test
 progs-$(CONFIG_SLAB)	+= slab.test
 progs-y	+= sysregs.test
+progs-$(CONFIG_STM32F429_DISCO)	+= tick+gpio.test
 progs-y	+= thread-wakeup.test
 progs-y	+= thread-yield.test
 progs-y	+= timeout.test
