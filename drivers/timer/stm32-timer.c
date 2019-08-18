@@ -67,6 +67,7 @@ static int __init stm32_init_timer(struct stm32_timer *stt, const struct stm32_t
 	struct irqdesc *desc;
 	struct clk *clk;
 	int rc = -EINVAL;
+	ulong prescaler;
 
 
 	clk = clk_get(cfg->clk);
@@ -92,7 +93,12 @@ static int __init stm32_init_timer(struct stm32_timer *stt, const struct stm32_t
 	stt->td.next_rel = stm32_timer_next_rel;
 	stt->td.now = stm32_timer_now;
 
-	iowrite32(base + TIM_PSC, clk_get_rate(clk)/HZ);
+	prescaler = clk_get_rate(clk)/HZ;
+	if (prescaler > TIM_PSC_MAX) {
+		printf("invalid preescaler: %d\n", prescaler);
+		prescaler = TIM_PSC_MAX;
+	}
+	iowrite32(base + TIM_PSC, prescaler);
 	iowrite32(base + TIM_EGR, TIM_EGR_UG);
 	iowrite32(base + TIM_DIER, TIM_DIER_UIE);
 	iowrite32(base + TIM_ARR, ~0);
