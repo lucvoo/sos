@@ -85,7 +85,7 @@ CFLAGS-y	+= -Wno-unused-function
 #CFLAGS-y	+= -Werror=implicit-function-declaration
 CFLAGS-y	+= -nostdinc -ffreestanding
 CFLAGS-y	+= -fno-ident
-CFLAGS-y	+= -Os 
+CFLAGS-y	+= -Os
 CFLAGS-$(CONFIG_GC_SECTIONS) += -ffunction-sections -fdata-sections
 AFLAGS-y	:=-D__ASSEMBLY__ -fverbose-asm
 
