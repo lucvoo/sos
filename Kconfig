@@ -80,10 +80,6 @@ endmenu
 
 menu "OS options"
 
-config	XSMALL
-	bool "Xsmall kernel" if n
-	default n
-
 menu "Stack options"
 choice
 	prompt "Stack type"
@@ -128,10 +124,6 @@ config	STACK_ALIGNMENT
 
 endmenu
 
-config	INITCALL
-	bool "initcalls support" if XSMALL
-	default y
-
 config	NR_THREAD_PRIORITY
 	int "Number of threads priority levels"
 	range 2 32
@@ -163,6 +155,14 @@ config	SMP
 config	HZ
 	int "tick frequency"
 	default 32768
+
+config	XSMALL
+	bool "Xsmall kernel" if BOOT
+	default n
+
+config	INITCALL
+	bool "initcalls support" if XSMALL
+	default !XSMALL
 
 config	BOOT
 	bool "Direct boot, without a bootloader"
