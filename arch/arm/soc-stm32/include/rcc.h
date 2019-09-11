@@ -24,10 +24,6 @@
 #define	RCC_BASE	0x40023800
 #define	RCC_SIZE	     0x400
 
-#define	RCC_BASE	0x40023800
-#define	RCC_SIZE	     0x400
-
-
 #define	RCC_CR		0x00
 #define	RCC_CR_PLLI2SRDY	(1 << 27)
 #define	RCC_CR_PLLI2SON		(1 << 26)
