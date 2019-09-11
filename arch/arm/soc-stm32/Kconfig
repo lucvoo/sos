@@ -5,7 +5,6 @@ config  SOC
 config	SOC_PARAMS
 	bool
 	default y
-	select CORTEX_M4
 
 config PHYS_ADDR
 	hex
@@ -20,10 +19,15 @@ config LOWPOWER_DEBUG
 	default y
 
 # models
+config	STM32F4XX
+	bool
+	select CORTEX_M4
 config	STM32F407
 	bool
+	select STM32F4XX
 config	STM32F429
 	bool
+	select STM32F4XX
 
 # clock configuration
 
