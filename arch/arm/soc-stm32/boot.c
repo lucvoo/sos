@@ -24,11 +24,6 @@
 #define	CLOCK_WARMING_TIMEOUT	0x8000		// FIXME
 
 
-static void iosl(void __iomem *addr, unsigned int val)
-{
-	iowrite32(addr, ioread32(addr) | val);
-}
-
 static void stm32_boot_flash(void)
 {
 	void __iomem *flash_base = (void __iomem*) FLASH_BASE;
@@ -49,7 +44,7 @@ int __init __stm32_boot_setup(void)
 	int n;
 
 	// Enable HSE
-	iosl(rcc_base + RCC_CR, RCC_CR_HSEON);
+	ioset32(rcc_base + RCC_CR, RCC_CR_HSEON);
 	n = CLOCK_WARMING_TIMEOUT;
 	do {
 		if (--n <= 0)
@@ -73,7 +68,7 @@ int __init __stm32_boot_setup(void)
 	iowrite32(rcc_base + RCC_PLLCFGR, pll);
 
 	// enable PLL
-	iosl(rcc_base + RCC_CR, RCC_CR_PLLON);
+	ioset32(rcc_base + RCC_CR, RCC_CR_PLLON);
 	do {
 		cr = ioread32(rcc_base + RCC_CR);
 	} while ((cr & RCC_CR_PLLRDY) == 0);
@@ -82,7 +77,7 @@ int __init __stm32_boot_setup(void)
 	stm32_boot_flash();
 
 	// Finaly, set the system clock
-	iosl(rcc_base + RCC_CFGR, RCC_CFGR_SW_PLL);
+	ioset32(rcc_base + RCC_CFGR, RCC_CFGR_SW_PLL);
 	do {
 		cfgr = ioread32(rcc_base + RCC_CFGR);
 		val = cfgr & RCC_CFGR_SWS_MSK;
