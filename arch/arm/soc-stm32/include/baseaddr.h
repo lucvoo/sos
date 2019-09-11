@@ -70,6 +70,8 @@
 #define	OTG_HS_SIZE	   0x40000
 #define	RNG_BASE	0x50060800
 #define	RNG_SIZE	     0x400
+#define	RCC_BASE	0x40023800
+#define	RCC_SIZE	     0x400
 #define	RTC_BASE	0x40002800
 #define	RTC_SIZE	     0x400
 #define	SAI1_BASE	0x40015800

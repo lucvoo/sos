@@ -21,9 +21,6 @@
  *	   => PLLCLK = 120MHz
  */
 
-#define	RCC_BASE	0x40023800
-#define	RCC_SIZE	     0x400
-
 #define	RCC_CR		0x00
 #define	RCC_CR_PLLI2SRDY	(1 << 27)
 #define	RCC_CR_PLLI2SON		(1 << 26)
@@ -47,9 +44,11 @@
 #define	RCC_CFGR_SW_HSI		0x0
 #define	RCC_CFGR_SW_HSE		0x1
 #define	RCC_CFGR_SW_PLL		0x2
+#define	RCC_CFGR_SW_MSK		0x3
 #define	RCC_CFGR_SW(X)		((X) << 0)
 #define	RCC_CFGR_SWS(X)		((X) << 2)
-#define	RCC_CFGR_SWS_MSK	RCC_CFGR_SWS(0x3)
+#define	RCC_CFGR_SWS_MSK	RCC_CFGR_SWS(RCC_CFGR_SW_MSK)
+#define	RCC_CFGR_SWS_PLL	RCC_CFGR_SWS(RCC_CFGR_SW_PLL)
 #define	RCC_CFGR_HPRE(X)	((X) << 4)
 #define	RCC_CFGR_HPRE_MSK	RCC_CFGR_HPRE(0XF)
 #define	RCC_CFGR_HPRE_1		RCC_CFGR_HPRE(0)
@@ -66,6 +65,9 @@
 
 #define	RCC_AHB1ENR	0x30
 #define	RCC_AHB1EN_GPIOEN(PORT)	(1 << (PORT))
+
+#define	RCC_GPIOENR	RCC_AHB1ENR
+#define	  RCC_GPIOEN(X)		RCC_AHB1EN_GPIOEN(X)
 
 #define	RCC_APB1ENR	0x40
 #define	RCC_APB1EN_TIMER2_BIT	0

@@ -88,7 +88,7 @@ static void stm32_gpio_init_one(int port)
 	char *name = gpio->name;
 
 	// enable the clock for this GPIO: FIXME: do this on gpio_get()
-	ioset32(rcc_base + RCC_AHB1ENR, RCC_AHB1EN_GPIOEN(port));
+	ioset32(rcc_base + RCC_GPIOENR, RCC_GPIOEN(port));
 
 	name[0] = 'P';
 	name[1] = 'A' + port;
