@@ -2,7 +2,7 @@
 #include <soc/baseaddr.h>
 #include <soc/rcc.h>
 #include <soc/flash.h>
-#include <soc/clock-config.h>
+#include <soc/model.h>
 #include <errno.h>
 #include <init.h>
 #include <io.h>
@@ -24,23 +24,11 @@
 #define	CLOCK_WARMING_TIMEOUT	0x8000		// FIXME
 
 
-static void stm32_boot_flash(void)
-{
-	void __iomem *flash_base = (void __iomem*) FLASH_BASE;
-	unsigned int val;
-
-	val = FLASH_ACR_LATENCY(WS);
-	val |= FLASH_ACR_PRFTEN;
-	val |= FLASH_ACR_ICEN;
-	val |= FLASH_ACR_DCEN;
-	iowrite32(flash_base + FLASH_ACR, val);
-}
-
 int __init __stm32_boot_setup(void)
 {
+	void __iomem *flash_base = (void __iomem*) FLASH_BASE;
 	void __iomem *rcc_base = (void __iomem*) RCC_BASE;
-	unsigned int cr, cfgr, pll;
-	unsigned int val;
+	unsigned int cr, cfgr;
 	int n;
 
 	// Enable HSE
@@ -53,22 +41,10 @@ int __init __stm32_boot_setup(void)
 	} while ((cr & RCC_CR_HSERDY) == 0);
 
 	// FLASH
-	stm32_boot_flash();
+	stm32_boot_flash(flash_base);
 
-	// Configure
-	cfgr = 0;
-	cfgr |=  HPRE;
-	cfgr |=  PPRE1;
-	cfgr |=  PPRE2;
-	iowrite32(rcc_base + RCC_CFGR, cfgr);
-
-	// PLL
-	pll = RCC_PLLCFGR_PLLSRC;
-	pll |= RCC_PLLCFGR_PLLQ(PLLQ);
-	pll |= RCC_PLLCFGR_PLLP(PLLP);
-	pll |= RCC_PLLCFGR_PLLN(PLLN);
-	pll |= RCC_PLLCFGR_PLLM(PLLM);
-	iowrite32(rcc_base + RCC_PLLCFGR, pll);
+	// Configure clocks
+	stm32_boot_config_clock(rcc_base);
 
 	// enable PLL
 	ioset32(rcc_base + RCC_CR, RCC_CR_PLLON);
@@ -80,8 +56,8 @@ int __init __stm32_boot_setup(void)
 	ioset32(rcc_base + RCC_CFGR, RCC_CFGR_SW_PLL);
 	do {
 		cfgr = ioread32(rcc_base + RCC_CFGR);
-		val = cfgr & RCC_CFGR_SWS_MSK;
-	} while (val != RCC_CFGR_SWS(RCC_CFGR_SW_PLL));
+		cfgr &= RCC_CFGR_SWS_MSK;
+	} while (cfgr != RCC_CFGR_SWS_PLL);
 
 	return 0;
 }
