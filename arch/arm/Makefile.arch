@@ -22,4 +22,5 @@ ARCHFLAGS-$(CONFIG_CORTEX_A9)	+= -mcpu=cortex-a9 -mtune=cortex-a9
 
 ARCHFLAGS-$(CONFIG_THUMB2)	+= -Wa,-mimplicit-it=always
 ARCHFLAGS-$(CONFIG_THUMB2)	+= -mthumb
+ARCHFLAGS-$(CONFIG_CORTEX_M3)	+= -mcpu=cortex-m3
 ARCHFLAGS-$(CONFIG_CORTEX_M4)	+= -mcpu=cortex-m4

@@ -19,6 +19,9 @@ config LOWPOWER_DEBUG
 	default y
 
 # models
+config	STM32F10X
+	bool
+	select CORTEX_M3
 config	STM32F4XX
 	bool
 	select CORTEX_M4
@@ -44,10 +47,12 @@ config	STM32_HSE_FREQ
 
 config	STM32_PLL_MAX
 	int
+	default  72 if STM32F10X
 	default 168 if STM32F407
 	default 180 if STM32F429
 config	STM32_CLK_MAX
 	int
+	default  72 if STM32F10X
 	default 168 if STM32F407
 	default 180 if STM32F429
 

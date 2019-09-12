@@ -46,6 +46,10 @@ config	CORTEX_A15
 	select ARM_GENERIC_TIMER
 	select HAS_DIV32
 
+config	CORTEX_M3
+	bool
+	select ARMV7M
+	select HAS_DIV32
 config	CORTEX_M4
 	bool
 	select ARMV7M
