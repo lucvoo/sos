@@ -10,6 +10,11 @@ config	MACH_PARAMS
 choice
 	prompt "Boards selection"
 
+	config STM32F103_BLUEPILL
+	bool "stm32f103-bluepill"
+	select STM32F10X
+	select STM32_HSE_8MHZ
+
 	config STM32F429_DISCO
 	bool "stm32f429-disco"
 	select STM32F429
