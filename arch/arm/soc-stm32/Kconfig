@@ -18,6 +18,9 @@ config LOWPOWER_DEBUG
 	bool "Allow debugging while in low-power mode"
 	default y
 
+config	SDRAM
+	bool
+
 # models
 config	STM32F10X
 	bool

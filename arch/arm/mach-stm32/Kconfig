@@ -19,5 +19,6 @@ choice
 	bool "stm32f429-disco"
 	select STM32F429
 	select STM32_HSE_8MHZ
+	select SDRAM
 
 endchoice
