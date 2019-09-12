@@ -43,7 +43,6 @@ vec_hardfault:
 	b	vec_hardfault
 	.size   vec_hardfault, .-vec_hardfault
 
-	.section .text.vec,"ax"
 	.thumb_func
 vec_mmfault:
 	b	vec_mmfault
@@ -94,7 +93,7 @@ vec_reserved:
 	.size   vec_reserved, .-vec_reserved
 
 
-	.section .init.text,"ax"
+	.section .startup.text,"ax"
 	.type   __startup, %function
 	.thumb_func
 __startup:
