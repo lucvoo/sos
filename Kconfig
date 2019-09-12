@@ -164,6 +164,10 @@ config	INITCALL
 	bool "initcalls support" if XSMALL
 	default !XSMALL
 
+config	IRQ_HANDLER
+	bool "interrupt support" if XSMALL
+	default y
+
 config	BOOT
 	bool "Direct boot, without a bootloader"
 	default n
