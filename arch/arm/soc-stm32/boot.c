@@ -52,6 +52,9 @@ int __init __stm32_boot_setup(void)
 		cr = ioread32(rcc_base + RCC_CR);
 	} while ((cr & RCC_CR_HSERDY) == 0);
 
+	// FLASH
+	stm32_boot_flash();
+
 	// Configure
 	cfgr = 0;
 	cfgr |=  HPRE;
@@ -72,9 +75,6 @@ int __init __stm32_boot_setup(void)
 	do {
 		cr = ioread32(rcc_base + RCC_CR);
 	} while ((cr & RCC_CR_PLLRDY) == 0);
-
-	// FLASH
-	stm32_boot_flash();
 
 	// Finaly, set the system clock
 	ioset32(rcc_base + RCC_CFGR, RCC_CFGR_SW_PLL);
