@@ -21,22 +21,15 @@
  */
 
 
-#define	CLOCK_WARMING_TIMEOUT	0x8000		// FIXME
-
-
-int __init __stm32_boot_setup(void)
+void __init __stm32_boot_setup(void)
 {
 	void __iomem *flash_base = (void __iomem*) FLASH_BASE;
 	void __iomem *rcc_base = (void __iomem*) RCC_BASE;
 	unsigned int cr, cfgr;
-	int n;
 
 	// Enable HSE
 	ioset32(rcc_base + RCC_CR, RCC_CR_HSEON);
-	n = CLOCK_WARMING_TIMEOUT;
 	do {
-		if (--n <= 0)
-			return -EIO;
 		cr = ioread32(rcc_base + RCC_CR);
 	} while ((cr & RCC_CR_HSERDY) == 0);
 
@@ -58,6 +51,4 @@ int __init __stm32_boot_setup(void)
 		cfgr = ioread32(rcc_base + RCC_CFGR);
 		cfgr &= RCC_CFGR_SWS_MSK;
 	} while (cfgr != RCC_CFGR_SWS_PLL);
-
-	return 0;
 }
