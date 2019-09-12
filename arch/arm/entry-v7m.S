@@ -74,6 +74,11 @@ vec_systick:
 	.size   vec_systick, .-vec_systick
 
 	.thumb_func
+vec_reserved:
+	b	vec_reserved
+	.size   vec_reserved, .-vec_reserved
+
+	.thumb_func
 vec_irq:
 #ifdef CONFIG_IRQ_HANDLER
 	// get the exception number
@@ -86,11 +91,6 @@ vec_irq:
 	b	vec_irq
 #endif
 	.size   vec_irq, .-vec_irq
-
-	.thumb_func
-vec_reserved:
-	b	vec_reserved
-	.size   vec_reserved, .-vec_reserved
 
 
 	.section .startup.text,"ax"
