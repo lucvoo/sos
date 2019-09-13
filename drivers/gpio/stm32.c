@@ -57,6 +57,9 @@ static void stm32_gpio_alt_func(struct gpio *gpio, int func)
 	int n = gpio->idx;
 
 	ioclrset32(iobase + GPIO_AFR(n), GPIO_AF(n, 0xF), GPIO_AF(n, func), 0);
+	ioclrset32(iobase + GPIO_OTYPER, GPIO_OTYPE(n, 1), GPIO_OTYPE_PP(n), 0);
+	ioclrset32(iobase + GPIO_SPEEDR, GPIO_SPEED(n, 3), GPIO_SPEED_HIGH(n), 0);
+	ioclrset32(iobase + GPIO_PUPDR, GPIO_PUPD(n, 3), GPIO_PUPD_NO(n), 0);
 	ioclrset32(iobase + GPIO_MODER, GPIO_MODE_MASK(n), GPIO_MODE_AF(n), 0);
 }
 
