@@ -1,3 +1,4 @@
+#include <soc/baseaddr.h>
 #include <soc/clock-config.h>
 #include <soc/rcc.h>
 #include "clk-fixed.h"
