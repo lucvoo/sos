@@ -136,4 +136,4 @@ static void __init stm32_timer_init(void)
 {
 	stm32_init_timer(&timer2, &timer2_cfg);
 }
-board_initcall(stm32_timer_init);
+board_core_initcall(stm32_timer_init);
