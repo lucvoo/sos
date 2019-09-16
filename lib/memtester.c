@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 /*
  * Very simple but very effective user-space memory tester.
  * Originally by Simon Kirby <sim@stormix.com> <sim@neato.org>
@@ -11,13 +12,10 @@
 #include <memtester.h>
 #include <prng.h>
 
-static char progress[] = "-\\|/";
+static const char progress[] = "-\\|/";
 #define PROGRESSLEN 4
-#define PROGRESSOFTEN 2500
-
 
 typedef unsigned long ul;
-typedef unsigned long long ull;
 typedef unsigned long volatile ulv;
 typedef unsigned char volatile u8v;
 typedef unsigned short volatile u16v;
@@ -25,36 +23,23 @@ typedef unsigned short volatile u16v;
 
 #define putchar(c)	printf("%c", c)
 #define	rand_ul()	prng()
-#define	UL_LEN		CONFIG_BITS
+#define	UL_LEN		(sizeof(unsigned long) * 8)
 #define	UL_BYTE(x)	(((~0UL) / 0xff) * (x))
-#define CHECKERBOARD1	((~0UL) / 3)
-#define CHECKERBOARD2	(~CHECKERBOARD1)
+#define CHECKERBOARD	((~0UL) / 3)
 
-
-union {
-	unsigned char bytes[UL_LEN / 8];
-	ul val;
-} mword8;
-
-union {
-	unsigned short u16s[UL_LEN / 16];
-	ul val;
-} mword16;
 
 static int compare_regions(ulv *bufa, ulv *bufb, ulong count)
 {
-	int r = 0;
-	ulong i;
 	ulv *p1 = bufa;
 	ulv *p2 = bufb;
+	int r = 0;
 
-	for (i = 0; i < count; i++, p1++, p2++) {
-		if (*p1 != *p2) {
-			pr_err("FAILURE: 0x%08lx != 0x%08lx at offset 0x%08lx.\n",
-					(ul) *p1, (ul) *p2, (ul) (i * sizeof(ul)));
-			/* printf("Skipping to next test..."); */
-			r = -1;
-		}
+	for (ulong i = 0; i++ < count; ) {
+		unsigned long v1 = *p1++, v2 = *p2++;
+		if (v1 == v2)
+			continue;
+		pr_err("%08lx != %08lx @ %p / %p\n", v1, v2, p1, p2);
+		r = 1;
 	}
 	return r;
 }
@@ -64,32 +49,28 @@ static int test_stuck_address(ulv *bufa, ulv *bufb, ulong count)
 {
 	ulv *p1 = bufa;
 	uint j;
-	ulong i;
 
 	count *= 2;			// size of bufa + bufb
 
-	printf("           ");
+	putchar(' ');
 	for (j = 0; j < 16; j++) {
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		p1 = (ulv *) bufa;
-		printf("setting %3u", j);
-		for (i = 0; i < count; i++) {
-			*p1 = ((j + i) % 2) == 0 ? (ul) p1 : ~((ul) p1);
-			*p1++;
+		p1 = bufa;
+		for (ulong i = 0; i < count; i++) {
+			ul val = ((j + i) % 2) == 0 ? (ul) p1 : ~((ul) p1);
+			*p1++ = val;
 		}
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		printf("testing %3u", j);
-		p1 = (ulv *) bufa;
-		for (i = 0; i < count; i++, p1++) {
-			if (*p1 != (((j + i) % 2) == 0 ? (ul) p1 : ~((ul) p1))) {
-				pr_err("FAILURE: possible bad address line at offset "
-						"0x%08lx.\n", (ul) (i * sizeof(ul)));
-				printf("Skipping to next test...\n");
-				return -1;
-			}
+		p1 = bufa;
+		for (ulong i = 0; i < count; i++) {
+			ul val = ((j + i) % 2) == 0 ? (ul) p1 : ~((ul) p1);
+			if (*p1++ == val)
+				continue;
+			pr_err("FAILURE: possible bad address line @ %p\n", p1);
+			return -1;
 		}
+		putchar('\b');
+		putchar(progress[j % PROGRESSLEN]);
 	}
-	printf("\b\b\b\b\b\b\b\b\b\b\b           \b\b\b\b\b\b\b\b\b\b\b");
+	putchar('\b');
 	return 0;
 }
 
@@ -97,18 +78,10 @@ static int test_random_value(ulv *bufa, ulv *bufb, ulong count)
 {
 	ulv *p1 = bufa;
 	ulv *p2 = bufb;
-	ul j = 0;
-	ulong i;
 
-	putchar(' ');
-	for (i = 0; i < count; i++) {
+	for (ulong i = 0; i < count; i++) {
 		*p1++ = *p2++ = rand_ul();
-		if (!(i % PROGRESSOFTEN)) {
-			putchar('\b');
-			putchar(progress[++j % PROGRESSLEN]);
-		}
 	}
-	printf("\b \b");
 	return compare_regions(bufa, bufb, count);
 }
 
@@ -116,10 +89,9 @@ static int test_xor_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
 	ulv *p1 = bufa;
 	ulv *p2 = bufb;
-	ulong i;
 	ul q = rand_ul();
 
-	for (i = 0; i < count; i++) {
+	for (ulong i = 0; i < count; i++) {
 		*p1++ ^= q;
 		*p2++ ^= q;
 	}
@@ -130,10 +102,9 @@ static int test_sub_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
 	ulv *p1 = bufa;
 	ulv *p2 = bufb;
-	ulong i;
 	ul q = rand_ul();
 
-	for (i = 0; i < count; i++) {
+	for (ulong i = 0; i < count; i++) {
 		*p1++ -= q;
 		*p2++ -= q;
 	}
@@ -144,10 +115,9 @@ static int test_mul_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
 	ulv *p1 = bufa;
 	ulv *p2 = bufb;
-	ulong i;
 	ul q = rand_ul();
 
-	for (i = 0; i < count; i++) {
+	for (ulong i = 0; i < count; i++) {
 		*p1++ *= q;
 		*p2++ *= q;
 	}
@@ -158,10 +128,9 @@ static int test_div_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
 	ulv *p1 = bufa;
 	ulv *p2 = bufb;
-	ulong i;
 	ul q = rand_ul();
 
-	for (i = 0; i < count; i++) {
+	for (ulong i = 0; i < count; i++) {
 		if (!q) {
 			q++;
 		}
@@ -175,10 +144,9 @@ static int test_or_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
 	ulv *p1 = bufa;
 	ulv *p2 = bufb;
-	ulong i;
 	ul q = rand_ul();
 
-	for (i = 0; i < count; i++) {
+	for (ulong i = 0; i < count; i++) {
 		*p1++ |= q;
 		*p2++ |= q;
 	}
@@ -189,10 +157,9 @@ static int test_and_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
 	ulv *p1 = bufa;
 	ulv *p2 = bufb;
-	ulong i;
 	ul q = rand_ul();
 
-	for (i = 0; i < count; i++) {
+	for (ulong i = 0; i < count; i++) {
 		*p1++ &= q;
 		*p2++ &= q;
 	}
@@ -203,10 +170,9 @@ static int test_seqinc_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
 	ulv *p1 = bufa;
 	ulv *p2 = bufb;
-	ulong i;
 	ul q = rand_ul();
 
-	for (i = 0; i < count; i++) {
+	for (ulong i = 0; i < count; i++) {
 		*p1++ = *p2++ = (i + q);
 	}
 	return compare_regions(bufa, bufb, count);
@@ -214,301 +180,242 @@ static int test_seqinc_comparison(ulv *bufa, ulv *bufb, ulong count)
 
 static int test_solidbits_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
-	ulv *p1 = bufa;
-	ulv *p2 = bufb;
-	uint j;
-	ul q;
-	ulong i;
+	putchar(' ');
+	for (int j = 0; j < 64; j++) {
+		ul q = (j % 2) == 0 ? ~0UL : 0UL;
+		ulv *p1 = bufa;
+		ulv *p2 = bufb;
 
-	printf("           ");
-	for (j = 0; j < 64; j++) {
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		q = (j % 2) == 0 ? ~0UL : 0;
-		printf("setting %3u", j);
-		p1 = (ulv *) bufa;
-		p2 = (ulv *) bufb;
-		for (i = 0; i < count; i++) {
-			*p1++ = *p2++ = (i % 2) == 0 ? q : ~q;
+		for (ulong i = 0; i < count; i++) {
+			*p1++ = *p2++ = q;
+			q = ~q;
 		}
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		printf("testing %3u", j);
 		if (compare_regions(bufa, bufb, count)) {
 			return -1;
 		}
+		putchar('\b');
+		putchar(progress[j % PROGRESSLEN]);
 	}
-	printf("\b\b\b\b\b\b\b\b\b\b\b           \b\b\b\b\b\b\b\b\b\b\b");
+	putchar('\b');
 	return 0;
 }
 
 static int test_checkerboard_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
-	ulv *p1 = bufa;
-	ulv *p2 = bufb;
-	uint j;
-	ul q;
-	ulong i;
+	putchar(' ');
+	for (int j = 0; j < 64; j++) {
+		ul q = (j % 2) == 0 ? CHECKERBOARD : ~CHECKERBOARD;
+		ulv *p1 = bufa;
+		ulv *p2 = bufb;
 
-	printf("           ");
-	for (j = 0; j < 64; j++) {
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		q = (j % 2) == 0 ? CHECKERBOARD1 : CHECKERBOARD2;
-		printf("setting %3u", j);
-		p1 = (ulv *) bufa;
-		p2 = (ulv *) bufb;
-		for (i = 0; i < count; i++) {
+		for (ulong i = 0; i < count; i++) {
 			*p1++ = *p2++ = (i % 2) == 0 ? q : ~q;
 		}
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		printf("testing %3u", j);
 		if (compare_regions(bufa, bufb, count)) {
 			return -1;
 		}
+		putchar('\b');
+		putchar(progress[j % PROGRESSLEN]);
 	}
-	printf("\b\b\b\b\b\b\b\b\b\b\b           \b\b\b\b\b\b\b\b\b\b\b");
+	putchar('\b');
 	return 0;
 }
 
 static int test_blockseq_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
-	ulv *p1 = bufa;
-	ulv *p2 = bufb;
-	uint j;
-	ulong i;
+	putchar(' ');
+	for (int j = 0; j < 256; j++) {
+		ulv *p1 = bufa;
+		ulv *p2 = bufb;
 
-	printf("           ");
-	for (j = 0; j < 256; j++) {
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		p1 = (ulv *) bufa;
-		p2 = (ulv *) bufb;
-		printf("setting %3u", j);
-		for (i = 0; i < count; i++) {
-			*p1++ = *p2++ = (ul) UL_BYTE(j);
+		for (ulong i = 0; i < count; i++) {
+			*p1++ = *p2++ = UL_BYTE(j);
 		}
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		printf("testing %3u", j);
 		if (compare_regions(bufa, bufb, count)) {
 			return -1;
 		}
+		putchar('\b');
+		putchar(progress[j % PROGRESSLEN]);
 	}
-	printf("\b\b\b\b\b\b\b\b\b\b\b           \b\b\b\b\b\b\b\b\b\b\b");
+	putchar('\b');
 	return 0;
 }
 
 static int test_walkbits0_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
-	ulv *p1 = bufa;
-	ulv *p2 = bufb;
-	uint j;
-	ulong i;
+	putchar(' ');
+	for (ulong j = 0; j < UL_LEN * 2; j++) {
+		ulv *p1 = bufa;
+		ulv *p2 = bufb;
 
-	printf("           ");
-	for (j = 0; j < UL_LEN * 2; j++) {
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		p1 = (ulv *) bufa;
-		p2 = (ulv *) bufb;
-		printf("setting %3u", j);
-		for (i = 0; i < count; i++) {
+		for (ulong i = 0; i < count; i++) {
 			if (j < UL_LEN) {	/* Walk it up. */
 				*p1++ = *p2++ = 1UL << j;
-			} else {	/* Walk it back down. */
+			} else {		/* Walk it back down. */
 				*p1++ = *p2++ = 1UL << (UL_LEN * 2 - j - 1);
 			}
 		}
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		printf("testing %3u", j);
 		if (compare_regions(bufa, bufb, count)) {
 			return -1;
 		}
+		putchar('\b');
+		putchar(progress[j % PROGRESSLEN]);
 	}
-	printf("\b\b\b\b\b\b\b\b\b\b\b           \b\b\b\b\b\b\b\b\b\b\b");
+	putchar('\b');
 	return 0;
 }
 
 static int test_walkbits1_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
-	ulv *p1 = bufa;
-	ulv *p2 = bufb;
-	uint j;
-	ulong i;
+	putchar(' ');
+	for (ulong j = 0; j < UL_LEN * 2; j++) {
+		ulv *p1 = bufa;
+		ulv *p2 = bufb;
 
-	printf("           ");
-	for (j = 0; j < UL_LEN * 2; j++) {
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		p1 = (ulv *) bufa;
-		p2 = (ulv *) bufb;
-		printf("setting %3u", j);
-		for (i = 0; i < count; i++) {
+		for (ulong i = 0; i < count; i++) {
 			if (j < UL_LEN) {	/* Walk it up. */
-				*p1++ = *p2++ = (~0UL) ^ (1UL << j);
-			} else {	/* Walk it back down. */
-				*p1++ = *p2++ = (~0UL) ^ (1UL << (UL_LEN * 2 - j - 1));
+				*p1++ = *p2++ = ~(1UL << j);
+			} else {		/* Walk it back down. */
+				*p1++ = *p2++ = ~(1UL << (UL_LEN * 2 - j - 1));
 			}
 		}
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		printf("testing %3u", j);
 		if (compare_regions(bufa, bufb, count)) {
 			return -1;
 		}
+		putchar('\b');
+		putchar(progress[j % PROGRESSLEN]);
 	}
-	printf("\b\b\b\b\b\b\b\b\b\b\b           \b\b\b\b\b\b\b\b\b\b\b");
+	putchar('\b');
 	return 0;
 }
 
 static int test_bitspread_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
-	ulv *p1;
-	ulv *p2;
-	uint j;
-	ulong i;
+	putchar(' ');
+	for (ulong j = 0; j < UL_LEN * 2; j++) {
+		ulv *p1 = bufa;
+		ulv *p2 = bufb;
 
-	printf("           ");
-	for (j = 0; j < UL_LEN; j++) {
-		ulong msk = (1UL << j) | (1UL << (j + 2));
-
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		p1 = bufa;
-		p2 = bufb;
-		printf("setting %3u", j);
-		for (i = 0; i < count; i++) {
-			/* Walk it up. */
-			*p1++ = *p2++ = (i % 2 == 0) ?  msk : ~msk;
+		for (ulong i = 0; i < count; i++) {
+			if (j < UL_LEN) {	/* Walk it up. */
+				*p1++ = *p2++ = (i % 2 == 0)
+					? (1UL << j) | (1UL << (j + 2))
+					: ~((1UL << j) | (1UL << (j + 2)));
+			} else {		/* Walk it back down. */
+				*p1++ = *p2++ = (i % 2 == 0)
+					? (1UL << (UL_LEN * 2 - 1 - j)) | (1UL << (UL_LEN * 2 + 1 - j))
+					: ~(1UL << (UL_LEN * 2 - 1 - j) | (1UL << (UL_LEN * 2 + 1 - j)));
+			}
 		}
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		printf("testing %3u", j);
-		if (compare_regions(bufa, bufb, count))
-			return -1;
-	}
-	for (j = UL_LEN; j--; ) {
-		ulong msk = (1UL << j) | (1UL << (j + 2));
-
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		p1 = bufa;
-		p2 = bufb;
-		printf("setting %3u", j);
-		for (i = 0; i < count; i++) {
-			/* Walk it back down. */
-			*p1++ = *p2++ = (i % 2 == 0) ?  msk : ~msk;
-		}
-		printf("\b\b\b\b\b\b\b\b\b\b\b");
-		printf("testing %3u", j);
 		if (compare_regions(bufa, bufb, count)) {
 			return -1;
 		}
+		putchar('\b');
+		putchar(progress[j % PROGRESSLEN]);
 	}
-	printf("\b\b\b\b\b\b\b\b\b\b\b           \b\b\b\b\b\b\b\b\b\b\b");
+	putchar('\b');
 	return 0;
 }
 
 static int test_bitflip_comparison(ulv *bufa, ulv *bufb, ulong count)
 {
-	ulv *p1 = bufa;
-	ulv *p2 = bufb;
-	uint j, k;
-	ul q;
-	ulong i;
+	putchar(' ');
+	for (ulong j = 0; j < (UL_LEN * 8); j++) {
+		ul q = 1UL << (j % UL_LEN);
+		ulv *p1 = bufa;
+		ulv *p2 = bufb;
 
-	printf("           ");
-	for (k = 0; k < UL_LEN; k++) {
-		q = 1UL << k;
-		for (j = 0; j < 8; j++) {
-			printf("\b\b\b\b\b\b\b\b\b\b\b");
+		for (ulong i = 0; i < count; i++) {
+			*p1++ = *p2++ = q;
 			q = ~q;
-			printf("setting %3u", k * 8 + j);
-			p1 = (ulv *) bufa;
-			p2 = (ulv *) bufb;
-			for (i = 0; i < count; i++) {
-				*p1++ = *p2++ = (i % 2) == 0 ? q : ~q;
-			}
-			printf("\b\b\b\b\b\b\b\b\b\b\b");
-			printf("testing %3u", k * 8 + j);
-			if (compare_regions(bufa, bufb, count)) {
-				return -1;
-			}
 		}
+		if (compare_regions(bufa, bufb, count)) {
+			return -1;
+		}
+		putchar('\b');
+		putchar(progress[j % PROGRESSLEN]);
 	}
-	printf("\b\b\b\b\b\b\b\b\b\b\b           \b\b\b\b\b\b\b\b\b\b\b");
+	putchar('\b');
 	return 0;
 }
 
 static int test_8bit_wide_random(ulv *bufa, ulv *bufb, ulong count)
 {
-	u8v *p1, *t;
-	ulv *p2;
-	int attempt;
-	uint b, j = 0;
-	ulong i;
-
 	putchar(' ');
-	for (attempt = 0; attempt < 2; attempt++) {
-		if (attempt & 1) {
+	for (int j = 0; j < 2; j++) {
+		u8v *p1;
+		ulv *p2;
+
+		if (j & 1) {
 			p1 = (u8v *) bufa;
 			p2 = bufb;
 		} else {
 			p1 = (u8v *) bufb;
 			p2 = bufa;
 		}
-		for (i = 0; i < count; i++) {
-			t = mword8.bytes;
-			*p2++ = mword8.val = rand_ul();
-			for (b = 0; b < UL_LEN / 8; b++) {
-				*p1++ = *t++;
-			}
-			if (!(i % PROGRESSOFTEN)) {
-				putchar('\b');
-				putchar(progress[++j % PROGRESSLEN]);
+		for (ulong i = 0; i < count; i++) {
+			ul q = rand_ul();
+			u8 *src = (void*) &q;
+			*p2++ = q;
+			for (ulong b = 0; b < UL_LEN / 8; b++) {
+				*p1++ = *src++;
 			}
 		}
 		if (compare_regions(bufa, bufb, count)) {
 			return -1;
 		}
+		putchar('\b');
+		putchar(progress[j % PROGRESSLEN]);
 	}
-	printf("\b \b");
+	putchar('\b');
 	return 0;
 }
 
 static int test_16bit_wide_random(ulv *bufa, ulv *bufb, ulong count)
 {
-	u16v *p1, *t;
-	ulv *p2;
-	int attempt;
-	uint b, j = 0;
-	ulong i;
-
 	putchar(' ');
-	for (attempt = 0; attempt < 2; attempt++) {
-		if (attempt & 1) {
+	for (int j = 0; j < 2; j++) {
+		u16v *p1;
+		ulv *p2;
+
+		if (j & 1) {
 			p1 = (u16v *) bufa;
 			p2 = bufb;
 		} else {
 			p1 = (u16v *) bufb;
 			p2 = bufa;
 		}
-		for (i = 0; i < count; i++) {
-			t = mword16.u16s;
-			*p2++ = mword16.val = rand_ul();
-			for (b = 0; b < UL_LEN / 16; b++) {
-				*p1++ = *t++;
-			}
-			if (!(i % PROGRESSOFTEN)) {
-				putchar('\b');
-				putchar(progress[++j % PROGRESSLEN]);
+		for (ulong i = 0; i < count; i++) {
+			ul q = rand_ul();
+			u16 *src = (void*) &q;
+			*p2++ = q;
+			for (ulong h = 0; h < UL_LEN / 16; h++) {
+				*p1++ = *src++;
 			}
 		}
 		if (compare_regions(bufa, bufb, count)) {
 			return -1;
 		}
+		putchar('\b');
+		putchar(progress[j % PROGRESSLEN]);
 	}
-	printf("\b \b");
+	putchar('\b');
+	return 0;
+}
+
+static int test_selftest(ulv *bufa, ulv *bufb, ulong count)
+{
+#if 0
+	return 1;
+#endif
 	return 0;
 }
 
 
-struct memtest {
+static const struct test {
 	const char *name;
 	int (*test)(ulv *bufa, ulv *bufb, ulong count);
-};
-
-static struct memtest tests[] = {
+} tests[] = {
 	[MEMTESTER_STUCKAD_BIT] = { "Stuck Address",	test_stuck_address, },
 	[MEMTESTER_RANDVAL_BIT] = { "Random Value",	test_random_value, },
 	[MEMTESTER_COMPXOR_BIT] = { "Compare XOR",	test_xor_comparison, },
@@ -527,14 +434,15 @@ static struct memtest tests[] = {
 	[MEMTESTER_WALK0_BIT]   = { "Walking Zeroes",	test_walkbits0_comparison, },
 	[MEMTESTER_WRITE8_BIT]  = { "8-bit Writes",	test_8bit_wide_random, },
 	[MEMTESTER_WRITE16_BIT] = { "16-bit Writes",	test_16bit_wide_random, },
+	{ "Selftest",	test_selftest },
+	{ NULL }
 };
 
-int memtester(void *buff, ulong size, int loops, uint testmask)
+int memtester(void *buff, ulong size, uint loops, uint testmask)
 {
-	void *bufa, *bufb;
+	ulv *bufa, *bufb;
 	ulong count;
 	int err = 0;
-	int rc;
 	uint i;
 
 	printf("Memtester: %p - %p, loops: %d, tests: %x\n", buff, buff + size -1, loops, testmask);
@@ -543,23 +451,38 @@ int memtester(void *buff, ulong size, int loops, uint testmask)
 	size /= 2;
 	bufa = buff;
 	bufb = buff + size;
-	count = size / sizeof(ulong);
+	count = size / sizeof(ul);
 
-	do {
-		printf("  Loop %d:\n", loops);
+	// Run test loops
+	if (!loops)			// unlimited
+		loops = ~0;
+	// Which tests?
+	if (!testmask)			// all tests
+		testmask = ~0;
+	for (uint loop = 0; loop < loops; loop++) {
+		printf(" Loop %lu:\n", loop);
 
 		for (i = 0; i < MEMTESTER_LAST_BIT; i++) {
+			int rc;
+
+			if (!tests[i].name)
+				break;
 			if ((testmask & (1 << i)) == 0)
 				continue;
 
-			printf("  %-20s: ", tests[i].name);
+			printf("  %-16s: ", tests[i].name);
 			rc = tests[i].test(bufa, bufb, count);
-			if (rc == 0)
-				printf("ok\n");
-			else
+			if (rc == 0) {
+				printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+			} else {
+				printf("KO\n");
 				err++;
+			}
 		}
-	} while (--loops > 0);
+		printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+		printf("                     ");
+		printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+	}
 
 	printf("Memtester: errors: %d\n", err);
 	return !!err;

@@ -45,6 +45,6 @@ enum {
 };
 
 
-int memtester(void *buff, ulong size, int loops, uint testmask);
+int memtester(void *buff, ulong size, uint loops, uint testmask);
 
 #endif
