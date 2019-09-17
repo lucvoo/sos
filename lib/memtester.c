@@ -416,7 +416,7 @@ static const struct test {
 	const char *name;
 	int (*test)(ulv *bufa, ulv *bufb, ulong count);
 } tests[] = {
-	[MEMTESTER_STUCKAD_BIT] = { "Stuck Address",	test_stuck_address, },
+	[MEMTESTER_SEQ_INC_BIT] = { "Sequential Inc.",	test_seqinc_comparison, },
 	[MEMTESTER_RANDVAL_BIT] = { "Random Value",	test_random_value, },
 	[MEMTESTER_COMPXOR_BIT] = { "Compare XOR",	test_xor_comparison, },
 	[MEMTESTER_COMPSUB_BIT] = { "Compare SUB",	test_sub_comparison, },
@@ -424,16 +424,16 @@ static const struct test {
 	[MEMTESTER_COMPDIV_BIT] = { "Compare DIV",	test_div_comparison, },
 	[MEMTESTER_COMP_OR_BIT] = { "Compare OR",	test_or_comparison, },
 	[MEMTESTER_COMPAND_BIT] = { "Compare AND",	test_and_comparison, },
-	[MEMTESTER_SEQ_INC_BIT] = { "Sequential Inc.",	test_seqinc_comparison, },
-	[MEMTESTER_SOLBITS_BIT] = { "Solid Bits",	test_solidbits_comparison, },
-	[MEMTESTER_BLK_SEQ_BIT] = { "Block Sequential",	test_blockseq_comparison, },
-	[MEMTESTER_CHECKER_BIT] = { "Checkerboard",	test_checkerboard_comparison, },
-	[MEMTESTER_BIT_SPR_BIT] = { "Bit Spread",	test_bitspread_comparison, },
-	[MEMTESTER_BITFLIP_BIT] = { "Bit Flip",		test_bitflip_comparison, },
-	[MEMTESTER_WALK1_BIT]   = { "Walking Ones",	test_walkbits1_comparison, },
-	[MEMTESTER_WALK0_BIT]   = { "Walking Zeroes",	test_walkbits0_comparison, },
 	[MEMTESTER_WRITE8_BIT]  = { "8-bit Writes",	test_8bit_wide_random, },
 	[MEMTESTER_WRITE16_BIT] = { "16-bit Writes",	test_16bit_wide_random, },
+	[MEMTESTER_STUCKAD_BIT] = { "Stuck Address",	test_stuck_address, },
+	[MEMTESTER_SOLBITS_BIT] = { "Solid Bits",	test_solidbits_comparison, },
+	[MEMTESTER_CHECKER_BIT] = { "Checkerboard",	test_checkerboard_comparison, },
+	[MEMTESTER_WALK1_BIT]   = { "Walking Ones",	test_walkbits1_comparison, },
+	[MEMTESTER_WALK0_BIT]   = { "Walking Zeroes",	test_walkbits0_comparison, },
+	[MEMTESTER_BIT_SPR_BIT] = { "Bit Spread",	test_bitspread_comparison, },
+	[MEMTESTER_BLK_SEQ_BIT] = { "Block Sequential",	test_blockseq_comparison, },
+	[MEMTESTER_BITFLIP_BIT] = { "Bit Flip",		test_bitflip_comparison, },
 	{ "Selftest",	test_selftest },
 	{ NULL }
 };
