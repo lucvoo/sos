@@ -403,6 +403,24 @@ static int test_16bit_wide_random(ulv *bufa, ulv *bufb, ulong count)
 	return 0;
 }
 
+#include <timerdev.h>
+static int test_perf(ulv *bufa, ulv *bufb, ulong count)
+{
+	ul t0, t1, t2;
+
+	t0 = timerdev_read();
+	for (ulong i = 0; i < count; i++)
+		bufa[i] = i;
+	t1 = timerdev_read();
+	for (ulong i = 0; i < count; i++)
+		(void)bufa[i];
+	t2 = timerdev_read();
+	printf("\n");
+	printf("write: %lu\n", t1 - t0);
+	printf(" read: %lu\n", t2 - t1);
+	return 0;
+}
+
 static int test_selftest(ulv *bufa, ulv *bufb, ulong count)
 {
 #if 0
@@ -434,6 +452,7 @@ static const struct test {
 	[MEMTESTER_BIT_SPR_BIT] = { "Bit Spread",	test_bitspread_comparison, },
 	[MEMTESTER_BLK_SEQ_BIT] = { "Block Sequential",	test_blockseq_comparison, },
 	[MEMTESTER_BITFLIP_BIT] = { "Bit Flip",		test_bitflip_comparison, },
+	{ "perf",	test_perf },
 	{ "Selftest",	test_selftest },
 	{ NULL }
 };
