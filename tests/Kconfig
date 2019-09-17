@@ -4,13 +4,23 @@ config	MEMTESTER
 	bool "memtester"
 
 config	MEMTESTER_ADDR
-	hex "memtester address"
+	hex "memtester addr"
 	depends on MEMTESTER
 	default VIRT_ADDR
 
 config	MEMTESTER_SIZE
-	hex "memtester address"
+	hex "memtester size"
 	depends on MEMTESTER
 	default PHYS_SIZE
+
+config	MEMTESTER_FULL
+	bool "memtester full"
+	depends on MEMTESTER
+	default y
+
+config	MEMTESTER_PERF
+	bool "memtester perf"
+	depends on MEMTESTER
+	default y
 
 endmenu

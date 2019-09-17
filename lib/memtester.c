@@ -445,6 +445,7 @@ static const struct test {
 	[MEMTESTER_WRITE8_BIT]  = { "8-bit Writes",	test_8bit_wide_random, },
 	[MEMTESTER_WRITE16_BIT] = { "16-bit Writes",	test_16bit_wide_random, },
 	[MEMTESTER_STUCKAD_BIT] = { "Stuck Address",	test_stuck_address, },
+#ifdef CONFIG_MEMTESTER_FULL
 	[MEMTESTER_SOLBITS_BIT] = { "Solid Bits",	test_solidbits_comparison, },
 	[MEMTESTER_CHECKER_BIT] = { "Checkerboard",	test_checkerboard_comparison, },
 	[MEMTESTER_WALK1_BIT]   = { "Walking Ones",	test_walkbits1_comparison, },
@@ -452,7 +453,10 @@ static const struct test {
 	[MEMTESTER_BIT_SPR_BIT] = { "Bit Spread",	test_bitspread_comparison, },
 	[MEMTESTER_BLK_SEQ_BIT] = { "Block Sequential",	test_blockseq_comparison, },
 	[MEMTESTER_BITFLIP_BIT] = { "Bit Flip",		test_bitflip_comparison, },
+#endif
+#ifdef CONFIG_MEMTESTER_PERF
 	{ "perf",	test_perf },
+#endif
 	{ "Selftest",	test_selftest },
 	{ NULL }
 };
