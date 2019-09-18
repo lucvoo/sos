@@ -7,5 +7,5 @@
 
 void kapi_start(void)
 {
-	memtester((void *)ADDR, SIZE, 32, MEMTESTER_ALL);
+	memtester((void *)ADDR, SIZE, 0, 0);
 }
