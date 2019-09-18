@@ -30,6 +30,17 @@
 #define	PINY 11
 #define	FUN  7
 #endif
+#ifdef CONFIG_STM32_DIAG_USART6_PC6_PC7
+	// PC6 & PC7 => AF 8
+#define	USART_BASE	USART6_BASE
+#define	RCC_USARTENR	RCC_APB2ENR
+#define	RCC_USARTEN	RCC_APB2EN_USART6EN
+#define	APBCLK		APB2CLK
+#define	PORT 2				// GPIO C
+#define	PINX 6
+#define	PINY 7
+#define	FUN  8
+#endif
 
 
 static void stm32_putc(void __iomem *base, unsigned int c)

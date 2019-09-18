@@ -83,6 +83,9 @@ config	STM32_DIAG_USART1_PA9_PA10
 config	STM32_DIAG_USART3_PB10_PB11
 	bool "USART3 on PB10 & PB11"
 
+config	STM32_DIAG_USART6_PC6_PC7
+	bool "USART6 on PC6 & PC7"
+
 endchoice
 config	STM32_DIAG
 	bool
