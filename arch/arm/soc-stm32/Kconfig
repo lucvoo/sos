@@ -28,12 +28,18 @@ config	STM32F10X
 config	STM32F4XX
 	bool
 	select CORTEX_M4
+config	STM32F7XX
+	bool
+	select CORTEX_M7
 config	STM32F407
 	bool
 	select STM32F4XX
 config	STM32F429
 	bool
 	select STM32F4XX
+config	STM32F746
+	bool
+	select STM32F7XX
 
 # clock configuration
 
@@ -41,11 +47,14 @@ config	STM32_HSE_8MHZ
 	bool
 config	STM32_HSE_12MHZ
 	bool
+config	STM32_HSE_25MHZ
+	bool
 
 config	STM32_HSE_FREQ
 	int
 	default 8 if STM32_HSE_8MHZ
 	default 12 if STM32_HSE_12MHZ
+	default 25 if STM32_HSE_25MHZ
 	default 0
 
 config	STM32_PLL_MAX
@@ -53,11 +62,13 @@ config	STM32_PLL_MAX
 	default  72 if STM32F10X
 	default 168 if STM32F407
 	default 180 if STM32F429
+	default 216 if STM32F746
 config	STM32_CLK_MAX
 	int
 	default  72 if STM32F10X
 	default 168 if STM32F407
 	default 180 if STM32F429
+	default 216 if STM32F746
 
 
 choice

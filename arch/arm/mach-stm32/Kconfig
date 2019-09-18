@@ -21,4 +21,9 @@ choice
 	select STM32_HSE_8MHZ
 	select SDRAM
 
+	config STM32F746_DISCO
+	bool "stm32f746-disco"
+	select STM32F746
+	select STM32_HSE_25MHZ
+
 endchoice
