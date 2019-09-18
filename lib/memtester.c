@@ -74,6 +74,25 @@ static int test_stuck_address(ulv *bufa, ulv *bufb, ulong count)
 	return 0;
 }
 
+static int test_non_alterning(ulv *bufa, ulv *bufb, ulong count)
+{
+	int rc = 0;
+	ul q = 0UL;
+	ulv *p;
+
+	p = bufa;
+	for (ulong i = 0; i < (count * 2); i++)
+		*p++ = q;
+	rc |= compare_regions(bufa, bufb, count);
+
+	p = bufa;
+	for (ulong i = 0; i < (count * 2); i++)
+		*p++ = ~q;
+	rc |= compare_regions(bufa, bufb, count);
+
+	return rc;
+}
+
 static int test_random_value(ulv *bufa, ulv *bufb, ulong count)
 {
 	ulv *p1 = bufa;
@@ -444,6 +463,7 @@ static const struct test {
 	[MEMTESTER_COMPAND_BIT] = { "Compare AND",	test_and_comparison, },
 	[MEMTESTER_WRITE8_BIT]  = { "8-bit Writes",	test_8bit_wide_random, },
 	[MEMTESTER_WRITE16_BIT] = { "16-bit Writes",	test_16bit_wide_random, },
+	[MEMTESTER_NONALT_BIT]  = { "Non-alterning",	test_non_alterning, },
 	[MEMTESTER_STUCKAD_BIT] = { "Stuck Address",	test_stuck_address, },
 #ifdef CONFIG_MEMTESTER_FULL
 	[MEMTESTER_SOLBITS_BIT] = { "Solid Bits",	test_solidbits_comparison, },
