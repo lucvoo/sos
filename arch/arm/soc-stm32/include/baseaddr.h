@@ -1,6 +1,23 @@
 #ifndef	_MACH_BASEADDR_H_
 #define	_MACH_BASEADDR_H_
 
+#if	defined(CONFIG_STM32F10X)
+#define	FLASH_BASE	0x40022000
+#define	FLASH_SIZE	     0x400
+#define	GPIO_BASE(PORT)	(0x40010800 + (PORT) * GPIO_SIZE)
+#define	GPIO_SIZE	     0x400
+#define	GPIOA_BASE	GPIO_BASE(0)
+#define	GPIOB_BASE	GPIO_BASE(1)
+#define	GPIOC_BASE	GPIO_BASE(2)
+#define	GPIOD_BASE	GPIO_BASE(3)
+#define	GPIOE_BASE	GPIO_BASE(4)
+#define	GPIOF_BASE	GPIO_BASE(5)
+#define	GPIOG_BASE	GPIO_BASE(6)
+#define	RCC_BASE	0x40021000
+#define	RCC_SIZE	     0x400
+#define	SRAM_BASE	0x20000000
+#define	SRAM_SIZE	    0x5000	// FIXME: sub-model dependent
+#elif	defined(CONFIG_STM32F4XX)
 #define	ADC_BASE	0x40012000
 #define	ADC_SIZE	     0x400
 #define	BKPSRAM_BASE	0x40024000
@@ -70,6 +87,8 @@
 #define	OTG_HS_SIZE	   0x40000
 #define	RNG_BASE	0x50060800
 #define	RNG_SIZE	     0x400
+#define	RCC_BASE	0x40023800
+#define	RCC_SIZE	     0x400
 #define	RTC_BASE	0x40002800
 #define	RTC_SIZE	     0x400
 #define	SAI1_BASE	0x40015800
@@ -108,5 +127,6 @@
 #define	USART6_SIZE	     0x400
 #define	WWDG_BASE	0x40002C00
 #define	WWDG_SIZE	     0x400
+#endif
 
 #endif

@@ -43,7 +43,6 @@ vec_hardfault:
 	b	vec_hardfault
 	.size   vec_hardfault, .-vec_hardfault
 
-	.section .text.vec,"ax"
 	.thumb_func
 vec_mmfault:
 	b	vec_mmfault
@@ -75,22 +74,26 @@ vec_systick:
 	.size   vec_systick, .-vec_systick
 
 	.thumb_func
+vec_reserved:
+	b	vec_reserved
+	.size   vec_reserved, .-vec_reserved
+
+	.thumb_func
 vec_irq:
+#ifdef CONFIG_IRQ_HANDLER
 	// get the exception number
 	mrs	r0, ipsr
 	ubfx	r0, r0, #0, #9
 	sub	r0, #16
 	mov	r1, #0			// FIXME?
 	b	nvic_irq_handler
+#else
+	b	vec_irq
+#endif
 	.size   vec_irq, .-vec_irq
 
-	.thumb_func
-vec_reserved:
-	b	vec_reserved
-	.size   vec_reserved, .-vec_reserved
 
-
-	.section .init.text,"ax"
+	.section .startup.text,"ax"
 	.type   __startup, %function
 	.thumb_func
 __startup:

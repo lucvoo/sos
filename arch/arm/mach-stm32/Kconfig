@@ -5,4 +5,19 @@ config MACH
 config	MACH_PARAMS
 	bool
 	default y
-	select SOC_STM32F4
+	select SOC_STM32
+
+choice
+	prompt "Boards selection"
+
+	config STM32F103_BLUEPILL
+	bool "stm32f103-bluepill"
+	select STM32F10X
+	select STM32_HSE_8MHZ
+
+	config STM32F429_DISCO
+	bool "stm32f429-disco"
+	select STM32F429
+	select STM32_HSE_8MHZ
+
+endchoice

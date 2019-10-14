@@ -11,7 +11,7 @@ static struct clk_fixed sysclk;
 static struct clk_ratio hclk;
 static struct clk_ratio systickclk;
 static struct clk_ratio apb1clk;
-static struct clk_ratio tim1clk;
+static struct clk_ratio apb1timclk;
 static struct clk_mmio timer2clk;
 
 
@@ -45,15 +45,15 @@ static void stm32_clock_setup(void)
 	apb1clk.clk.name = "apb1clk";
 	clk_ratio_register(&apb1clk);
 
-	tim1clk.rate.mult = 2;
-	tim1clk.rate.div = 1;
-	tim1clk.clk.parent = &apb1clk.clk;
-	tim1clk.clk.name = "tim1clk";
-	clk_ratio_register(&tim1clk);
+	apb1timclk.rate.mult = APB1TIM_MUL;
+	apb1timclk.rate.div = 1;
+	apb1timclk.clk.parent = &apb1clk.clk;
+	apb1timclk.clk.name = "apb1timclk";
+	clk_ratio_register(&apb1timclk);
 
 	timer2clk.gate.reg = rccbase + RCC_APB1ENR;
 	timer2clk.gate.bit = RCC_APB1EN_TIMER2_BIT;
-	timer2clk.clk.parent = &tim1clk.clk;
+	timer2clk.clk.parent = &apb1timclk.clk;
 	timer2clk.clk.name = "timer2clk";
 	clk_mmio_register(&timer2clk);
 

@@ -1,3 +1,3 @@
 objs-$(CONFIG_BOOT) +=	boot.o
 objs-y +=	debug.o
-objs-y +=	diag.o
+objs-$(CONFIG_STM32_DIAG) +=	diag.o

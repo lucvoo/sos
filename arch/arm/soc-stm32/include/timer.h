@@ -43,6 +43,7 @@
 #define	TIM_CNT		0x24
 
 #define	TIM_PSC		0x28
+#define	TIM_PSC_MAX		0xffff
 
 #define	TIM_ARR		0x2C
 
